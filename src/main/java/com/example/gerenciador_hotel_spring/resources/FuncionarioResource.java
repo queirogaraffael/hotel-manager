@@ -1,7 +1,10 @@
 package com.example.gerenciador_hotel_spring.resources;
 
 import com.example.gerenciador_hotel_spring.dtos.FuncionarioDTO;
+import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
+import com.example.gerenciador_hotel_spring.exceptions.EnderecoJaExisteException;
+import com.example.gerenciador_hotel_spring.services.EnderecoService;
 import com.example.gerenciador_hotel_spring.services.FuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +24,7 @@ public class FuncionarioResource {
     @Autowired
     FuncionarioService funcionarioService;
 
+
     @Operation(summary = "Cria novo funcionario", description = "Tanto o endereco como extrato são opcionais para criar o funcionario. CPF precisa ter exatamento 11 caracteres.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Funcionário criado com sucesso"),
@@ -37,6 +41,27 @@ public class FuncionarioResource {
 
         Funcionario funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
         return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioCriado);
+    }
+
+
+    @Operation(summary = "Cria endereco", description = "Se o funcionário já tiver um endereço, o programa lançará uma exceção.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Endereço criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "409", description = "Conflito: Endereço já existe. Modifique!"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    @PostMapping("/endereco/{cpf}")
+    public ResponseEntity<Endereco> criaEnderecoFuncionario(@PathVariable String cpf, @RequestBody Endereco endereco) {
+
+        Endereco enderecoExiste = funcionarioService.getEnderecoFuncionarioByCPF(cpf);
+
+        if(enderecoExiste != null){
+            throw new EnderecoJaExisteException("Endereço já existe. Tente Modificar.");
+        }
+
+        Endereco enderecoCriado = funcionarioService.criaEnderecoParaFuncionario(cpf, endereco);
+        return ResponseEntity.status(HttpStatus.CREATED).body(enderecoCriado);
     }
 
 

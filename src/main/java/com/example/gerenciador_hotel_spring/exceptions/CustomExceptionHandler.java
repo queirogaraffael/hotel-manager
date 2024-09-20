@@ -14,8 +14,28 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+    @ExceptionHandler(EnderecoJaExisteException.class)
+    public ResponseEntity<Object> handleEnderecoJaExisteException(EnderecoJaExisteException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+
+    @ExceptionHandler(ExtratoJaExisteParaMesReferenteException.class)
+    public ResponseEntity<Object> handleExtratoJaExisteParaMesReferenteException(ExtratoJaExisteParaMesReferenteException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+
+    @ExceptionHandler(FuncionarioJaExisteException.class)
+    public ResponseEntity<Object> handleFuncionarioJaExisteException(FuncionarioJaExisteException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
 }

@@ -40,6 +40,20 @@ public class FuncionarioService {
     }
 
 
+    @Transactional
+    public Endereco criaEnderecoParaFuncionario(String cpf, Endereco endereco) {
+
+        Funcionario funcionario = funcionarioRepository.findByCpf(cpf).orElseThrow(() -> new ResourceNotFoundException("Funcionario com o CPF " + cpf + " não encontrado."));
+
+        funcionario.setEndereco(endereco);
+
+        funcionarioRepository.save(funcionario);
+
+        return endereco;
+    }
+
+
+
     @Transactional(readOnly = true)
     public Funcionario getFuncionarioByCPF(String cpf) {
         return funcionarioRepository.findByCpf(cpf)
@@ -72,6 +86,5 @@ public class FuncionarioService {
     public Endereco getEnderecoFuncionarioByCPF(String cpf){
         return enderecoRepository.getEnderecoFuncionarioByCPF(cpf).orElseThrow(()-> new ResourceNotFoundException("Funcionario sem endereço cadastrado"));
     }
-
 
 }

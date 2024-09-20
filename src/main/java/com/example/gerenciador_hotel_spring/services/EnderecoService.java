@@ -23,36 +23,6 @@ public class EnderecoService {
     @Autowired
     FuncionarioRepository funcionarioRepository;
 
-    @Transactional
-    public Endereco criaEnderecoParaHospede(String cpf, Endereco endereco) {
-
-        Hospede hospede = hospedeRepository.findByCpf(cpf).orElseThrow(() -> new ResourceNotFoundException("Hospede com o CPF " + cpf + " não encontrado."));
-
-        hospede.setEndereco(endereco);
-
-        hospedeRepository.save(hospede);
-
-        return endereco;
-    }
-
-
-    @Transactional
-    public Endereco criaEnderecoParaFuncionario(String cpf, Endereco endereco) {
-
-        Funcionario funcionario = funcionarioRepository.findByCpf(cpf).orElseThrow(() -> new ResourceNotFoundException("Funcionario com o CPF " + cpf + " não encontrado."));
-
-        funcionario.setEndereco(endereco);
-
-        funcionarioRepository.save(funcionario);
-
-        return endereco;
-    }
-
-
-    @Transactional(readOnly = true)
-    public Endereco getEnderecoHospedeByCPF(String cpf) {
-        return enderecoRepository.getEnderecoHospedeByCPF(cpf).orElseThrow(() -> new ResourceNotFoundException("Hospede sem endereço cadastrado."));
-    }
 
     @Transactional
     public Endereco modificaEnderecoById(Long id, Endereco enderecoModificado) {
