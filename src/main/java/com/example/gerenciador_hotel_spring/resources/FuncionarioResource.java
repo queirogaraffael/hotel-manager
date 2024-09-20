@@ -1,10 +1,88 @@
 package com.example.gerenciador_hotel_spring.resources;
 
+import com.example.gerenciador_hotel_spring.dtos.FuncionarioDTO;
+import com.example.gerenciador_hotel_spring.entities.Funcionario;
+import com.example.gerenciador_hotel_spring.services.FuncionarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/funcionarios")
 public class FuncionarioResource {
 
+    @Autowired
+    FuncionarioService funcionarioService;
 
-    // criar funcionario
-    // pegar funcionario por cpf
-    // pegar funcionarios paginados por nome (quais dados?) endereço e extrato ?
-    // editar dados do funcionario(quais?)
+    @Operation(summary = "Cria novo funcionario", description = "Tanto o endereco como extrato são opcionais para criar o funcionario. CPF precisa ter exatamento 11 caracteres.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Funcionário criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "409", description = "Conflito: Funcionário já existe"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    @PostMapping
+    public ResponseEntity<?> criaFuncionario(@Valid @RequestBody Funcionario funcionario, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
+
+        Funcionario funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioCriado);
+    }
+
+
+    @Operation(summary = "Retorna Funcionario pelo CPF.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funcionário encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    @GetMapping("/{cpf}")
+    public ResponseEntity<Funcionario> getFuncionarioByCpf(@PathVariable String cpf) {
+        Funcionario funcionario = funcionarioService.getFuncionarioByCPF(cpf);
+
+        if (funcionario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(funcionario);
+    }
+
+
+    @GetMapping("/nome")
+    @Operation(summary = "Busca funcionários DTO por nome de forma paginada.", description = "Retorna uma página de funcionários DTO cujo nome contém o valor fornecido.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funcionários encontrados com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos fornecidos"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public Page<FuncionarioDTO> buscaFuncionariosPorNome(
+            @RequestParam String nome,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return funcionarioService.getFuncionariosDTOPorNomePaginados(nome, page, size);
+    }
+
+
+    @PutMapping("/{cpf}")
+    @Operation(summary = "Atualiza dados do funcionario.", description = "Nome, cargo e endereço.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funcionário atualizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Funcionario> atualizaFuncionario(@PathVariable String cpf, @RequestBody Funcionario funcionarioAtualizado) {
+        Funcionario funcionario = funcionarioService.editaFuncionarioByCPF(cpf, funcionarioAtualizado);
+
+        return ResponseEntity.status(HttpStatus.OK).body(funcionario);
+    }
 }
