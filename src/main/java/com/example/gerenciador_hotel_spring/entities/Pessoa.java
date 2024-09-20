@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -22,12 +22,13 @@ public abstract class Pessoa {
     private Long id;
 
     private String nome;
-    private LocalDate dataNascimento;
+    private Date dataNascimento;
     private String numeroTelefone;
 
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
+
 
 }

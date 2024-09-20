@@ -5,6 +5,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
+
 
 @Entity
 @Data
@@ -21,6 +23,8 @@ import java.util.Set;
 public class Hospede extends Pessoa {
 
     @Column(unique = true)
+    @Size(min = 11, max = 11, message = "CPF deve ter 11 caracteres")
+    @EqualsAndHashCode.Include
     private String cpf;
 
     @OneToMany(mappedBy = "hospede", cascade = CascadeType.ALL, orphanRemoval = true)

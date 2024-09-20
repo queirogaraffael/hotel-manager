@@ -1,6 +1,7 @@
 package com.example.gerenciador_hotel_spring.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,5 +27,6 @@ public class Endereco {
     private String estado;
 
     @OneToOne(mappedBy = "endereco", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Pessoa pessoa;
 }
