@@ -1,0 +1,30 @@
+package com.example.gerenciador_hotel_spring.entities;
+
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Endereco {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Long id;
+
+    private String rua;
+    private String numero;
+    private String cidade;
+    private String bairro;
+    private String estado;
+
+    @OneToOne(mappedBy = "endereco", fetch = FetchType.LAZY)
+    private Pessoa pessoa;
+}
