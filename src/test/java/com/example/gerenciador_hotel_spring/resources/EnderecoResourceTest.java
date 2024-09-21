@@ -54,7 +54,7 @@ class EnderecoResourceTest {
         when(enderecoService.modificaEnderecoById(Mockito.eq(id), Mockito.any(Endereco.class)))
                 .thenReturn(enderecoAtualizado);
 
-        mockMvc.perform(put("/enderecos/{id}", id)
+        mockMvc.perform(put("/api/enderecos/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(enderecoAtualizado)))
                 .andExpect(status().isOk())
@@ -66,8 +66,6 @@ class EnderecoResourceTest {
     }
 
 
-
-
     @Test
     @DisplayName("Teste para atualizar endereço não encontrado.")
     void testModificaEnderecoById_NotFound() throws Exception {
@@ -77,7 +75,7 @@ class EnderecoResourceTest {
         when(enderecoService.modificaEnderecoById(id, enderecoAtualizado))
                 .thenThrow(new ResourceNotFoundException("Endereco com este id " + id + " não encontrado para modificação."));
 
-        mockMvc.perform(put("/enderecos/{id}", id)
+        mockMvc.perform(put("/api/enderecos/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(enderecoAtualizado)))
                 .andExpect(status().isNotFound());
@@ -91,7 +89,7 @@ class EnderecoResourceTest {
 
         doNothing().when(enderecoService).deletaEnderecoById(id);
 
-        mockMvc.perform(delete("/enderecos/{id}", id))
+        mockMvc.perform(delete("/api/enderecos/{id}", id))
                 .andExpect(status().isNoContent());
     }
 }

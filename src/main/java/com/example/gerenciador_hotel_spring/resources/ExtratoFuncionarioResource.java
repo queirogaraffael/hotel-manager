@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/extratos")
+@RequestMapping("/api/extratos")
 public class ExtratoFuncionarioResource {
 
     @Autowired

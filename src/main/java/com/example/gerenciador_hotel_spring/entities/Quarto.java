@@ -3,6 +3,7 @@ package com.example.gerenciador_hotel_spring.entities;
 
 import com.example.gerenciador_hotel_spring.enums.StatusQuarto;
 import com.example.gerenciador_hotel_spring.enums.TipoQuarto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,14 +26,14 @@ public class Quarto {
     private Long id;
 
     @Column(unique = true)
-    private int numeroQuarto;
+    private String numero;
 
     private TipoQuarto tipoQuarto;
     private int capacidade;
     private double precoDiaria;
     private StatusQuarto statusQuarto;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "quarto", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reserva> reservas = new HashSet<>();
 }

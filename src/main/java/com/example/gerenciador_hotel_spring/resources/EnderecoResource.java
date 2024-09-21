@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/enderecos")
-@Tag(name = "Endereços", description = "Operações em comum de Endereço para todas as entidades relacionadas a Endereço.")
+@RequestMapping("/api/enderecos")
+@Tag(name = "Endereços", description = "Operações comuns de endereço para todas as entidades que se relacionam com ele.")
 public class EnderecoResource {
 
     @Autowired

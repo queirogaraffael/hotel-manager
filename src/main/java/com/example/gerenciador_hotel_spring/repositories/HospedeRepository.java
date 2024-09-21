@@ -1,6 +1,5 @@
 package com.example.gerenciador_hotel_spring.repositories;
 
-import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.entities.Hospede;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

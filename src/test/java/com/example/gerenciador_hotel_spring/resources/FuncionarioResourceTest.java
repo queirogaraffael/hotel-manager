@@ -50,7 +50,7 @@ class FuncionarioResourceTest {
 
         Mockito.when(funcionarioService.criarFuncionario(Mockito.any(Funcionario.class))).thenReturn(funcionario);
 
-        mockMvc.perform(post("/funcionarios")
+        mockMvc.perform(post("/api/funcionarios")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(funcionario)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -68,7 +68,7 @@ class FuncionarioResourceTest {
 
         Mockito.when(funcionarioService.getFuncionarioByCPF("12345678901")).thenReturn(funcionario);
 
-        mockMvc.perform(get("/funcionarios/12345678901")
+        mockMvc.perform(get("/api/funcionarios/12345678901")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").value("12345678901"))
@@ -85,7 +85,7 @@ class FuncionarioResourceTest {
         Mockito.when(funcionarioService.getFuncionariosDTOPorNomePaginados(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(page);
 
-        mockMvc.perform(get("/funcionarios/nome")
+        mockMvc.perform(get("/api/funcionarios/nome")
                         .param("nome", "João Silva")
                         .param("page", "0")
                         .param("size", "10")
@@ -105,7 +105,7 @@ class FuncionarioResourceTest {
         Mockito.when(funcionarioService.editaFuncionarioByCPF(Mockito.eq("12345678901"), Mockito.any(Funcionario.class)))
                 .thenReturn(funcionarioAtualizado);
 
-        mockMvc.perform(put("/funcionarios/12345678901")
+        mockMvc.perform(put("/api/funcionarios/12345678901")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(funcionarioAtualizado)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -123,7 +123,7 @@ class FuncionarioResourceTest {
         Mockito.when(funcionarioService.criarFuncionario(Mockito.any(Funcionario.class)))
                 .thenThrow(new FuncionarioJaExisteException("Funcionario com este CPF já existe!"));
 
-        mockMvc.perform(post("/funcionarios")
+        mockMvc.perform(post("/api/funcionarios")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(funcionario)))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
@@ -138,7 +138,7 @@ class FuncionarioResourceTest {
 
         Mockito.when(funcionarioService.getEnderecoFuncionarioByCPF(cpf)).thenReturn(endereco);
 
-        mockMvc.perform(post("/funcionarios/endereco/" + cpf)
+        mockMvc.perform(post("/api/funcionarios/endereco/" + cpf)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(endereco)))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
@@ -155,7 +155,7 @@ class FuncionarioResourceTest {
         Mockito.when(funcionarioService.criaEnderecoParaFuncionario(Mockito.eq(cpf), Mockito.any(Endereco.class)))
                 .thenReturn(endereco);
 
-        mockMvc.perform(post("/funcionarios/endereco/" + cpf)
+        mockMvc.perform(post("/api/funcionarios/endereco/" + cpf)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(endereco)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -171,7 +171,7 @@ class FuncionarioResourceTest {
 
         Mockito.when(funcionarioService.getEnderecoFuncionarioByCPF(cpf)).thenReturn(endereco);
 
-        mockMvc.perform(get("/funcionarios/endereco/" + cpf)
+        mockMvc.perform(get("/api/funcionarios/endereco/" + cpf)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.rua").value("Rua A"))
@@ -187,7 +187,7 @@ class FuncionarioResourceTest {
         Mockito.when(funcionarioService.getEnderecoFuncionarioByCPF(cpf))
                 .thenThrow(new ResourceNotFoundException("Funcionario sem endereço cadastrado"));
 
-        mockMvc.perform(get("/funcionarios/endereco/" + cpf)
+        mockMvc.perform(get("/api/funcionarios/endereco/" + cpf)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }

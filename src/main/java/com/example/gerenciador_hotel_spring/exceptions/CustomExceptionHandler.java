@@ -43,4 +43,10 @@ public class CustomExceptionHandler {
     public ResponseEntity<Object> handleHospedeJaExisteException(HospedeJaExisteException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
+
+    @ExceptionHandler(QuartoJaExisteException.class)
+    public ResponseEntity<Object> handleQuartoJaExisteException(QuartoJaExisteException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 }
