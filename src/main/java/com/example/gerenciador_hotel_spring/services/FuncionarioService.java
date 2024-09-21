@@ -82,6 +82,7 @@ public class FuncionarioService {
 
     }
 
+
     @Transactional(readOnly = true)
     public Endereco getEnderecoFuncionarioByCPF(String cpf){
         return enderecoRepository.getEnderecoFuncionarioByCPF(cpf).orElseThrow(()-> new ResourceNotFoundException("Funcionario sem endereço cadastrado"));

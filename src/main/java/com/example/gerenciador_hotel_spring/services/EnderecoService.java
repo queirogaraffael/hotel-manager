@@ -1,12 +1,8 @@
 package com.example.gerenciador_hotel_spring.services;
 
 import com.example.gerenciador_hotel_spring.entities.Endereco;
-import com.example.gerenciador_hotel_spring.entities.Funcionario;
-import com.example.gerenciador_hotel_spring.entities.Hospede;
 import com.example.gerenciador_hotel_spring.exceptions.ResourceNotFoundException;
 import com.example.gerenciador_hotel_spring.repositories.EnderecoRepository;
-import com.example.gerenciador_hotel_spring.repositories.FuncionarioRepository;
-import com.example.gerenciador_hotel_spring.repositories.HospedeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +12,6 @@ public class EnderecoService {
 
     @Autowired
     EnderecoRepository enderecoRepository;
-
-    @Autowired
-    HospedeRepository hospedeRepository;
-
-    @Autowired
-    FuncionarioRepository funcionarioRepository;
 
 
     @Transactional
@@ -37,6 +27,7 @@ public class EnderecoService {
         return enderecoRepository.save(endereco);
 
     }
+
 
     @Transactional
     public void deletaEnderecoById(Long id) {

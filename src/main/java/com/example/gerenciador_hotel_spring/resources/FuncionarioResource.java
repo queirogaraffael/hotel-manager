@@ -64,6 +64,20 @@ public class FuncionarioResource {
     }
 
 
+    @Operation(summary = "Pega endereço de um funcionário pelo CPF")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Endereço encontrado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Endereço não encontrado para o CPF fornecido."),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    @GetMapping("/endereco/{cpf}")
+    public ResponseEntity<Endereco> getEnderecoFuncionarioByCPF(@PathVariable String cpf) {
+        Endereco endereco = funcionarioService.getEnderecoFuncionarioByCPF(cpf);
+        return ResponseEntity.status(HttpStatus.OK).body(endereco);
+    }
+
+
+
     @Operation(summary = "Retorna Funcionario pelo CPF.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Funcionário encontrado com sucesso"),

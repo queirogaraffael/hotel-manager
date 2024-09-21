@@ -4,6 +4,7 @@ import com.example.gerenciador_hotel_spring.dtos.FuncionarioDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.exceptions.FuncionarioJaExisteException;
+import com.example.gerenciador_hotel_spring.exceptions.ResourceNotFoundException;
 import com.example.gerenciador_hotel_spring.services.FuncionarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -159,6 +160,36 @@ class FuncionarioResourceTest {
                         .content(objectMapper.writeValueAsString(endereco)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.rua").value("Rua A"));
+    }
+
+
+    @Test
+    @DisplayName("Teste para obter o endereço de um funcionário pelo CPF com sucesso.")
+    void getEnderecoFuncionarioByCpf_Sucesso() throws Exception {
+        Endereco endereco = new Endereco(1L, "Rua A", "123", "Cidade X", "Bairro Y", "Estado Z", null);
+        String cpf = "12345678901";
+
+        Mockito.when(funcionarioService.getEnderecoFuncionarioByCPF(cpf)).thenReturn(endereco);
+
+        mockMvc.perform(get("/funcionarios/endereco/" + cpf)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.rua").value("Rua A"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.numero").value("123"));
+    }
+
+
+    @Test
+    @DisplayName("Teste para obter o endereço de um funcionário pelo CPF quando não encontrado.")
+    void getEnderecoFuncionarioByCpf_NotFound() throws Exception {
+        String cpf = "12345678901";
+
+        Mockito.when(funcionarioService.getEnderecoFuncionarioByCPF(cpf))
+                .thenThrow(new ResourceNotFoundException("Funcionario sem endereço cadastrado"));
+
+        mockMvc.perform(get("/funcionarios/endereco/" + cpf)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 }
