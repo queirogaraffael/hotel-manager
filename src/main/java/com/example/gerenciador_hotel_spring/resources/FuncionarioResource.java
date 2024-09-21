@@ -4,7 +4,6 @@ import com.example.gerenciador_hotel_spring.dtos.FuncionarioDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.exceptions.EnderecoJaExisteException;
-import com.example.gerenciador_hotel_spring.services.EnderecoService;
 import com.example.gerenciador_hotel_spring.services.FuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
