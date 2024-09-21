@@ -38,4 +38,9 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
+
+    @ExceptionHandler(HospedeJaExisteException.class)
+    public ResponseEntity<Object> handleHospedeJaExisteException(HospedeJaExisteException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 }

@@ -78,7 +78,7 @@ public class FuncionarioResource {
 
 
 
-    @Operation(summary = "Retorna Funcionario pelo CPF.")
+    @Operation(summary = "Retorna Funcionario pelo CPF.", description = "Apenas os atributos principais.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Funcionário encontrado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
@@ -112,7 +112,7 @@ public class FuncionarioResource {
 
 
     @PutMapping("/{cpf}")
-    @Operation(summary = "Atualiza dados do funcionario.", description = "Nome, cargo e endereço.")
+    @Operation(summary = "Atualiza dados do funcionario.", description = "Atributos principais")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Funcionário atualizado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),

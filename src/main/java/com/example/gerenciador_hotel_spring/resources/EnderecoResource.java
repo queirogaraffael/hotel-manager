@@ -5,13 +5,16 @@ import com.example.gerenciador_hotel_spring.services.EnderecoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/enderecos")
+@Tag(name = "Endereços", description = "Operações em comum de Endereço para todas as entidades relacionadas a Endereço.")
 public class EnderecoResource {
 
     @Autowired

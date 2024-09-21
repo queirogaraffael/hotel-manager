@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @Data
@@ -16,10 +15,6 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ExtratoFuncionario {
-
-    public static final String FORMATO_DATA = "MM/yyyy";
-    public static final DateTimeFormatter formato = DateTimeFormatter.ofPattern(FORMATO_DATA);
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
