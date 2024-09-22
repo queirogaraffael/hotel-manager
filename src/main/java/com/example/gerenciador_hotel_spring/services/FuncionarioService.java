@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.services;
 
-import com.example.gerenciador_hotel_spring.dtos.FuncionarioDTO;
+import com.example.gerenciador_hotel_spring.dtos.FuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.exceptions.FuncionarioJaExisteException;
@@ -62,8 +62,7 @@ public class FuncionarioService {
 
 
     @Transactional(readOnly = true)
-    public Page<FuncionarioDTO> getFuncionariosDTOPorNomePaginados(String nome, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<FuncionarioResponseDTO> getFuncionariosDTOPorNomePaginados(String nome,Pageable pageable) {
         return funcionarioRepository.findFuncionariosDTOByNamePageados(nome, pageable);
     }
 

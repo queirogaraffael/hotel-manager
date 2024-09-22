@@ -1,13 +1,12 @@
 package com.example.gerenciador_hotel_spring.services;
 
-import com.example.gerenciador_hotel_spring.dtos.ReservaDTO;
+import com.example.gerenciador_hotel_spring.dtos.ReservaResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Reserva;
 import com.example.gerenciador_hotel_spring.enums.StatusReserva;
 import com.example.gerenciador_hotel_spring.exceptions.ResourceNotFoundException;
 import com.example.gerenciador_hotel_spring.repositories.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,15 +41,19 @@ public class ReservaService {
 
 
     @Transactional(readOnly = true)
-    public Page<ReservaDTO> buscarReservasDTOAgendadasEmUsoPorCPF(String cpf, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<ReservaResponseDTO> buscarReservasDTOPorHospedeEStatusPaginadas(String cpfHospede, StatusReserva status, Pageable pageable) {
+        return reservaRepository.buscarReservasDTOPorHospedeEStatusPaginadas(cpfHospede, status, pageable);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<ReservaResponseDTO> buscarReservasDTOAgendadasEmUsoPorCPF(String cpf, Pageable pageable) {
         return reservaRepository.findReservasDTOAgendadasEmUsoPorCPF(cpf, StatusReserva.AGENDADO, StatusReserva.EM_USO, pageable);
     }
 
 
     @Transactional(readOnly = true)
-    public Page<ReservaDTO> buscaReservasDTOHospedeFinalizadasCanceladasByCPF(String cpf, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<ReservaResponseDTO> buscaReservasDTOHospedeFinalizadasCanceladasByCPF(String cpf, Pageable pageable) {
         return reservaRepository.findReservasDTOHospedeFinalizadasCanceladasByCPF(cpf, StatusReserva.FINALIZADO, StatusReserva.CANCELADO, pageable);
     }
 

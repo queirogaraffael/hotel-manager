@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.resources;
 
-import com.example.gerenciador_hotel_spring.dtos.ReservaDTO;
+import com.example.gerenciador_hotel_spring.dtos.ReservaResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Reserva;
 import com.example.gerenciador_hotel_spring.enums.StatusReserva;
 import com.example.gerenciador_hotel_spring.services.ReservaService;
@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,13 +67,31 @@ public class ReservaResource {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @GetMapping("/reservas/agendadas-em-uso/por-cpf/{cpf}")
-    public ResponseEntity<Page<ReservaDTO>> buscarReservasDTOAgendadasEmUsoPorCPF(
+    public ResponseEntity<Page<ReservaResponseDTO>> buscarReservasDTOAgendadasEmUsoPorCPF(
             @PathVariable String cpf,
-            @RequestParam int page,
-            @RequestParam int size) {
-        Page<ReservaDTO> reservasDTO = reservaService.buscarReservasDTOAgendadasEmUsoPorCPF(cpf, page, size);
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        Page<ReservaResponseDTO> reservasDTO = reservaService.buscarReservasDTOAgendadasEmUsoPorCPF(cpf,pageable);
         return ResponseEntity.ok(reservasDTO);
     }
+
+
+    @Operation(summary = "Busca paginada de reservas DTO por hóspede e status", description = "Recupera reservas de um hóspede com base no CPF e status, paginadas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reservas encontradas com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Nenhuma reserva encontrada para o hóspede ou status fornecido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    @GetMapping("/por-hospede/{cpfHospede}/status/{status}")
+    public ResponseEntity<Page<ReservaResponseDTO>> buscarReservasPorHospedeEStatus(
+            @PathVariable String cpfHospede,
+            @PathVariable StatusReserva status,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+
+        Page<ReservaResponseDTO> reservasDTO = reservaService.buscarReservasDTOPorHospedeEStatusPaginadas(cpfHospede, status, pageable);
+
+        return ResponseEntity.ok(reservasDTO);
+    }
+
 
     @Operation(summary = "Busca paginada de reservas FINALIZADAS e CANCELADAS (Histórico) por CPF.", description = "Recupera histórico (reservas finalizadas e canceladas) paginado de um hóspede com base no CPF.")
     @ApiResponses(value = {
@@ -80,11 +100,10 @@ public class ReservaResource {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @GetMapping("/reservas/finalizadas-canceladas/por-cpf/{cpf}")
-    public ResponseEntity<Page<ReservaDTO>> buscarReservasFinalizadasCanceladasPorCPF(
+    public ResponseEntity<Page<ReservaResponseDTO>> buscarReservasFinalizadasCanceladasPorCPF(
             @PathVariable String cpf,
-            @RequestParam int page,
-            @RequestParam int size) {
-        Page<ReservaDTO> reservasDTO = reservaService.buscaReservasDTOHospedeFinalizadasCanceladasByCPF(cpf, page, size);
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        Page<ReservaResponseDTO> reservasDTO = reservaService.buscaReservasDTOHospedeFinalizadasCanceladasByCPF(cpf, pageable);
         return ResponseEntity.ok(reservasDTO);
     }
 

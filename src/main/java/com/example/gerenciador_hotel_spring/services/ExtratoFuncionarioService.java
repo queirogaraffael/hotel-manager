@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.services;
 
-import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioDTO;
+import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.ExtratoFuncionario;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.exceptions.ExtratoJaExisteParaMesReferenteException;
@@ -9,7 +9,6 @@ import com.example.gerenciador_hotel_spring.repositories.ExtratoFuncionarioRepos
 import com.example.gerenciador_hotel_spring.repositories.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,8 +47,7 @@ public class ExtratoFuncionarioService {
 
 
     @Transactional(readOnly = true)
-    public Page<ExtratoFuncionarioDTO> getExtratosFuncionarioDTOPorCPFPaginados(String cpf, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<ExtratoFuncionarioResponseDTO> getExtratosFuncionarioDTOPorCPFPaginados(String cpf, Pageable pageable) {
         return extratoFuncionarioRepository.findExtratosFuncionarioDTOByCPF(cpf, pageable);
     }
 

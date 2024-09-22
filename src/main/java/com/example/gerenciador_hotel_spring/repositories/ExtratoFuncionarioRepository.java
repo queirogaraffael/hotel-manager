@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.repositories;
 
-import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioDTO;
+import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.ExtratoFuncionario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +14,8 @@ import java.time.YearMonth;
 @Repository
 public interface ExtratoFuncionarioRepository extends JpaRepository<ExtratoFuncionario, Long> {
 
-    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioDTO(e.id, e.mesReferente) FROM ExtratoFuncionario e WHERE e.funcionario.cpf = :cpf")
-    Page<ExtratoFuncionarioDTO> findExtratosFuncionarioDTOByCPF(@Param("cpf") String cpf, Pageable pageable);
+    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO(e.id, e.mesReferente) FROM ExtratoFuncionario e WHERE e.funcionario.cpf = :cpf")
+    Page<ExtratoFuncionarioResponseDTO> findExtratosFuncionarioDTOByCPF(@Param("cpf") String cpf, Pageable pageable);
 
 
     @Query("SELECT COUNT(e) > 0 FROM ExtratoFuncionario e WHERE e.funcionario.cpf = :funcionarioCPF AND e.mesReferente = :data")

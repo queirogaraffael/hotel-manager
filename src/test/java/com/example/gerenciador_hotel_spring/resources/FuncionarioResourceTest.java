@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.resources;
 
-import com.example.gerenciador_hotel_spring.dtos.FuncionarioDTO;
+import com.example.gerenciador_hotel_spring.dtos.FuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.exceptions.FuncionarioJaExisteException;
@@ -79,8 +79,8 @@ class FuncionarioResourceTest {
     @Test
     @DisplayName("Teste para buscar funcionários paginados por nome.")
     void buscaFuncionariosPorNome_Sucesso() throws Exception {
-        FuncionarioDTO funcionarioDTO = new FuncionarioDTO(1L, "João Silva", "12345678901");
-        Page<FuncionarioDTO> page = new PageImpl<>(List.of(funcionarioDTO));
+        FuncionarioResponseDTO funcionarioDTO = new FuncionarioResponseDTO(1L, "João Silva", "12345678901");
+        Page<FuncionarioResponseDTO> page = new PageImpl<>(List.of(funcionarioDTO));
 
         Mockito.when(funcionarioService.getFuncionariosDTOPorNomePaginados(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(page);

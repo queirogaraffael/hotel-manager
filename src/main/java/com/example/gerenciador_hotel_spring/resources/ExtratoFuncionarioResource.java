@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.resources;
 
-import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioDTO;
+import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.ExtratoFuncionario;
 import com.example.gerenciador_hotel_spring.services.ExtratoFuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,11 +57,10 @@ public class ExtratoFuncionarioResource {
             @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<Page<ExtratoFuncionarioDTO>> getExtratosFuncionarioDTOPorCPFPaginados(
+    public ResponseEntity<Page<ExtratoFuncionarioResponseDTO>> getExtratosFuncionarioDTOPorCPFPaginados(
             @PathVariable String cpf,
-            @RequestParam int page,
-            @RequestParam int size) {
-        Page<ExtratoFuncionarioDTO> extratos = extratoFuncionarioService.getExtratosFuncionarioDTOPorCPFPaginados(cpf, page, size);
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        Page<ExtratoFuncionarioResponseDTO> extratos = extratoFuncionarioService.getExtratosFuncionarioDTOPorCPFPaginados(cpf, pageable);
         return ResponseEntity.ok(extratos);
     }
 

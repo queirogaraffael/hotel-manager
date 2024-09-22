@@ -4,5 +4,5 @@ import com.example.gerenciador_hotel_spring.enums.StatusReserva;
 
 import java.util.Date;
 
-public record ReservaDTO(Long id, Date dataEntrada, Date dataSaida, StatusReserva statusReserva) {
+public record ReservaResponseDTO(Long id, Date dataEntrada, Date dataSaida, StatusReserva statusReserva) {
 }

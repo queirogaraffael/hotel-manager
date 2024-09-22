@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.resources;
 
-import com.example.gerenciador_hotel_spring.dtos.FuncionarioDTO;
+import com.example.gerenciador_hotel_spring.dtos.FuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.exceptions.EnderecoJaExisteException;
@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -77,7 +79,6 @@ public class FuncionarioResource {
     }
 
 
-
     @Operation(summary = "Retorna Funcionario pelo CPF.", description = "Apenas os atributos principais.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Funcionário encontrado com sucesso"),
@@ -103,11 +104,10 @@ public class FuncionarioResource {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos fornecidos"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public Page<FuncionarioDTO> buscaFuncionariosPorNome(
+    public Page<FuncionarioResponseDTO> buscaFuncionariosPorNome(
             @RequestParam String nome,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return funcionarioService.getFuncionariosDTOPorNomePaginados(nome, page, size);
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return funcionarioService.getFuncionariosDTOPorNomePaginados(nome, pageable);
     }
 
 
