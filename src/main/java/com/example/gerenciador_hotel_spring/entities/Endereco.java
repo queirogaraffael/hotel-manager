@@ -26,7 +26,7 @@ public class Endereco {
     private String bairro;
     private String estado;
 
-    @OneToOne(mappedBy = "endereco", fetch = FetchType.LAZY)
     @JsonIgnore
+    @OneToOne(mappedBy = "endereco", fetch = FetchType.LAZY)
     private Pessoa pessoa;
 }

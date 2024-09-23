@@ -1,6 +1,7 @@
 package com.example.gerenciador_hotel_spring.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +28,7 @@ public class Hospede extends Pessoa {
     @EqualsAndHashCode.Include
     private String cpf;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hospede", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reserva> reservas = new HashSet<>();
 

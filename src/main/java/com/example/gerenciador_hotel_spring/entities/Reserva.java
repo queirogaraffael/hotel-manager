@@ -2,6 +2,7 @@ package com.example.gerenciador_hotel_spring.entities;
 
 
 import com.example.gerenciador_hotel_spring.enums.StatusReserva;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,17 +25,15 @@ public class Reserva {
 
     private Date dataEntrada;
     private Date dataSaida;
-
     private Integer numeroHospedes;
-
     private StatusReserva statusReserva;
-
     private Double valorTotal;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "quarto_id")
     private Quarto quarto;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "hospede_id")
     private Hospede hospede;

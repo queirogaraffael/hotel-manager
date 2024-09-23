@@ -93,7 +93,7 @@ public class HospedeResource {
 
 
     @PutMapping("/{cpf}")
-    @Operation(summary = "Atualiza dados do hóspede.", description = "Atributos principais")
+    @Operation(summary = "Atualiza dados do hóspede.", description = "Atualiza atributos principais")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Hóspede atualizado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Hóspede não encontrado com o CPF fornecido"),

@@ -22,7 +22,7 @@ public class ExtratoFuncionarioResource {
     private ExtratoFuncionarioService extratoFuncionarioService;
 
     @PostMapping("/{cpf}")
-    @Operation(summary = "Cria um extrato para o funcionário", description = "Cria um novo extrato para o funcionário com o CPF fornecido.")
+    @Operation(summary = "Cria um extrato para o funcionário", description = "Cria um novo extrato para o funcionário com o CPF fornecido. Se existir extrato para o mes/ano referente, o programa lançará uma exceção.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Extrato criado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),

@@ -1,6 +1,7 @@
 package com.example.gerenciador_hotel_spring.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class ExtratoFuncionario {
     private double valorHora;
     private double salario;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;

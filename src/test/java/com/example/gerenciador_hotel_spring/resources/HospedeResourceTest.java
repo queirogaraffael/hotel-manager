@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("Testes do controlador de Hóspedes")
+@DisplayName("Testes de HospedeResource")
 class HospedeResourceTest {
 
     @Autowired

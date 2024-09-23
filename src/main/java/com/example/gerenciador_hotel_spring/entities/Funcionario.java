@@ -24,10 +24,8 @@ public class Funcionario extends Pessoa {
     @EqualsAndHashCode.Include
     private String cpf;
 
-
     private String cargo;
     private Turno turno;
-
 
     @OneToMany(mappedBy = "funcionario", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ExtratoFuncionario> extratoFuncionario = new HashSet<>();

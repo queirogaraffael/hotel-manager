@@ -54,7 +54,7 @@ public class QuartoResource {
     }
 
 
-    @Operation(summary = "Editar quarto por número", description = "Atualiza as informações de um quarto com base no número fornecido.")
+    @Operation(summary = "Editar quarto por número", description = "Atualiza as informações de um quarto com base no número fornecido. Atualiza todos os campos.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Quarto atualizado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Quarto não encontrado"),
