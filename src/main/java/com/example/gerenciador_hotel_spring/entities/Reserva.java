@@ -29,7 +29,8 @@ public class Reserva {
     private StatusReserva statusReserva;
     private Double valorTotal;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "quarto_id")
     private Quarto quarto;
 

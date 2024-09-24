@@ -27,9 +27,9 @@ public class ReservaResource {
             @ApiResponse(responseCode = "201", description = "Reserva criada com sucesso"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    @PostMapping
-    public ResponseEntity<Reserva> criarReserva(@RequestBody Reserva reserva) {
-        Reserva novaReserva = reservaService.criarReserva(reserva);
+    @PostMapping("{cpf}/{numeroQuarto}")
+    public ResponseEntity<Reserva> criarReserva(@PathVariable String cpf, @PathVariable String numeroQuarto, @RequestBody Reserva reserva) {
+        Reserva novaReserva = reservaService.criarReserva(reserva, cpf, numeroQuarto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaReserva);
     }
 

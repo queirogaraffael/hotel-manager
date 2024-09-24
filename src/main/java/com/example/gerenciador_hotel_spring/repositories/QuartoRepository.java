@@ -49,5 +49,4 @@ public interface QuartoRepository extends JpaRepository<Quarto, Long> {
     @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE (q.tipoQuarto = :tipoQuarto AND q.statusQuarto = :statusQuarto)")
     List<QuartoResponseDTO> buscarQuartosDTOPorTipoEPorStatus(@Param("tipoQuarto") TipoQuarto tipoQuarto, @Param("statusQuarto") StatusQuarto statusQuarto);
 
-
 }

@@ -9,16 +9,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.YearMonth;
+import java.util.Date;
 
 @Repository
 public interface ExtratoFuncionarioRepository extends JpaRepository<ExtratoFuncionario, Long> {
 
-    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO(e.id, e.mesReferente) FROM ExtratoFuncionario e WHERE e.funcionario.cpf = :cpf")
+    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO(e.id, e.dataExtrato) FROM ExtratoFuncionario e WHERE e.funcionario.cpf = :cpf")
     Page<ExtratoFuncionarioResponseDTO> findExtratosFuncionarioDTOByCPF(@Param("cpf") String cpf, Pageable pageable);
 
 
-    @Query("SELECT COUNT(e) > 0 FROM ExtratoFuncionario e WHERE e.funcionario.cpf = :funcionarioCPF AND e.mesReferente = :data")
-    boolean existeExtratoDeFuncionarioParaMes(@Param("funcionarioCPF") String funcionarioCPF, @Param("data") YearMonth mesReferente);
+    @Query("SELECT COUNT(e) > 0 FROM ExtratoFuncionario e " +
+            "WHERE e.funcionario.cpf = :funcionarioCPF " +
+            "AND EXTRACT(YEAR FROM e.dataExtrato) = EXTRACT(YEAR FROM :data) " +
+            "AND EXTRACT(MONTH FROM e.dataExtrato) = EXTRACT(MONTH FROM :data)")
+    boolean existeExtratoDeFuncionarioParaMes(@Param("funcionarioCPF") String funcionarioCPF, @Param("data") Date dataExtrato);
+
 }
 

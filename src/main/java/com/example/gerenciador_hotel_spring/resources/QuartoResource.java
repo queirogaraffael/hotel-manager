@@ -68,7 +68,7 @@ public class QuartoResource {
     }
 
 
-    @Operation(summary = "Busca paginada de quartos por tipo", description = "Recupera quartos com base no tipo de quarto, paginados.")
+    @Operation(summary = "Busca paginada de quartos DTO por tipo", description = "Recupera quartos com base no tipo de quarto, paginados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Quartos encontrados com sucesso"),
             @ApiResponse(responseCode = "404", description = "Nenhum quarto encontrado para o status fornecido"),
@@ -89,7 +89,7 @@ public class QuartoResource {
     }
 
 
-    @Operation(summary = "Busca paginada de quartos por tipo e status", description = "Recupera quartos com base no tipo e status, paginados.")
+    @Operation(summary = "Busca paginada de quartos DTO por tipo e status", description = "Recupera quartos com base no tipo e status, paginados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Quartos encontrados com sucesso"),
             @ApiResponse(responseCode = "404", description = "Nenhum quarto encontrado para o status fornecido"),
@@ -111,7 +111,7 @@ public class QuartoResource {
     }
 
 
-    @Operation(summary = "Busca paginada de quartos por status", description = "Recupera quartos com base no status, paginados.")
+    @Operation(summary = "Busca paginada de quartos DTO por status", description = "Recupera quartos com base no status, paginados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Quartos encontrados com sucesso"),
             @ApiResponse(responseCode = "404", description = "Nenhum quarto encontrado para o status fornecido"),
@@ -132,7 +132,7 @@ public class QuartoResource {
     }
 
 
-    @Operation(summary = "Obter quartos disponíveis por tipo e data",
+    @Operation(summary = "Obter quartos DTO disponíveis por tipo e data",
             description = "Recupera uma lista paginada de quartos disponíveis com base no tipo de quarto e no intervalo de datas fornecido.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Quartos encontrados com sucesso"),

@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 @Repository
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
@@ -38,4 +40,13 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     Page<ReservaResponseDTO> buscarReservasDTOPorHospedeEStatusPaginadas(@Param("cpf") String cpf,
                                                                          @Param("status") StatusReserva status,
                                                                          Pageable pageable);
+
+
+    @Query("SELECT COUNT(r) = 0 FROM Reserva r " +
+            "WHERE r.quarto.numero = :numeroQuarto " +
+            "AND (r.dataEntrada <= :dataSaida AND r.dataSaida >= :dataEntrada)")
+    boolean quartoEstaDisponivelParaDataDeReserva(@Param("dataEntrada") Date dataEntrada,
+                                         @Param("dataSaida") Date dataSaida,
+                                         @Param("numeroQuarto") String numeroQuarto);
+
 }

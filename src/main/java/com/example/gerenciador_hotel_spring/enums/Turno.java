@@ -1,6 +1,8 @@
 package com.example.gerenciador_hotel_spring.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+@JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum Turno {
 
     DIURNO(0, "Diurno"),

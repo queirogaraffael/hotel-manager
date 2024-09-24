@@ -49,4 +49,11 @@ public class CustomExceptionHandler {
     public ResponseEntity<Object> handleQuartoJaExisteException(QuartoJaExisteException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
+
+    @ExceptionHandler(QuartoNaoEstaDisponivelParaDataException.class)
+    public ResponseEntity<Object> handleQuartoNaoEstaDisponivelParaDataException(QuartoNaoEstaDisponivelParaDataException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
 }

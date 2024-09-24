@@ -50,12 +50,12 @@ public class QuartoService {
 
     @Transactional(readOnly = true)
     public Page<QuartoResponseDTO> buscarQuartosDTOPorTipoPaginadas(TipoQuarto tipoQuarto, Pageable pageable) {
-        return quartoRepository.findQuartosDTOByTipoPageados(tipoQuarto,pageable);
+        return quartoRepository.findQuartosDTOByTipoPageados(tipoQuarto, pageable);
     }
 
 
     @Transactional(readOnly = true)
-    public Page<QuartoResponseDTO> buscaQuartoPorTipoDisponiveisPorData(TipoQuarto tipoQuarto, Date dataEntrada, Date dataSaida, Pageable pageable){
+    public Page<QuartoResponseDTO> buscaQuartoPorTipoDisponiveisPorData(TipoQuarto tipoQuarto, Date dataEntrada, Date dataSaida, Pageable pageable) {
 
         StatusReserva statusAgendado = StatusReserva.AGENDADO;
         StatusReserva statusEmUso = StatusReserva.EM_USO;
@@ -91,7 +91,7 @@ public class QuartoService {
     public Quarto modificaStatusQuartoByNumero(String numero, StatusQuarto statusQuarto) {
         Quarto quarto = getQuartoByNumero(numero);
 
-       quarto.setStatusQuarto(statusQuarto);
+        quarto.setStatusQuarto(statusQuarto);
 
         return quartoRepository.save(quarto);
     }
@@ -104,7 +104,7 @@ public class QuartoService {
 
         boolean quartoComNumeroJaExiste = quartoRepository.existsByNumero(quartoModificado.getNumero());
 
-        if(quartoComNumeroJaExiste){
+        if (quartoComNumeroJaExiste) {
             throw new QuartoJaExisteException("Quarto com esse número já existe. Tente com outro número.");
         }
 

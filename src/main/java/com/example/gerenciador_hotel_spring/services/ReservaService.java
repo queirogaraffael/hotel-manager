@@ -1,9 +1,14 @@
 package com.example.gerenciador_hotel_spring.services;
 
 import com.example.gerenciador_hotel_spring.dtos.ReservaResponseDTO;
+import com.example.gerenciador_hotel_spring.entities.Hospede;
+import com.example.gerenciador_hotel_spring.entities.Quarto;
 import com.example.gerenciador_hotel_spring.entities.Reserva;
 import com.example.gerenciador_hotel_spring.enums.StatusReserva;
+import com.example.gerenciador_hotel_spring.exceptions.QuartoNaoEstaDisponivelParaDataException;
 import com.example.gerenciador_hotel_spring.exceptions.ResourceNotFoundException;
+import com.example.gerenciador_hotel_spring.repositories.HospedeRepository;
+import com.example.gerenciador_hotel_spring.repositories.QuartoRepository;
 import com.example.gerenciador_hotel_spring.repositories.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,15 +16,38 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class ReservaService {
 
     @Autowired
     ReservaRepository reservaRepository;
 
+    @Autowired
+    HospedeRepository hospedeRepository;
+
+    @Autowired
+    QuartoRepository quartoRepository;
 
     @Transactional
-    public Reserva criarReserva(Reserva reserva) {
+    public Reserva criarReserva(Reserva reserva, String cpf, String numeroQuarto) {
+
+        Optional<Quarto> quarto = quartoRepository.findByNumero(numeroQuarto);
+
+        if(!quarto.isPresent()){
+            throw new ResourceNotFoundException("Quarto inválido. Cadastre o quarto com o número " + numeroQuarto + " primeiro.");
+        }
+
+        boolean quartoEstaDisponivelParaData = reservaRepository.quartoEstaDisponivelParaDataDeReserva(reserva.getDataEntrada(), reserva.getDataSaida(), numeroQuarto);
+
+        if (!quartoEstaDisponivelParaData) {
+            throw new QuartoNaoEstaDisponivelParaDataException("Quarto não está disponivel para reserva para esta data.");
+        }
+
+        Hospede hospede = hospedeRepository.findByCpf(cpf).orElseThrow(() -> new ResourceNotFoundException("Hóspede não encontrado."));
+        reserva.setHospede(hospede);
+        reserva.setQuarto(quarto.get());
         return reservaRepository.save(reserva);
     }
 

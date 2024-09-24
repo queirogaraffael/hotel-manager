@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.YearMonth;
+import java.util.Date;
 
 @Entity
 @Data
@@ -22,7 +23,7 @@ public class ExtratoFuncionario {
     private Long id;
 
     @EqualsAndHashCode.Include
-    private YearMonth mesReferente;
+    private Date dataExtrato;
 
     private double horasTrabalhadas;
     private double valorHora;

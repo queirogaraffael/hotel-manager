@@ -2,6 +2,7 @@ package com.example.gerenciador_hotel_spring.entities;
 
 
 import com.example.gerenciador_hotel_spring.enums.Turno;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class Funcionario extends Pessoa {
     private String cargo;
     private Turno turno;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "funcionario", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ExtratoFuncionario> extratoFuncionario = new HashSet<>();
 

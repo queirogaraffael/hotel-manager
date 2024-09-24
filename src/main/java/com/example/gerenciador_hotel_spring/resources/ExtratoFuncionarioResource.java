@@ -51,7 +51,7 @@ public class ExtratoFuncionarioResource {
 
 
     @GetMapping("/cpf/{cpf}")
-    @Operation(summary = "Obtém extratos paginados pelo CPF", description = "Retorna uma lista paginada de extratos para o funcionário com o CPF fornecido.")
+    @Operation(summary = "Obtém extratos DTO paginados pelo CPF", description = "Retorna uma lista paginada de extratos para o funcionário com o CPF fornecido.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de extratos encontrada"),
             @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),

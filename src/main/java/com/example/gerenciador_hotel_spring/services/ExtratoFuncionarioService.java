@@ -26,7 +26,7 @@ public class ExtratoFuncionarioService {
     @Transactional
     public ExtratoFuncionario criaExtratoFuncionario(String cpf, ExtratoFuncionario extrato) {
 
-        if(extratoFuncionarioRepository.existeExtratoDeFuncionarioParaMes(cpf, extrato.getMesReferente())){
+        if(extratoFuncionarioRepository.existeExtratoDeFuncionarioParaMes(cpf, extrato.getDataExtrato())){
             throw new ExtratoJaExisteParaMesReferenteException("Extrato já existe para o mês referente.");
         }
 
@@ -57,7 +57,7 @@ public class ExtratoFuncionarioService {
 
         ExtratoFuncionario extratoFuncionario = getExtratoFuncionarioUnicoById(id);
 
-        extratoFuncionario.setMesReferente(extratoFuncionarioModificado.getMesReferente());
+        extratoFuncionario.setDataExtrato(extratoFuncionarioModificado.getDataExtrato());
         extratoFuncionario.setHorasTrabalhadas(extratoFuncionarioModificado.getHorasTrabalhadas());
         extratoFuncionario.setValorHora(extratoFuncionarioModificado.getValorHora());
         extratoFuncionario.setSalario(extratoFuncionarioModificado.getSalario());
