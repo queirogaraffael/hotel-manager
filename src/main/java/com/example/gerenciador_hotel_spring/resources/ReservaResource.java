@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReservaResource {
 
     @Autowired
-    ReservaService reservaService;
+    private ReservaService reservaService;
 
     @Operation(summary = "Criar nova reserva", description = "Cria uma nova reserva. Quarto tem que estar disponivel para data e hóspede precisa já estar cadastrado.")
     @ApiResponses(value = {

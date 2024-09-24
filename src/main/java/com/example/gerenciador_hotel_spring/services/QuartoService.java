@@ -25,7 +25,7 @@ public class QuartoService {
 
 
     @Autowired
-    QuartoRepository quartoRepository;
+    private QuartoRepository quartoRepository;
 
 
     @Transactional

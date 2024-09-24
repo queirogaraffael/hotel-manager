@@ -3,7 +3,6 @@ package com.example.gerenciador_hotel_spring.resources;
 import com.example.gerenciador_hotel_spring.dtos.FuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
-import com.example.gerenciador_hotel_spring.exceptions.EnderecoJaExisteException;
 import com.example.gerenciador_hotel_spring.services.FuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class FuncionarioResource {
 
     @Autowired
-    FuncionarioService funcionarioService;
+    private FuncionarioService funcionarioService;
 
 
     @Operation(summary = "Cria novo funcionario", description = "Tanto o endereco como extrato são opcionais para criar o funcionario. CPF precisa ter exatamento 11 caracteres.")
@@ -54,13 +53,6 @@ public class FuncionarioResource {
     })
     @PostMapping("/endereco/{cpf}")
     public ResponseEntity<Endereco> criaEnderecoFuncionario(@PathVariable String cpf, @RequestBody Endereco endereco) {
-
-        Endereco enderecoExiste = funcionarioService.getEnderecoFuncionarioByCPF(cpf);
-
-        if(enderecoExiste != null){
-            throw new EnderecoJaExisteException("Endereço já existe. Tente Modificar.");
-        }
-
         Endereco enderecoCriado = funcionarioService.criaEnderecoParaFuncionario(cpf, endereco);
         return ResponseEntity.status(HttpStatus.CREATED).body(enderecoCriado);
     }

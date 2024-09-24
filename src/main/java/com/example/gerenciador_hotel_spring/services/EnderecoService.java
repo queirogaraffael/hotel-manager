@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EnderecoService {
 
     @Autowired
-    EnderecoRepository enderecoRepository;
+    private EnderecoRepository enderecoRepository;
 
 
     @Transactional
@@ -26,12 +26,6 @@ public class EnderecoService {
 
         return enderecoRepository.save(endereco);
 
-    }
-
-
-    @Transactional
-    public void deletaEnderecoById(Long id) {
-        enderecoRepository.deleteById(id);
     }
 
 }

@@ -2,7 +2,6 @@ package com.example.gerenciador_hotel_spring.resources;
 
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Hospede;
-import com.example.gerenciador_hotel_spring.exceptions.EnderecoJaExisteException;
 import com.example.gerenciador_hotel_spring.services.HospedeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class HospedeResource {
 
     @Autowired
-    HospedeService hospedeService;
+    private HospedeService hospedeService;
 
     @Operation(summary = "Cria novo hóspede", description = "O endereço é opcional para criar o hóspede. Reservas Também. O CPF precisa ter exatamente 11 caracteres.")
     @ApiResponses(value = {
@@ -44,18 +43,10 @@ public class HospedeResource {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Endereço criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "409", description = "Conflito: Endereço já existe. Modifique!"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping("/endereco/{cpf}")
     public ResponseEntity<Endereco> criaEnderecoHospede(@PathVariable String cpf, @RequestBody Endereco endereco) {
-
-        Endereco enderecoExiste = hospedeService.getEnderecoHospedeByCPF(cpf);
-
-        if (enderecoExiste != null) {
-            throw new EnderecoJaExisteException("Endereço já existe. Tente Modificar.");
-        }
-
         Endereco enderecoCriado = hospedeService.criaEnderecoParaHospede(cpf, endereco);
         return ResponseEntity.status(HttpStatus.CREATED).body(enderecoCriado);
     }

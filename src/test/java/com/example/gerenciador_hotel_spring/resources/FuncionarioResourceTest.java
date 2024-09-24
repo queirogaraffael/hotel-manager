@@ -1,34 +1,26 @@
 package com.example.gerenciador_hotel_spring.resources;
-
-import com.example.gerenciador_hotel_spring.dtos.FuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
-import com.example.gerenciador_hotel_spring.exceptions.FuncionarioJaExisteException;
-import com.example.gerenciador_hotel_spring.exceptions.ResourceNotFoundException;
+import com.example.gerenciador_hotel_spring.repositories.FuncionarioRepository;
 import com.example.gerenciador_hotel_spring.services.FuncionarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Date;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("Testes do controlador de Funcionarios")
+@DisplayName("Testes de FuncionarioResource")
 class FuncionarioResourceTest {
 
     @Autowired
@@ -37,8 +29,17 @@ class FuncionarioResourceTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @Autowired
+    private FuncionarioRepository funcionarioRepository;
+
+    @Autowired
     private FuncionarioService funcionarioService;
+
+    @BeforeEach
+    void setUp() {
+        funcionarioRepository.deleteAll();
+    }
+
 
     @Test
     @DisplayName("Teste para criar um funcionário.")
@@ -47,9 +48,6 @@ class FuncionarioResourceTest {
         funcionario.setCpf("12345678901");
         funcionario.setNome("João Silva");
         funcionario.setDataNascimento(new Date());
-        funcionario.setCargo("Desenvolvedor");
-
-        Mockito.when(funcionarioService.criarFuncionario(Mockito.any(Funcionario.class))).thenReturn(funcionario);
 
         mockMvc.perform(post("/api/funcionarios")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -66,8 +64,8 @@ class FuncionarioResourceTest {
         Funcionario funcionario = new Funcionario();
         funcionario.setCpf("12345678901");
         funcionario.setNome("João Silva");
-
-        Mockito.when(funcionarioService.getFuncionarioByCPF("12345678901")).thenReturn(funcionario);
+        funcionario.setDataNascimento(new Date());
+        funcionarioRepository.save(funcionario);
 
         mockMvc.perform(get("/api/funcionarios/12345678901")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -78,35 +76,16 @@ class FuncionarioResourceTest {
 
 
     @Test
-    @DisplayName("Teste para buscar funcionários paginados por nome.")
-    void buscaFuncionariosPorNome_Sucesso() throws Exception {
-        FuncionarioResponseDTO funcionarioDTO = new FuncionarioResponseDTO(1L, "João Silva", "12345678901");
-        Page<FuncionarioResponseDTO> page = new PageImpl<>(List.of(funcionarioDTO));
-
-        Mockito.when(funcionarioService.getFuncionariosDTOPorNomePaginados(Mockito.anyString(), Mockito.any(Pageable.class)))
-                .thenReturn(page);
-
-        mockMvc.perform(get("/api/funcionarios/nome")
-                        .param("nome", "João Silva")
-                        .param("page", "0")
-                        .param("size", "10")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].nome").value("João Silva"));
-    }
-
-
-
-
-    @Test
     @DisplayName("Teste para atualizar um funcionário.")
     void atualizaFuncionario_Sucesso() throws Exception {
-        Funcionario funcionarioAtualizado = new Funcionario();
-        funcionarioAtualizado.setCpf("12345678901");
-        funcionarioAtualizado.setNome("Maria Silva");
+        Funcionario funcionario = new Funcionario();
+        funcionario.setCpf("12345678901");
+        funcionario.setNome("João Silva");
+        funcionario.setDataNascimento(new Date());
+        funcionarioRepository.save(funcionario);
 
-        Mockito.when(funcionarioService.editaFuncionarioByCPF(Mockito.eq("12345678901"), Mockito.any(Funcionario.class)))
-                .thenReturn(funcionarioAtualizado);
+        Funcionario funcionarioAtualizado = new Funcionario();
+        funcionarioAtualizado.setNome("Maria Silva");
 
         mockMvc.perform(put("/api/funcionarios/12345678901")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -122,9 +101,7 @@ class FuncionarioResourceTest {
         Funcionario funcionario = new Funcionario();
         funcionario.setCpf("12345678901");
         funcionario.setNome("João Silva");
-
-        Mockito.when(funcionarioService.criarFuncionario(Mockito.any(Funcionario.class)))
-                .thenThrow(new FuncionarioJaExisteException("Funcionario com este CPF já existe!"));
+        funcionarioRepository.save(funcionario);
 
         mockMvc.perform(post("/api/funcionarios")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -134,51 +111,27 @@ class FuncionarioResourceTest {
 
 
     @Test
-    @DisplayName("Teste para criar endereço de funcionário.")
-    void criaEnderecoFuncionario_EnderecoJaExiste() throws Exception {
-        String cpf = "12345678901";
-        Endereco endereco = new Endereco(null, "Rua A", "123", "Cidade X", "Bairro Y", "Estado Z", null);
-
-        Mockito.when(funcionarioService.getEnderecoFuncionarioByCPF(cpf)).thenReturn(endereco);
-
-        mockMvc.perform(post("/api/funcionarios/endereco/" + cpf)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(endereco)))
-                .andExpect(MockMvcResultMatchers.status().isConflict());
-    }
-
-
-    @Test
-    @DisplayName("Teste para criar endereço de funcionário com sucesso.")
+    @DisplayName("Teste para criar endereço de um funcionário com sucesso.")
     void criaEnderecoFuncionario_Sucesso() throws Exception {
-        Endereco endereco = new Endereco(null, "Rua A", "123", "Cidade X", "Bairro Y", "Estado Z", null);
         String cpf = "12345678901";
+        Endereco endereco = new Endereco(null, "Rua A", "123", "Cidade X", "Bairro Y", "Estado Z", null);
 
-        Mockito.when(funcionarioService.getEnderecoFuncionarioByCPF(cpf)).thenReturn(null);
-        Mockito.when(funcionarioService.criaEnderecoParaFuncionario(Mockito.eq(cpf), Mockito.any(Endereco.class)))
-                .thenReturn(endereco);
+        Funcionario funcionario = new Funcionario();
+        funcionario.setCpf(cpf);
+        funcionario.setNome("João Silva");
+        funcionario.setDataNascimento(new Date());
+
+        funcionarioRepository.save(funcionario);
 
         mockMvc.perform(post("/api/funcionarios/endereco/" + cpf)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(endereco)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.rua").value("Rua A"));
-    }
-
-
-    @Test
-    @DisplayName("Teste para obter o endereço de um funcionário pelo CPF com sucesso.")
-    void getEnderecoFuncionarioByCpf_Sucesso() throws Exception {
-        Endereco endereco = new Endereco(1L, "Rua A", "123", "Cidade X", "Bairro Y", "Estado Z", null);
-        String cpf = "12345678901";
-
-        Mockito.when(funcionarioService.getEnderecoFuncionarioByCPF(cpf)).thenReturn(endereco);
-
-        mockMvc.perform(get("/api/funcionarios/endereco/" + cpf)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.rua").value("Rua A"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.numero").value("123"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.numero").value("123"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.cidade").value("Cidade X"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.bairro").value("Bairro Y"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.estado").value("Estado Z"));
     }
 
 
@@ -187,12 +140,34 @@ class FuncionarioResourceTest {
     void getEnderecoFuncionarioByCpf_NotFound() throws Exception {
         String cpf = "12345678901";
 
-        Mockito.when(funcionarioService.getEnderecoFuncionarioByCPF(cpf))
-                .thenThrow(new ResourceNotFoundException("Funcionario sem endereço cadastrado"));
-
         mockMvc.perform(get("/api/funcionarios/endereco/" + cpf)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+
+    @Test
+    @DisplayName("Teste para buscar funcionários por nome de forma paginada com sucesso")
+    void buscaFuncionariosPorNomePaginado_Sucesso() throws Exception {
+        Funcionario funcionario1 = new Funcionario();
+        funcionario1.setCpf("12345678901");
+        funcionario1.setNome("João Silva");
+        funcionarioRepository.save(funcionario1);
+
+        Funcionario funcionario2 = new Funcionario();
+        funcionario2.setCpf("98765432109");
+        funcionario2.setNome("Joana Souza");
+        funcionarioRepository.save(funcionario2);
+
+        mockMvc.perform(get("/api/funcionarios/nome")
+                        .param("nome", "Jo")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.length()").value(2)) // Verifica que existem 2 resultados na página
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].nome").value("João Silva"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content[1].nome").value("Joana Souza"));
     }
 
 }

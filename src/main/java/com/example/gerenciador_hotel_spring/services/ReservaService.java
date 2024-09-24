@@ -22,13 +22,13 @@ import java.util.Optional;
 public class ReservaService {
 
     @Autowired
-    ReservaRepository reservaRepository;
+    private ReservaRepository reservaRepository;
 
     @Autowired
-    HospedeRepository hospedeRepository;
+    private HospedeRepository hospedeRepository;
 
     @Autowired
-    QuartoRepository quartoRepository;
+    private QuartoRepository quartoRepository;
 
     @Transactional
     public Reserva criarReserva(Reserva reserva, String cpf, String numeroQuarto) {

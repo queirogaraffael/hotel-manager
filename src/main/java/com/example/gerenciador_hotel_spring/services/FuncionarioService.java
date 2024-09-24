@@ -9,7 +9,6 @@ import com.example.gerenciador_hotel_spring.repositories.EnderecoRepository;
 import com.example.gerenciador_hotel_spring.repositories.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +20,10 @@ public class FuncionarioService {
 
 
     @Autowired
-    FuncionarioRepository funcionarioRepository;
+    private FuncionarioRepository funcionarioRepository;
 
     @Autowired
-    EnderecoRepository enderecoRepository;
+    private EnderecoRepository enderecoRepository;
 
 
     @Transactional
@@ -53,7 +52,6 @@ public class FuncionarioService {
     }
 
 
-
     @Transactional(readOnly = true)
     public Funcionario getFuncionarioByCPF(String cpf) {
         return funcionarioRepository.findByCpf(cpf)
@@ -62,7 +60,7 @@ public class FuncionarioService {
 
 
     @Transactional(readOnly = true)
-    public Page<FuncionarioResponseDTO> getFuncionariosDTOPorNomePaginados(String nome,Pageable pageable) {
+    public Page<FuncionarioResponseDTO> getFuncionariosDTOPorNomePaginados(String nome, Pageable pageable) {
         return funcionarioRepository.findFuncionariosDTOByNamePageados(nome, pageable);
     }
 
@@ -83,8 +81,8 @@ public class FuncionarioService {
 
 
     @Transactional(readOnly = true)
-    public Endereco getEnderecoFuncionarioByCPF(String cpf){
-        return enderecoRepository.getEnderecoFuncionarioByCPF(cpf).orElseThrow(()-> new ResourceNotFoundException("Funcionario sem endereço cadastrado"));
+    public Endereco getEnderecoFuncionarioByCPF(String cpf) {
+        return enderecoRepository.getEnderecoFuncionarioByCPF(cpf).orElseThrow(() -> new ResourceNotFoundException("Funcionario sem endereço cadastrado"));
     }
 
 }

@@ -1,36 +1,23 @@
 package com.example.gerenciador_hotel_spring.resources;
 
-import com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Quarto;
 import com.example.gerenciador_hotel_spring.enums.StatusQuarto;
 import com.example.gerenciador_hotel_spring.enums.TipoQuarto;
+import com.example.gerenciador_hotel_spring.repositories.QuartoRepository;
 import com.example.gerenciador_hotel_spring.services.QuartoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Date;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,15 +30,15 @@ class QuartoResourceTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
+    @Autowired
     private QuartoService quartoService;
 
-    @InjectMocks
-    private QuartoResource quartoResource;
+    @Autowired
+    private QuartoRepository quartoRepository;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        quartoRepository.deleteAll();
     }
 
     @Test
@@ -64,8 +51,6 @@ class QuartoResourceTest {
                 .precoDiaria(100.0)
                 .statusQuarto(StatusQuarto.DISPONIVEL)
                 .build();
-
-        when(quartoService.criarQuarto(any(Quarto.class))).thenReturn(quarto);
 
         mockMvc.perform(post("/api/quartos")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -86,7 +71,7 @@ class QuartoResourceTest {
                 .statusQuarto(StatusQuarto.DISPONIVEL)
                 .build();
 
-        when(quartoService.getQuartoByNumero("101")).thenReturn(quarto);
+        quartoService.criarQuarto(quarto); // Criar quarto no banco de dados
 
         mockMvc.perform(get("/api/quartos/101"))
                 .andExpect(status().isOk())
@@ -95,7 +80,17 @@ class QuartoResourceTest {
 
     @Test
     @DisplayName("Teste para editar um quarto existente pelo número.")
-    void testEditeQuartoByNumero() throws Exception {
+    void testEditQuartoByNumero() throws Exception {
+        Quarto quarto = Quarto.builder()
+                .numero("101")
+                .tipoQuarto(TipoQuarto.SOLTEIRO)
+                .capacidade(2)
+                .precoDiaria(100.0)
+                .statusQuarto(StatusQuarto.DISPONIVEL)
+                .build();
+
+        quartoService.criarQuarto(quarto);
+
         Quarto quartoModificado = Quarto.builder()
                 .numero("102")
                 .tipoQuarto(TipoQuarto.CASAL)
@@ -103,17 +98,6 @@ class QuartoResourceTest {
                 .precoDiaria(200.0)
                 .statusQuarto(StatusQuarto.DISPONIVEL)
                 .build();
-
-        Quarto quartoAtualizado = Quarto.builder()
-                .id(1L)
-                .numero("102")
-                .tipoQuarto(TipoQuarto.CASAL)
-                .capacidade(4)
-                .precoDiaria(200.0)
-                .statusQuarto(StatusQuarto.DISPONIVEL)
-                .build();
-
-        when(quartoService.editaQuartoByNumero(eq("101"), any(Quarto.class))).thenReturn(quartoAtualizado);
 
         mockMvc.perform(put("/api/quartos/101")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -125,11 +109,16 @@ class QuartoResourceTest {
     @Test
     @DisplayName("Teste para buscar quartos por tipo.")
     void testBuscarQuartosPorTipo() throws Exception {
-        Page<QuartoResponseDTO> page = new PageImpl<>(List.of(
-                new QuartoResponseDTO(1L, "101", TipoQuarto.SOLTEIRO)),
-                PageRequest.of(0, 10), 1);
 
-        when(quartoService.buscarQuartosDTOPorTipoPaginadas(TipoQuarto.SOLTEIRO, PageRequest.of(0, 10))).thenReturn(page);
+        Quarto quarto = Quarto.builder()
+                .numero("101")
+                .tipoQuarto(TipoQuarto.SOLTEIRO)
+                .capacidade(2)
+                .precoDiaria(100.0)
+                .statusQuarto(StatusQuarto.DISPONIVEL)
+                .build();
+
+        quartoService.criarQuarto(quarto);
 
         mockMvc.perform(get("/api/quartos/por-tipo/SOLTEIRO?page=0&size=10"))
                 .andExpect(status().isOk())
@@ -139,11 +128,15 @@ class QuartoResourceTest {
     @Test
     @DisplayName("Teste para buscar quartos por tipo e status.")
     void testBuscarQuartosPorTipoEStatus() throws Exception {
-        Page<QuartoResponseDTO> page = new PageImpl<>(List.of(
-                new QuartoResponseDTO(1L, "101", TipoQuarto.SOLTEIRO)),
-                PageRequest.of(0, 10), 1);
+        Quarto quarto = Quarto.builder()
+                .numero("101")
+                .tipoQuarto(TipoQuarto.SOLTEIRO)
+                .capacidade(2)
+                .precoDiaria(100.0)
+                .statusQuarto(StatusQuarto.DISPONIVEL)
+                .build();
 
-        when(quartoService.buscarQuartosDTOPorTipoEPorStatusPaginadas(TipoQuarto.SOLTEIRO, StatusQuarto.DISPONIVEL, PageRequest.of(0, 10))).thenReturn(page);
+        quartoService.criarQuarto(quarto);
 
         mockMvc.perform(get("/api/quartos/por-tipo/SOLTEIRO/status/DISPONIVEL?page=0&size=10"))
                 .andExpect(status().isOk())
@@ -153,11 +146,15 @@ class QuartoResourceTest {
     @Test
     @DisplayName("Teste para buscar quartos por status.")
     void testBuscarQuartosPorStatus() throws Exception {
-        Page<QuartoResponseDTO> page = new PageImpl<>(List.of(
-                new QuartoResponseDTO(1L, "101", TipoQuarto.SOLTEIRO)),
-                PageRequest.of(0, 10), 1);
+        Quarto quarto = Quarto.builder()
+                .numero("101")
+                .tipoQuarto(TipoQuarto.SOLTEIRO)
+                .capacidade(2)
+                .precoDiaria(100.0)
+                .statusQuarto(StatusQuarto.DISPONIVEL)
+                .build();
 
-        when(quartoService.buscarQuartosDTOPorStatusPaginadas(StatusQuarto.DISPONIVEL, PageRequest.of(0, 10))).thenReturn(page);
+        quartoService.criarQuarto(quarto);
 
         mockMvc.perform(get("/api/quartos/por-status/DISPONIVEL?page=0&size=10"))
                 .andExpect(status().isOk())
@@ -167,11 +164,15 @@ class QuartoResourceTest {
     @Test
     @DisplayName("Teste para buscar quartos disponíveis por tipo e datas.")
     void testBuscarQuartosDisponiveis() throws Exception {
-        Page<QuartoResponseDTO> page = new PageImpl<>(List.of(
-                new QuartoResponseDTO(1L, "101", TipoQuarto.SOLTEIRO)),
-                PageRequest.of(0, 10), 1);
+        Quarto quarto = Quarto.builder()
+                .numero("101")
+                .tipoQuarto(TipoQuarto.SOLTEIRO)
+                .capacidade(2)
+                .precoDiaria(100.0)
+                .statusQuarto(StatusQuarto.DISPONIVEL)
+                .build();
 
-        when(quartoService.buscaQuartoPorTipoDisponiveisPorData(any(TipoQuarto.class), any(Date.class), any(Date.class), any(PageRequest.class))).thenReturn(page);
+        quartoService.criarQuarto(quarto); // Criar quarto no banco de dados
 
         mockMvc.perform(get("/api/quartos/quartos/disponiveis")
                         .param("tipoQuarto", "SOLTEIRO")
@@ -183,4 +184,5 @@ class QuartoResourceTest {
                 .andExpect(jsonPath("$.content[0].numero").value("101"));
     }
 }
+
 

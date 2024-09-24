@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExtratoFuncionarioService {
 
     @Autowired
-    ExtratoFuncionarioRepository extratoFuncionarioRepository;
+    private ExtratoFuncionarioRepository extratoFuncionarioRepository;
 
     @Autowired
-    FuncionarioRepository funcionarioRepository;
+    private FuncionarioRepository funcionarioRepository;
 
 
     @Transactional

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class EnderecoResource {
 
     @Autowired
-    EnderecoService enderecoService;
+    private EnderecoService enderecoService;
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza dados do endereco.", description = "Atualiza todos os dados do endereço.")
@@ -31,17 +31,4 @@ public class EnderecoResource {
         Endereco endereco = enderecoService.modificaEnderecoById(id, enderecoAtualizado);
         return ResponseEntity.status(HttpStatus.OK).body(endereco);
     }
-
-
-    @Operation(summary = "Deleta endereço")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Endereço deletado com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor.")
-    })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletaEnderecoPorId(@PathVariable Long id){
-        enderecoService.deletaEnderecoById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
 }

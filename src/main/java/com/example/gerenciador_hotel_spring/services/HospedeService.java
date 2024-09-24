@@ -16,10 +16,10 @@ import java.util.Optional;
 public class HospedeService {
 
     @Autowired
-    HospedeRepository hospedeRepository;
+    private HospedeRepository hospedeRepository;
 
     @Autowired
-    EnderecoRepository enderecoRepository;
+    private EnderecoRepository enderecoRepository;
 
 
     @Transactional

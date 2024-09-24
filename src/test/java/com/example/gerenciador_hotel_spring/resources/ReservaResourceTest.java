@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("Testes de ReservaResource")
-class ReservaResourceIntegrationTest {
+class ReservaResourceTest {
 
     @Autowired
     private MockMvc mockMvc;

@@ -26,7 +26,7 @@ import java.util.Date;
 public class QuartoResource {
 
     @Autowired
-    QuartoService quartoService;
+    private QuartoService quartoService;
 
     @Operation(summary = "Cria novo quarto", description = "Cria um quarto com um número único.")
     @ApiResponses(value = {
