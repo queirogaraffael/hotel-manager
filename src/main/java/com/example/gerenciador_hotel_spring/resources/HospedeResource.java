@@ -39,7 +39,7 @@ public class HospedeResource {
     }
 
 
-    @Operation(summary = "Cria endereco para hóspede", description = "Se o hóspede já tiver um endereço, o programa lançará uma exceção.")
+    @Operation(summary = "Cria endereco para hóspede", description = "Se o hóspede já tiver um endereço, o novo endereço será substituido.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Endereço criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),

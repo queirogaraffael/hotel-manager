@@ -44,11 +44,10 @@ public class FuncionarioResource {
     }
 
 
-    @Operation(summary = "Cria endereco", description = "Se o funcionário já tiver um endereço, o programa lançará uma exceção.")
+    @Operation(summary = "Cria endereco", description = "Se o funcionário já tiver um endereço, o novo endereço será substituido.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Endereço criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "409", description = "Conflito: Endereço já existe. Modifique!"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping("/endereco/{cpf}")
