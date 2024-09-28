@@ -46,6 +46,7 @@ public class ReservaService {
         }
 
         Hospede hospede = hospedeRepository.findByCpf(cpf).orElseThrow(() -> new ResourceNotFoundException("Hóspede não encontrado."));
+
         reserva.setHospede(hospede);
         reserva.setQuarto(quarto.get());
         return reservaRepository.save(reserva);

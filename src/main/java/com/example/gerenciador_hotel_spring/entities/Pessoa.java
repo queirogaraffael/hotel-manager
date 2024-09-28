@@ -1,5 +1,6 @@
 package com.example.gerenciador_hotel_spring.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,7 @@ public abstract class Pessoa {
     private String numeroTelefone;
 
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
