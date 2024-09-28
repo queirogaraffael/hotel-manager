@@ -3,6 +3,7 @@ package com.example.gerenciador_hotel_spring.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,6 +33,7 @@ public class ExtratoFuncionario {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "funcionario_id")
+    @NotNull(message = "ExtratoFuncionario precisa estar associado a um funcionário.")
     private Funcionario funcionario;
 
 }
