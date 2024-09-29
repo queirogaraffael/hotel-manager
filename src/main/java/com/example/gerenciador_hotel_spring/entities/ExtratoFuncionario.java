@@ -30,7 +30,7 @@ public class ExtratoFuncionario {
     private double valorHora;
     private double salario;
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "funcionario_id")
     @NotNull(message = "ExtratoFuncionario precisa estar associado a um funcionário.")

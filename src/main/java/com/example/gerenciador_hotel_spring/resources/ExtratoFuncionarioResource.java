@@ -1,5 +1,6 @@
 package com.example.gerenciador_hotel_spring.resources;
 
+import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioDTO;
 import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.ExtratoFuncionario;
 import com.example.gerenciador_hotel_spring.services.ExtratoFuncionarioService;
@@ -28,11 +29,12 @@ public class ExtratoFuncionarioResource {
             @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<ExtratoFuncionario> criaExtratoFuncionario(
+    public ResponseEntity<ExtratoFuncionarioDTO> criaExtratoFuncionario(
             @PathVariable String cpf,
-            @RequestBody ExtratoFuncionario extrato) {
-        ExtratoFuncionario novoExtrato = extratoFuncionarioService.criaExtratoFuncionario(cpf, extrato);
-        return ResponseEntity.status(201).body(novoExtrato);
+            @RequestBody ExtratoFuncionarioDTO extratoFuncionarioDTO) {
+
+        ExtratoFuncionarioDTO extrato = extratoFuncionarioService.criaExtratoFuncionario(cpf, extratoFuncionarioDTO);
+        return ResponseEntity.status(201).body(extrato);
     }
 
 
@@ -72,10 +74,10 @@ public class ExtratoFuncionarioResource {
             @ApiResponse(responseCode = "404", description = "Extrato não encontrado com o ID fornecido"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<ExtratoFuncionario> editaExtratoFuncionarioById(
+    public ResponseEntity<ExtratoFuncionarioDTO> editaExtratoFuncionarioById(
             @PathVariable Long id,
-            @RequestBody ExtratoFuncionario extratoFuncionarioModificado) {
-        ExtratoFuncionario extratoAtualizado = extratoFuncionarioService.editaExtratoFuncionarioById(id, extratoFuncionarioModificado);
+            @RequestBody ExtratoFuncionarioDTO extratoFuncionarioModificado) {
+        ExtratoFuncionarioDTO extratoAtualizado = extratoFuncionarioService.editaExtratoFuncionarioById(id, extratoFuncionarioModificado);
         return ResponseEntity.ok(extratoAtualizado);
     }
 

@@ -1,5 +1,6 @@
 package com.example.gerenciador_hotel_spring.services;
 
+import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioDTO;
 import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.ExtratoFuncionario;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
@@ -24,9 +25,17 @@ public class ExtratoFuncionarioService {
 
 
     @Transactional
-    public ExtratoFuncionario criaExtratoFuncionario(String cpf, ExtratoFuncionario extrato) {
+    public ExtratoFuncionarioDTO criaExtratoFuncionario(String cpf, ExtratoFuncionarioDTO extratoFuncionarioDTO) {
 
-        if(extratoFuncionarioRepository.existeExtratoDeFuncionarioParaMes(cpf, extrato.getDataExtrato())){
+        ExtratoFuncionario extrato = new ExtratoFuncionario();
+
+        extrato.setDataExtrato(extratoFuncionarioDTO.dataExtrato());
+        extrato.setHorasTrabalhadas(extratoFuncionarioDTO.horasTrabalhadas());
+        extrato.setValorHora(extratoFuncionarioDTO.valorHora());
+        extrato.setSalario(extratoFuncionarioDTO.salario());
+
+
+        if (extratoFuncionarioRepository.existeExtratoDeFuncionarioParaMes(cpf, extrato.getDataExtrato())) {
             throw new ExtratoJaExisteParaMesReferenteException("Extrato já existe para o mês referente.");
         }
 
@@ -35,7 +44,9 @@ public class ExtratoFuncionarioService {
         extrato.setFuncionario(funcionario);
         funcionario.getExtratoFuncionario().add(extrato);
 
-        return extratoFuncionarioRepository.save(extrato);
+        extratoFuncionarioRepository.save(extrato);
+
+        return extratoFuncionarioDTO;
 
     }
 
@@ -53,16 +64,18 @@ public class ExtratoFuncionarioService {
 
 
     @Transactional
-    public ExtratoFuncionario editaExtratoFuncionarioById(Long id, ExtratoFuncionario extratoFuncionarioModificado) {
+    public ExtratoFuncionarioDTO editaExtratoFuncionarioById(Long id, ExtratoFuncionarioDTO extratoFuncionarioModificado) {
 
         ExtratoFuncionario extratoFuncionario = getExtratoFuncionarioUnicoById(id);
 
-        extratoFuncionario.setDataExtrato(extratoFuncionarioModificado.getDataExtrato());
-        extratoFuncionario.setHorasTrabalhadas(extratoFuncionarioModificado.getHorasTrabalhadas());
-        extratoFuncionario.setValorHora(extratoFuncionarioModificado.getValorHora());
-        extratoFuncionario.setSalario(extratoFuncionarioModificado.getSalario());
+        extratoFuncionario.setDataExtrato(extratoFuncionarioModificado.dataExtrato());
+        extratoFuncionario.setHorasTrabalhadas(extratoFuncionarioModificado.horasTrabalhadas());
+        extratoFuncionario.setValorHora(extratoFuncionarioModificado.valorHora());
+        extratoFuncionario.setSalario(extratoFuncionarioModificado.salario());
 
-        return extratoFuncionarioRepository.save(extratoFuncionario);
+        extratoFuncionarioRepository.save(extratoFuncionario);
+
+        return extratoFuncionarioModificado;
 
     }
 
