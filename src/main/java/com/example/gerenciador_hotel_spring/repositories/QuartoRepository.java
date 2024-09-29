@@ -21,8 +21,6 @@ public interface QuartoRepository extends JpaRepository<Quarto, Long> {
 
     Optional<Quarto> findByNumero(String numero);
 
-    boolean existsByNumero(String numero);
-
     @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE q.tipoQuarto = :tipoQuarto")
     Page<QuartoResponseDTO> findQuartosDTOByTipoPageados(@Param("tipoQuarto") TipoQuarto tipoQuarto, Pageable pageable);
 

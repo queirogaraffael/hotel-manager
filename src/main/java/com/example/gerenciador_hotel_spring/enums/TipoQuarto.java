@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum TipoQuarto {
 
-    SOLTEIRO(0, "Solteiro"),
-    CASAL(1, "Casal"),
-    SUITE(2, "Suite");
+    SOLTEIRO(0, "SOLTEIRO"),
+    CASAL(1, "CASAL"),
+    SUITE(2, "SUITE");
 
     private final int codigo;
     private final String descricao;

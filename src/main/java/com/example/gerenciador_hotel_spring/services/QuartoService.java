@@ -1,6 +1,8 @@
 package com.example.gerenciador_hotel_spring.services;
 
+import com.example.gerenciador_hotel_spring.dtos.QuartoCreateDTO;
 import com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.QuartoUpdateDTO;
 import com.example.gerenciador_hotel_spring.entities.Quarto;
 import com.example.gerenciador_hotel_spring.enums.StatusQuarto;
 import com.example.gerenciador_hotel_spring.enums.StatusReserva;
@@ -29,14 +31,25 @@ public class QuartoService {
 
 
     @Transactional
-    public Quarto criarQuarto(Quarto quarto) {
-        Optional<Quarto> quartoOptional = quartoRepository.findByNumero(quarto.getNumero());
+    public QuartoCreateDTO criarQuarto(QuartoCreateDTO quartoDTO) {
+        Optional<Quarto> quartoOptional = quartoRepository.findByNumero(quartoDTO.numero());
 
         if (quartoOptional.isPresent()) {
             throw new QuartoJaExisteException("Quarto já cadastrado com esse número");
         }
 
-        return quartoRepository.save(quarto);
+
+        Quarto quarto = new Quarto();
+
+        quarto.setNumero(quartoDTO.numero());
+        quarto.setTipoQuarto(quartoDTO.tipoQuarto());
+        quarto.setCapacidade(quartoDTO.capacidade());
+        quarto.setPrecoDiaria(quartoDTO.precoDiaria());
+        quarto.setStatusQuarto(quartoDTO.statusQuarto());
+
+        quartoRepository.save(quarto);
+
+        return quartoDTO;
 
     }
 
@@ -98,23 +111,17 @@ public class QuartoService {
 
 
     @Transactional
-    public Quarto editaQuartoByNumero(String numero, Quarto quartoModificado) {
-
+    public QuartoUpdateDTO editaQuartoByNumero(String numero, QuartoUpdateDTO quartoModificado) {
         Quarto quarto = getQuartoByNumero(numero);
 
-        boolean quartoComNumeroJaExiste = quartoRepository.existsByNumero(quartoModificado.getNumero());
+        quarto.setTipoQuarto(quartoModificado.tipoQuarto());
+        quarto.setCapacidade(quartoModificado.capacidade());
+        quarto.setPrecoDiaria(quartoModificado.precoDiaria());
+        quarto.setStatusQuarto(quartoModificado.statusQuarto());
 
-        if (quartoComNumeroJaExiste) {
-            throw new QuartoJaExisteException("Quarto com esse número já existe. Tente com outro número.");
-        }
+        quartoRepository.save(quarto);
 
-        quarto.setNumero(quartoModificado.getNumero());
-        quarto.setTipoQuarto(quartoModificado.getTipoQuarto());
-        quarto.setCapacidade(quartoModificado.getCapacidade());
-        quarto.setPrecoDiaria(quartoModificado.getPrecoDiaria());
-        quarto.setStatusQuarto(quartoModificado.getStatusQuarto());
-
-        return quartoRepository.save(quarto);
+        return quartoModificado;
 
     }
 

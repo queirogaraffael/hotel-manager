@@ -27,17 +27,16 @@ public class ExtratoFuncionarioService {
     @Transactional
     public ExtratoFuncionarioDTO criaExtratoFuncionario(String cpf, ExtratoFuncionarioDTO extratoFuncionarioDTO) {
 
+        if (extratoFuncionarioRepository.existeExtratoDeFuncionarioParaMes(cpf, extratoFuncionarioDTO.dataExtrato())) {
+            throw new ExtratoJaExisteParaMesReferenteException("Extrato já existe para o mês referente.");
+        }
+
         ExtratoFuncionario extrato = new ExtratoFuncionario();
 
         extrato.setDataExtrato(extratoFuncionarioDTO.dataExtrato());
         extrato.setHorasTrabalhadas(extratoFuncionarioDTO.horasTrabalhadas());
         extrato.setValorHora(extratoFuncionarioDTO.valorHora());
         extrato.setSalario(extratoFuncionarioDTO.salario());
-
-
-        if (extratoFuncionarioRepository.existeExtratoDeFuncionarioParaMes(cpf, extrato.getDataExtrato())) {
-            throw new ExtratoJaExisteParaMesReferenteException("Extrato já existe para o mês referente.");
-        }
 
         Funcionario funcionario = funcionarioRepository.findFuncionarioComExtratoByCPF(cpf).orElseThrow(() -> new ResourceNotFoundException("Funcionário com o CPF " + cpf + " não encontrado."));
 

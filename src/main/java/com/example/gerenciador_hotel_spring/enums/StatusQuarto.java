@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum StatusQuarto {
 
-    DISPONIVEL(0,"Disponivel"),
-    OCUPADO(1,"Ocupado"),
-    MANUTENCAO(2,"Manutencao");
+    DISPONIVEL(0,"DISPONIVEL"),
+    OCUPADO(1,"OCUPADO"),
+    MANUTENCAO(2,"MANUTENCAO");
 
     private final int codigo;
     private final String descricao;

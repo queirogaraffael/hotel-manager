@@ -32,6 +32,6 @@ public class Quarto {
     private StatusQuarto statusQuarto;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "quarto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "quarto", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reserva> reservas = new HashSet<>();
 }

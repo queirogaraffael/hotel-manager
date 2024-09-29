@@ -1,6 +1,8 @@
 package com.example.gerenciador_hotel_spring.resources;
 
+import com.example.gerenciador_hotel_spring.dtos.QuartoCreateDTO;
 import com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.QuartoUpdateDTO;
 import com.example.gerenciador_hotel_spring.entities.Quarto;
 import com.example.gerenciador_hotel_spring.enums.StatusQuarto;
 import com.example.gerenciador_hotel_spring.enums.TipoQuarto;
@@ -35,8 +37,8 @@ public class QuartoResource {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping
-    public ResponseEntity<Quarto> criarQuarto(@RequestBody Quarto quarto) {
-        Quarto novoQuarto = quartoService.criarQuarto(quarto);
+    public ResponseEntity<QuartoCreateDTO> criarQuarto(@RequestBody QuartoCreateDTO quarto) {
+        QuartoCreateDTO novoQuarto = quartoService.criarQuarto(quarto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoQuarto);
     }
 
@@ -62,8 +64,8 @@ public class QuartoResource {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PutMapping("/{numero}")
-    public ResponseEntity<Quarto> editaQuartoByNumero(@PathVariable String numero, @RequestBody Quarto quartoModificado) {
-        Quarto quartoAtualizado = quartoService.editaQuartoByNumero(numero, quartoModificado);
+    public ResponseEntity<QuartoUpdateDTO> editaQuartoByNumero(@PathVariable String numero, @RequestBody QuartoUpdateDTO quartoModificado) {
+        QuartoUpdateDTO quartoAtualizado = quartoService.editaQuartoByNumero(numero, quartoModificado);
         return ResponseEntity.status(HttpStatus.OK).body(quartoAtualizado);
     }
 

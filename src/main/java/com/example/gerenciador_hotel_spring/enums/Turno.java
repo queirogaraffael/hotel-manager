@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum Turno {
 
-    DIURNO(0, "Diurno"),
-    NOTURNO(1, "Noturno");
+    DIURNO(0, "DIURNO"),
+    NOTURNO(1, "NOTURNO");
 
     private final int codigo;
     private final String descricao;

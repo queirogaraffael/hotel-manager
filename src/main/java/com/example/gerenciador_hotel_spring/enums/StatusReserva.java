@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum StatusReserva {
 
-    AGENDADO(0, "Agendado"),
-    CANCELADO(1, "Cancelado"),
-    EM_USO(2, "Em uso"),
-    FINALIZADO(3, "Finalizado"),
-    MANUTENCAO(3, "Manutencao");
+    AGENDADO(0, "AGENDADO"),
+    CANCELADO(1, "CANCELADO"),
+    EM_USO(2, "EM_USO"),
+    FINALIZADO(3, "FINALIZADO"),
+    MANUTENCAO(3, "MANUTENCAO");
 
 
     private final int codigo;
