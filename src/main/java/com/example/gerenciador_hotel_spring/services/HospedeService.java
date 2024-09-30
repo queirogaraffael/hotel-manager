@@ -1,5 +1,7 @@
 package com.example.gerenciador_hotel_spring.services;
 
+import com.example.gerenciador_hotel_spring.dtos.hospede.HospedeCreateDTO;
+import com.example.gerenciador_hotel_spring.dtos.hospede.HospedeUpdateDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Hospede;
 import com.example.gerenciador_hotel_spring.exceptions.HospedeJaExisteException;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -23,14 +26,23 @@ public class HospedeService {
 
 
     @Transactional
-    public Hospede criarHospede(Hospede hospede) {
-        Optional<Hospede> hospedeOptional = hospedeRepository.findByCpf(hospede.getCpf());
+    public HospedeCreateDTO criarHospede(HospedeCreateDTO hospedeCreateDTO) {
+        Optional<Hospede> hospedeOptional = hospedeRepository.findByCpf(hospedeCreateDTO.cpf());
 
         if (hospedeOptional.isPresent()) {
             throw new HospedeJaExisteException("Hóspede com este CPF já existe!");
         }
 
-        return hospedeRepository.save(hospede);
+        Hospede hospede = new Hospede();
+
+        hospede.setCpf(hospedeCreateDTO.cpf());
+        hospede.setNome(hospedeCreateDTO.nome());
+        hospede.setDataNascimento(hospedeCreateDTO.dataNascimento());
+        hospede.setNumeroTelefone(hospedeCreateDTO.numeroTelefone());
+
+        hospedeRepository.save(hospede);
+
+        return  hospedeCreateDTO;
 
     }
 
@@ -62,15 +74,17 @@ public class HospedeService {
 
 
     @Transactional
-    public Hospede editaHospedeByCPF(String cpf, Hospede hospedeModificado) {
+    public HospedeUpdateDTO editaHospedeByCPF(String cpf, HospedeUpdateDTO hospedeModificado) {
 
         Hospede hospede = getHospedeByCPF(cpf);
 
-        hospede.setNome(hospedeModificado.getNome());
-        hospede.setDataNascimento(hospedeModificado.getDataNascimento());
-        hospede.setNumeroTelefone(hospedeModificado.getNumeroTelefone());
+        hospede.setNome(hospedeModificado.nome());
+        hospede.setDataNascimento(hospedeModificado.dataNascimento());
+        hospede.setNumeroTelefone(hospedeModificado.numeroTelefone());
 
-        return hospedeRepository.save(hospede);
+        hospedeRepository.save(hospede);
+
+        return hospedeModificado;
 
     }
 

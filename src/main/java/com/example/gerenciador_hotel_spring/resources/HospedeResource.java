@@ -1,5 +1,7 @@
 package com.example.gerenciador_hotel_spring.resources;
 
+import com.example.gerenciador_hotel_spring.dtos.hospede.HospedeCreateDTO;
+import com.example.gerenciador_hotel_spring.dtos.hospede.HospedeUpdateDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Hospede;
 import com.example.gerenciador_hotel_spring.services.HospedeService;
@@ -10,7 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +21,7 @@ public class HospedeResource {
     @Autowired
     private HospedeService hospedeService;
 
-    @Operation(summary = "Cria novo hóspede", description = "O endereço é opcional para criar o hóspede. Reservas Também. O CPF precisa ter exatamente 11 caracteres.")
+    @Operation(summary = "Cria novo hóspede", description = "Não adiciona com endereço ou extratos. O CPF precisa ter exatamente 11 caracteres.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Hóspede criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
@@ -28,13 +29,9 @@ public class HospedeResource {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping
-    public ResponseEntity<?> criaHospede(@Valid @RequestBody Hospede hospede, BindingResult result) {
+    public ResponseEntity<HospedeCreateDTO> criaHospede(@Valid @RequestBody HospedeCreateDTO hospede) {
 
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getAllErrors());
-        }
-
-        Hospede hospedeCriado = hospedeService.criarHospede(hospede);
+        HospedeCreateDTO hospedeCriado = hospedeService.criarHospede(hospede);
         return ResponseEntity.status(HttpStatus.CREATED).body(hospedeCriado);
     }
 
@@ -90,8 +87,8 @@ public class HospedeResource {
             @ApiResponse(responseCode = "404", description = "Hóspede não encontrado com o CPF fornecido"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<Hospede> atualizaHospede(@PathVariable String cpf, @RequestBody Hospede hospedeAtualizado) {
-        Hospede hospede = hospedeService.editaHospedeByCPF(cpf, hospedeAtualizado);
+    public ResponseEntity<HospedeUpdateDTO> atualizaHospede(@PathVariable String cpf, @RequestBody HospedeUpdateDTO hospedeAtualizado) {
+        HospedeUpdateDTO hospede = hospedeService.editaHospedeByCPF(cpf, hospedeAtualizado);
 
         return ResponseEntity.status(HttpStatus.OK).body(hospede);
     }

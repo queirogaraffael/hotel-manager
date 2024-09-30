@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,11 +34,7 @@ public class FuncionarioResource {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping
-    public ResponseEntity<?> criaFuncionario(@Valid @RequestBody FuncionarioCreateDTO funcionario, BindingResult result) {
-
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getAllErrors());
-        }
+    public ResponseEntity<FuncionarioCreateDTO> criaFuncionario(@Valid @RequestBody FuncionarioCreateDTO funcionario) {
 
         FuncionarioCreateDTO funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
         return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioCriado);
