@@ -1,7 +1,7 @@
 package com.example.gerenciador_hotel_spring.services;
 
-import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioDTO;
-import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.extratoFuncionario.ExtratoFuncionarioDTO;
+import com.example.gerenciador_hotel_spring.dtos.extratoFuncionario.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.ExtratoFuncionario;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.exceptions.ExtratoJaExisteParaMesReferenteException;

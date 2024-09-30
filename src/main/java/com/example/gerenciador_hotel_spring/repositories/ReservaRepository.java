@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.repositories;
 
-import com.example.gerenciador_hotel_spring.dtos.ReservaResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.reserva.ReservaResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Reserva;
 import com.example.gerenciador_hotel_spring.enums.StatusReserva;
 import org.springframework.data.domain.Page;
@@ -16,7 +16,7 @@ import java.util.Date;
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
 
-    @Query("SELECT NEW com.example.gerenciador_hotel_spring.dtos.ReservaResponseDTO(r.id, r.dataEntrada, r.dataSaida, r.statusReserva) " +
+    @Query("SELECT NEW com.example.gerenciador_hotel_spring.dtos.reserva.ReservaResponseDTO(r.id, r.dataEntrada, r.dataSaida, r.statusReserva) " +
             "FROM Reserva r LEFT JOIN r.hospede h " +
             "WHERE h.cpf = :cpf AND (r.statusReserva = :statusAgendado OR r.statusReserva = :statusEmUso)")
     Page<ReservaResponseDTO> findReservasDTOAgendadasEmUsoPorCPF(@Param("cpf") String cpf,
@@ -25,7 +25,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
                                                                  Pageable pageable);
 
 
-    @Query("SELECT NEW com.example.gerenciador_hotel_spring.dtos.ReservaResponseDTO(r.id, r.dataEntrada, r.dataSaida, r.statusReserva) " +
+    @Query("SELECT NEW com.example.gerenciador_hotel_spring.dtos.reserva.ReservaResponseDTO(r.id, r.dataEntrada, r.dataSaida, r.statusReserva) " +
             "FROM Reserva r LEFT JOIN r.hospede h " +
             "WHERE h.cpf = :cpf AND (r.statusReserva = :statusFinalizado OR r.statusReserva = :statusCancelado)")
     Page<ReservaResponseDTO> findReservasDTOHospedeFinalizadasCanceladasByCPF(@Param("cpf") String cpf,
@@ -34,7 +34,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
                                                                               Pageable pageable);
 
 
-    @Query("SELECT NEW com.example.gerenciador_hotel_spring.dtos.ReservaResponseDTO(r.id, r.dataEntrada, r.dataSaida, r.statusReserva) " +
+    @Query("SELECT NEW com.example.gerenciador_hotel_spring.dtos.reserva.ReservaResponseDTO(r.id, r.dataEntrada, r.dataSaida, r.statusReserva) " +
             "FROM Reserva r JOIN r.hospede h " +
             "WHERE h.cpf = :cpf AND r.statusReserva = :status")
     Page<ReservaResponseDTO> buscarReservasDTOPorHospedeEStatusPaginadas(@Param("cpf") String cpf,

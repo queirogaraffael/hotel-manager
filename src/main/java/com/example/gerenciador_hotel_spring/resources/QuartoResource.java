@@ -1,8 +1,8 @@
 package com.example.gerenciador_hotel_spring.resources;
 
-import com.example.gerenciador_hotel_spring.dtos.QuartoCreateDTO;
-import com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO;
-import com.example.gerenciador_hotel_spring.dtos.QuartoUpdateDTO;
+import com.example.gerenciador_hotel_spring.dtos.quarto.QuartoCreateDTO;
+import com.example.gerenciador_hotel_spring.dtos.quarto.QuartoResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.quarto.QuartoUpdateDTO;
 import com.example.gerenciador_hotel_spring.entities.Quarto;
 import com.example.gerenciador_hotel_spring.enums.StatusQuarto;
 import com.example.gerenciador_hotel_spring.enums.TipoQuarto;

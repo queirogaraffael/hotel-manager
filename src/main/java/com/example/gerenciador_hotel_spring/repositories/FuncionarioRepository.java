@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.repositories;
 
-import com.example.gerenciador_hotel_spring.dtos.FuncionarioResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.funcionario.FuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,7 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
 
     Optional<Funcionario> findByCpf(String cpf);
 
-    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.FuncionarioResponseDTO(f.id, f.nome, f.cpf) FROM Funcionario f WHERE LOWER(f.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
+    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.funcionario.FuncionarioResponseDTO(f.id, f.nome, f.cpf) FROM Funcionario f WHERE LOWER(f.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
     Page<FuncionarioResponseDTO> findFuncionariosDTOByNamePageados(@Param("nome") String nome, Pageable pageable);
 
     boolean existsByCpf(String cpf);

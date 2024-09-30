@@ -1,6 +1,8 @@
 package com.example.gerenciador_hotel_spring.resources;
 
-import com.example.gerenciador_hotel_spring.dtos.FuncionarioResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.funcionario.FuncionarioCreateDTO;
+import com.example.gerenciador_hotel_spring.dtos.funcionario.FuncionarioResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.funcionario.FuncionarioUpdateDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.services.FuncionarioService;
@@ -25,7 +27,7 @@ public class FuncionarioResource {
     private FuncionarioService funcionarioService;
 
 
-    @Operation(summary = "Cria novo funcionario", description = "Tanto o endereco como extrato são opcionais para criar o funcionario. CPF precisa ter exatamento 11 caracteres.")
+    @Operation(summary = "Cria novo funcionario", description = "FuncionarioDTO. Não adiciona com endereço nem extrato. CPF precisa ter exatamento 11 caracteres.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Funcionário criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
@@ -33,13 +35,13 @@ public class FuncionarioResource {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping
-    public ResponseEntity<?> criaFuncionario(@Valid @RequestBody Funcionario funcionario, BindingResult result) {
+    public ResponseEntity<?> criaFuncionario(@Valid @RequestBody FuncionarioCreateDTO funcionario, BindingResult result) {
 
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
 
-        Funcionario funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
+        FuncionarioCreateDTO funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
         return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioCriado);
     }
 
@@ -109,8 +111,8 @@ public class FuncionarioResource {
             @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    public ResponseEntity<Funcionario> atualizaFuncionario(@PathVariable String cpf, @RequestBody Funcionario funcionarioAtualizado) {
-        Funcionario funcionario = funcionarioService.editaFuncionarioByCPF(cpf, funcionarioAtualizado);
+    public ResponseEntity<FuncionarioUpdateDTO> atualizaFuncionario(@PathVariable String cpf, @RequestBody FuncionarioUpdateDTO funcionarioAtualizado) {
+        FuncionarioUpdateDTO funcionario = funcionarioService.editaFuncionarioByCPF(cpf, funcionarioAtualizado);
 
         return ResponseEntity.status(HttpStatus.OK).body(funcionario);
     }

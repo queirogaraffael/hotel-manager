@@ -1,7 +1,7 @@
 package com.example.gerenciador_hotel_spring.resources;
 
-import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioDTO;
-import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.extratoFuncionario.ExtratoFuncionarioDTO;
+import com.example.gerenciador_hotel_spring.dtos.extratoFuncionario.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.ExtratoFuncionario;
 import com.example.gerenciador_hotel_spring.services.ExtratoFuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;

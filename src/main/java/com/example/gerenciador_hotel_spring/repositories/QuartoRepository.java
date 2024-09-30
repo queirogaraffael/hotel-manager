@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.repositories;
 
-import com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.quarto.QuartoResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Quarto;
 import com.example.gerenciador_hotel_spring.enums.StatusQuarto;
 import com.example.gerenciador_hotel_spring.enums.StatusReserva;
@@ -21,18 +21,18 @@ public interface QuartoRepository extends JpaRepository<Quarto, Long> {
 
     Optional<Quarto> findByNumero(String numero);
 
-    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE q.tipoQuarto = :tipoQuarto")
+    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.quarto.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE q.tipoQuarto = :tipoQuarto")
     Page<QuartoResponseDTO> findQuartosDTOByTipoPageados(@Param("tipoQuarto") TipoQuarto tipoQuarto, Pageable pageable);
 
-    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE (q.tipoQuarto = :tipoQuarto AND q.statusQuarto = :statusQuarto)")
+    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.quarto.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE (q.tipoQuarto = :tipoQuarto AND q.statusQuarto = :statusQuarto)")
     Page<QuartoResponseDTO> buscarQuartosDTOPorTipoEPorStatusPaginadas(@Param("tipoQuarto") TipoQuarto tipoQuarto, @Param("statusQuarto") StatusQuarto statusQuarto, Pageable pageable);
 
 
-    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE q.statusQuarto = :statusQuarto")
+    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.quarto.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE q.statusQuarto = :statusQuarto")
     Page<QuartoResponseDTO> buscarQuartosDTOPorStatusPaginadas(@Param("statusQuarto") StatusQuarto statusQuarto, Pageable pageable);
 
 
-    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.QuartoOcupadoDTO(q.id) " +
+    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.quarto.QuartoOcupadoDTO(q.id) " +
             "FROM Reserva r JOIN r.quarto q " +
             "WHERE q.tipoQuarto = :tipoQuarto " +
             "AND r.dataEntrada <= :dataFinal " +
@@ -44,7 +44,7 @@ public interface QuartoRepository extends JpaRepository<Quarto, Long> {
             @Param("dataFinal") Date dataFinal,
             @Param("statusReservas") List<StatusReserva> statusReservas);
 
-    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE (q.tipoQuarto = :tipoQuarto AND q.statusQuarto = :statusQuarto)")
+    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.quarto.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE (q.tipoQuarto = :tipoQuarto AND q.statusQuarto = :statusQuarto)")
     List<QuartoResponseDTO> buscarQuartosDTOPorTipoEPorStatus(@Param("tipoQuarto") TipoQuarto tipoQuarto, @Param("statusQuarto") StatusQuarto statusQuarto);
 
 }

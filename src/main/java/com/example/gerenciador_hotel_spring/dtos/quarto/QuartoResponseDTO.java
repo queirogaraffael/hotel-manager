@@ -1,4 +1,4 @@
-package com.example.gerenciador_hotel_spring.dtos;
+package com.example.gerenciador_hotel_spring.dtos.quarto;
 
 import com.example.gerenciador_hotel_spring.enums.TipoQuarto;
 

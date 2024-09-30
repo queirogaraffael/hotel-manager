@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.repositories;
 
-import com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.extratoFuncionario.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.ExtratoFuncionario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +14,7 @@ import java.util.Date;
 @Repository
 public interface ExtratoFuncionarioRepository extends JpaRepository<ExtratoFuncionario, Long> {
 
-    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.ExtratoFuncionarioResponseDTO(e.id, e.dataExtrato) FROM ExtratoFuncionario e WHERE e.funcionario.cpf = :cpf")
+    @Query("SELECT new com.example.gerenciador_hotel_spring.dtos.extratoFuncionario.ExtratoFuncionarioResponseDTO(e.id, e.dataExtrato) FROM ExtratoFuncionario e WHERE e.funcionario.cpf = :cpf")
     Page<ExtratoFuncionarioResponseDTO> findExtratosFuncionarioDTOByCPF(@Param("cpf") String cpf, Pageable pageable);
 
 

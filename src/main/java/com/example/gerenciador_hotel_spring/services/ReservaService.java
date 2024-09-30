@@ -1,6 +1,6 @@
 package com.example.gerenciador_hotel_spring.services;
 
-import com.example.gerenciador_hotel_spring.dtos.ReservaResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.reserva.ReservaResponseDTO;
 import com.example.gerenciador_hotel_spring.entities.Hospede;
 import com.example.gerenciador_hotel_spring.entities.Quarto;
 import com.example.gerenciador_hotel_spring.entities.Reserva;

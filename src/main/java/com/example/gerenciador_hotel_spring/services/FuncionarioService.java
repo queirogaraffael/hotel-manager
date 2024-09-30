@@ -1,6 +1,8 @@
 package com.example.gerenciador_hotel_spring.services;
 
-import com.example.gerenciador_hotel_spring.dtos.FuncionarioResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.funcionario.FuncionarioCreateDTO;
+import com.example.gerenciador_hotel_spring.dtos.funcionario.FuncionarioResponseDTO;
+import com.example.gerenciador_hotel_spring.dtos.funcionario.FuncionarioUpdateDTO;
 import com.example.gerenciador_hotel_spring.entities.Endereco;
 import com.example.gerenciador_hotel_spring.entities.Funcionario;
 import com.example.gerenciador_hotel_spring.exceptions.FuncionarioJaExisteException;
@@ -27,14 +29,25 @@ public class FuncionarioService {
 
 
     @Transactional
-    public Funcionario criarFuncionario(Funcionario funcionario) {
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(funcionario.getCpf());
+    public FuncionarioCreateDTO criarFuncionario(FuncionarioCreateDTO funcionarioDTO) {
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(funcionarioDTO.cpf());
 
         if (funcionarioOptional.isPresent()) {
             throw new FuncionarioJaExisteException("Funcionario com este CPF já existe!");
         }
 
-        return funcionarioRepository.save(funcionario);
+        Funcionario funcionario = new Funcionario();
+
+        funcionario.setCpf(funcionarioDTO.cpf());
+        funcionario.setNome(funcionarioDTO.nome());
+        funcionario.setDataNascimento(funcionarioDTO.dataNascimento());
+        funcionario.setNumeroTelefone(funcionarioDTO.numeroTelefone());
+        funcionario.setCargo(funcionarioDTO.cargo());
+        funcionario.setTurno(funcionarioDTO.turno());
+
+        funcionarioRepository.save(funcionario);
+
+        return funcionarioDTO;
 
     }
 
@@ -66,16 +79,18 @@ public class FuncionarioService {
 
 
     @Transactional
-    public Funcionario editaFuncionarioByCPF(String cpf, Funcionario funcionarioModificado) {
+    public FuncionarioUpdateDTO editaFuncionarioByCPF(String cpf, FuncionarioUpdateDTO funcionarioModificado) {
         Funcionario funcionario = getFuncionarioByCPF(cpf);
 
-        funcionario.setNome(funcionarioModificado.getNome());
-        funcionario.setDataNascimento(funcionarioModificado.getDataNascimento());
-        funcionario.setNumeroTelefone(funcionarioModificado.getNumeroTelefone());
-        funcionario.setCargo(funcionarioModificado.getCargo());
-        funcionario.setTurno(funcionarioModificado.getTurno());
+        funcionario.setNome(funcionarioModificado.nome());
+        funcionario.setDataNascimento(funcionarioModificado.dataNascimento());
+        funcionario.setNumeroTelefone(funcionarioModificado.numeroTelefone());
+        funcionario.setCargo(funcionarioModificado.cargo());
+        funcionario.setTurno(funcionarioModificado.turno());
 
-        return funcionarioRepository.save(funcionario);
+        funcionarioRepository.save(funcionario);
+
+        return funcionarioModificado;
 
     }
 

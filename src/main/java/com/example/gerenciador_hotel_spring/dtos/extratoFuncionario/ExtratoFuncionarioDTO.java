@@ -1,4 +1,4 @@
-package com.example.gerenciador_hotel_spring.dtos;
+package com.example.gerenciador_hotel_spring.dtos.extratoFuncionario;
 
 import java.util.Date;
 
