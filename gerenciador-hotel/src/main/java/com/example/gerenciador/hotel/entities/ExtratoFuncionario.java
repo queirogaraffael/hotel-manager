@@ -1,0 +1,37 @@
+package com.example.gerenciador.hotel.entities;
+
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class ExtratoFuncionario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @EqualsAndHashCode.Include
+    private Date dataExtrato;
+
+    private double horasTrabalhadas;
+    private double valorHora;
+    private double salario;
+
+
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id")
+    @NotNull(message = "ExtratoFuncionario precisa estar associado a um funcionário.")
+    private Funcionario funcionario;
+
+}
