@@ -26,7 +26,6 @@ public abstract class Pessoa {
     private Date dataNascimento;
     private String numeroTelefone;
 
-
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "endereco_id")
