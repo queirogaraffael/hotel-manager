@@ -3,6 +3,8 @@ package com.example.gerenciador.hotel.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,16 +24,24 @@ public class ExtratoFuncionario {
     private Long id;
 
     @EqualsAndHashCode.Include
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private Date dataExtrato;
 
+    @Column(nullable = false)
+    @PositiveOrZero(message = "Horas trabalhadas não podem ser negativas")
     private double horasTrabalhadas;
+
+    @Column(nullable = false)
+    @Positive(message = "Valor da hora deve ser maior que zero")
     private double valorHora;
+
+    @Column(nullable = false)
+    @PositiveOrZero(message = "Salário não pode ser negativo")
     private double salario;
 
-
-    @ManyToOne
-    @JoinColumn(name = "funcionario_id")
-    @NotNull(message = "ExtratoFuncionario precisa estar associado a um funcionário.")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "funcionario_id", nullable = false)
+    @NotNull(message = "Funcionário não pode ser nulo")
     private Funcionario funcionario;
-
 }

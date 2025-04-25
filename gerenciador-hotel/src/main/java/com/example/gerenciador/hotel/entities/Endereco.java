@@ -1,32 +1,28 @@
 package com.example.gerenciador.hotel.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
 public class Endereco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
 
     private String rua;
     private String numero;
-    private String cidade;
     private String bairro;
+    private String cidade;
     private String estado;
+    private String cep;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "endereco", fetch = FetchType.LAZY)
-    private Pessoa pessoa;
+    @OneToOne(mappedBy = "endereco", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
 }

@@ -2,7 +2,6 @@ package com.example.gerenciador.hotel.entities;
 
 
 import com.example.gerenciador.hotel.enums.StatusReserva;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -30,13 +29,13 @@ public class Reserva {
     private StatusReserva statusReserva;
     private Double valorTotal;
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "quarto_id")
     @NotNull(message = "Reserva precisa estar associada a um quarto.")
     private Quarto quarto;
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "hospede_id")
     @NotNull(message = "Reserva precisa estar associada a um hospede.")

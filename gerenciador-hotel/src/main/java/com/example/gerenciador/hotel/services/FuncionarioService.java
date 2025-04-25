@@ -58,7 +58,7 @@ public class FuncionarioService {
 
         Funcionario funcionario = funcionarioRepository.findByCpf(cpf).orElseThrow(() -> new ResourceNotFoundException("Funcionario com o CPF " + cpf + " não encontrado."));
 
-        funcionario.setEndereco(endereco);
+        funcionario.setEnderecoHospede(endereco);
 
         funcionarioRepository.save(funcionario);
 
