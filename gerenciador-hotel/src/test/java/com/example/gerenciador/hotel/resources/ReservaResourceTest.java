@@ -1,15 +1,15 @@
 package com.example.gerenciador.hotel.resources;
 
-import com.example.gerenciador.hotel.entities.Hospede;
-import com.example.gerenciador.hotel.entities.Quarto;
-import com.example.gerenciador.hotel.entities.Reserva;
+import com.example.gerenciador.hotel.domain.entities.Hospede;
+import com.example.gerenciador.hotel.domain.entities.Quarto;
+import com.example.gerenciador.hotel.domain.entities.Reserva;
 
-import com.example.gerenciador.hotel.enums.StatusQuarto;
-import com.example.gerenciador.hotel.enums.StatusReserva;
-import com.example.gerenciador.hotel.enums.TipoQuarto;
-import com.example.gerenciador.hotel.repositories.HospedeRepository;
-import com.example.gerenciador.hotel.repositories.QuartoRepository;
-import com.example.gerenciador.hotel.repositories.ReservaRepository;
+import com.example.gerenciador.hotel.domain.enums.StatusQuarto;
+import com.example.gerenciador.hotel.domain.enums.StatusReserva;
+import com.example.gerenciador.hotel.domain.enums.TipoQuarto;
+import com.example.gerenciador.hotel.domain.repositories.HospedeRepository;
+import com.example.gerenciador.hotel.domain.repositories.QuartoRepository;
+import com.example.gerenciador.hotel.domain.repositories.ReservaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

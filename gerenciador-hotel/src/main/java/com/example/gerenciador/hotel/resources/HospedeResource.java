@@ -1,11 +1,12 @@
 package com.example.gerenciador.hotel.resources;
 
 
-import com.example.gerenciador.hotel.dtos.hospede.HospedeCreateDTO;
-import com.example.gerenciador.hotel.dtos.hospede.HospedeUpdateDTO;
-import com.example.gerenciador.hotel.entities.Endereco;
-import com.example.gerenciador.hotel.entities.Hospede;
-import com.example.gerenciador.hotel.services.HospedeService;
+
+import com.example.gerenciador.hotel.domain.entities.Endereco;
+import com.example.gerenciador.hotel.domain.entities.Hospede;
+import com.example.gerenciador.hotel.domain.services.HospedeService;
+import com.example.gerenciador.hotel.shared.dtos.hospede.HospedeCreateDTO;
+import com.example.gerenciador.hotel.shared.dtos.hospede.HospedeUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

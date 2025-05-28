@@ -1,10 +1,10 @@
 package com.example.gerenciador.hotel.resources;
 
-import com.example.gerenciador.hotel.entities.ExtratoFuncionario;
-import com.example.gerenciador.hotel.entities.Funcionario;
+import com.example.gerenciador.hotel.domain.entities.ExtratoFuncionario;
+import com.example.gerenciador.hotel.domain.entities.Funcionario;
 
-import com.example.gerenciador.hotel.repositories.ExtratoFuncionarioRepository;
-import com.example.gerenciador.hotel.repositories.FuncionarioRepository;
+import com.example.gerenciador.hotel.domain.repositories.ExtratoFuncionarioRepository;
+import com.example.gerenciador.hotel.domain.repositories.FuncionarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

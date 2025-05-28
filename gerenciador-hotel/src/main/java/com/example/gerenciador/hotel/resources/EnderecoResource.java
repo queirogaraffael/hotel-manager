@@ -1,8 +1,8 @@
 package com.example.gerenciador.hotel.resources;
 
 
-import com.example.gerenciador.hotel.entities.Endereco;
-import com.example.gerenciador.hotel.services.EnderecoService;
+import com.example.gerenciador.hotel.domain.entities.Endereco;
+import com.example.gerenciador.hotel.domain.services.EnderecoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

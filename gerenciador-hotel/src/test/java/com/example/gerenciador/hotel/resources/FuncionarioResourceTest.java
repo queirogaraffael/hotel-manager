@@ -1,8 +1,8 @@
 package com.example.gerenciador.hotel.resources;
-import com.example.gerenciador.hotel.entities.Endereco;
-import com.example.gerenciador.hotel.entities.Funcionario;
-import com.example.gerenciador.hotel.repositories.FuncionarioRepository;
-import com.example.gerenciador.hotel.services.FuncionarioService;
+import com.example.gerenciador.hotel.domain.entities.Endereco;
+import com.example.gerenciador.hotel.domain.entities.Funcionario;
+import com.example.gerenciador.hotel.domain.repositories.FuncionarioRepository;
+import com.example.gerenciador.hotel.domain.services.FuncionarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

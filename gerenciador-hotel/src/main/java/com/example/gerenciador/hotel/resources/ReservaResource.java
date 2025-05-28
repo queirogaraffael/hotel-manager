@@ -1,10 +1,10 @@
 package com.example.gerenciador.hotel.resources;
 
 
-import com.example.gerenciador.hotel.dtos.reserva.ReservaResponseDTO;
-import com.example.gerenciador.hotel.entities.Reserva;
-import com.example.gerenciador.hotel.enums.StatusReserva;
-import com.example.gerenciador.hotel.services.ReservaService;
+import com.example.gerenciador.hotel.domain.entities.Reserva;
+import com.example.gerenciador.hotel.domain.enums.StatusReserva;
+import com.example.gerenciador.hotel.domain.services.ReservaService;
+import com.example.gerenciador.hotel.shared.dtos.reserva.ReservaResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

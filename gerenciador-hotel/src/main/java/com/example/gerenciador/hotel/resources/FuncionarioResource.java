@@ -1,18 +1,16 @@
 package com.example.gerenciador.hotel.resources;
 
 
-import com.example.gerenciador.hotel.dtos.funcionario.FuncionarioCreateDTO;
-import com.example.gerenciador.hotel.dtos.funcionario.FuncionarioResponseDTO;
-import com.example.gerenciador.hotel.dtos.funcionario.FuncionarioUpdateDTO;
-import com.example.gerenciador.hotel.entities.Endereco;
-import com.example.gerenciador.hotel.entities.Funcionario;
-import com.example.gerenciador.hotel.services.FuncionarioService;
+
+import com.example.gerenciador.hotel.domain.entities.Endereco;
+import com.example.gerenciador.hotel.domain.entities.Funcionario;
+import com.example.gerenciador.hotel.domain.services.FuncionarioService;
+import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioCreateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;

@@ -1,14 +1,14 @@
 package com.example.gerenciador.hotel.resources;
 
 
-import com.example.gerenciador.hotel.dtos.quarto.QuartoCreateDTO;
-import com.example.gerenciador.hotel.dtos.quarto.QuartoResponseDTO;
-import com.example.gerenciador.hotel.dtos.quarto.QuartoUpdateDTO;
-import com.example.gerenciador.hotel.entities.Quarto;
-import com.example.gerenciador.hotel.enums.StatusQuarto;
-import com.example.gerenciador.hotel.enums.TipoQuarto;
-import com.example.gerenciador.hotel.exceptions.ResourceNotFoundException;
-import com.example.gerenciador.hotel.services.QuartoService;
+import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoCreateDTO;
+import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoResponseDTO;
+import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoUpdateDTO;
+import com.example.gerenciador.hotel.domain.entities.Quarto;
+import com.example.gerenciador.hotel.domain.enums.StatusQuarto;
+import com.example.gerenciador.hotel.domain.enums.TipoQuarto;
+import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
+import com.example.gerenciador.hotel.domain.services.QuartoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
