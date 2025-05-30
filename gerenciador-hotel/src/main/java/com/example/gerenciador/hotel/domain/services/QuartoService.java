@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.domain.services;
 
 import com.example.gerenciador.hotel.domain.repositories.QuartoRepository;
-import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoCreateDTO;
+import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoRequestDTO;
 import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoResponseDTO;
 import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoUpdateDTO;
 import com.example.gerenciador.hotel.domain.entities.Quarto;
@@ -33,7 +33,7 @@ public class QuartoService {
 
 
     @Transactional
-    public QuartoCreateDTO criarQuarto(QuartoCreateDTO quartoDTO) {
+    public QuartoRequestDTO criarQuarto(QuartoRequestDTO quartoDTO) {
         Optional<Quarto> quartoOptional = quartoRepository.findByNumero(quartoDTO.numero());
 
         if (quartoOptional.isPresent()) {

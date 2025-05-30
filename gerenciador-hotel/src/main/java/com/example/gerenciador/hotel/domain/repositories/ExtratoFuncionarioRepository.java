@@ -1,6 +1,5 @@
 package com.example.gerenciador.hotel.domain.repositories;
 
-import com.example.gerenciador.hotel.shared.dtos.extratoFuncionario.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador.hotel.domain.entities.ExtratoFuncionario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -4,8 +4,7 @@ import com.example.gerenciador.hotel.domain.entities.Endereco;
 import com.example.gerenciador.hotel.domain.entities.Hospede;
 import com.example.gerenciador.hotel.domain.repositories.EnderecoRepository;
 import com.example.gerenciador.hotel.domain.repositories.HospedeRepository;
-import com.example.gerenciador.hotel.shared.dtos.hospede.HospedeCreateDTO;
-import com.example.gerenciador.hotel.shared.dtos.hospede.HospedeUpdateDTO;
+import com.example.gerenciador.hotel.shared.dtos.hospede.HospedeRequestDTO;
 import com.example.gerenciador.hotel.shared.exceptions.HospedeJaExisteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class HospedeService {
 
 
     @Transactional
-    public HospedeCreateDTO criarHospede(HospedeCreateDTO hospedeCreateDTO) {
+    public HospedeRequestDTO criarHospede(HospedeRequestDTO hospedeCreateDTO) {
         Optional<Hospede> hospedeOptional = hospedeRepository.findByCpf(hospedeCreateDTO.cpf());
 
         if (hospedeOptional.isPresent()) {

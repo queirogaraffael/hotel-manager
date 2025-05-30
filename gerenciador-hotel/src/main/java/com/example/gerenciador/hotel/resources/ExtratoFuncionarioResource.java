@@ -1,7 +1,6 @@
 package com.example.gerenciador.hotel.resources;
 
-import com.example.gerenciador.hotel.shared.dtos.extratoFuncionario.ExtratoFuncionarioDTO;
-import com.example.gerenciador.hotel.shared.dtos.extratoFuncionario.ExtratoFuncionarioResponseDTO;
+import com.example.gerenciador.hotel.shared.dtos.extratofuncionario.ExtratoFuncionarioDTO;
 import com.example.gerenciador.hotel.domain.entities.ExtratoFuncionario;
 import com.example.gerenciador.hotel.domain.services.ExtratoFuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;

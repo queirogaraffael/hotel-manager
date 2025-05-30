@@ -5,7 +5,7 @@ package com.example.gerenciador.hotel.resources;
 import com.example.gerenciador.hotel.domain.entities.Endereco;
 import com.example.gerenciador.hotel.domain.entities.Funcionario;
 import com.example.gerenciador.hotel.domain.services.FuncionarioService;
-import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioCreateDTO;
+import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -33,9 +33,9 @@ public class FuncionarioResource {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping
-    public ResponseEntity<FuncionarioCreateDTO> criaFuncionario(@Valid @RequestBody FuncionarioCreateDTO funcionario) {
+    public ResponseEntity<FuncionarioRequestDTO> criaFuncionario(@Valid @RequestBody FuncionarioRequestDTO funcionario) {
 
-        FuncionarioCreateDTO funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
+        FuncionarioRequestDTO funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
         return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioCriado);
     }
 

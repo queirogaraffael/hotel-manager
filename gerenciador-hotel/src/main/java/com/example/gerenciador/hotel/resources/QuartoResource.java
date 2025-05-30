@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.resources;
 
 
-import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoCreateDTO;
+import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoRequestDTO;
 import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoResponseDTO;
 import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoUpdateDTO;
 import com.example.gerenciador.hotel.domain.entities.Quarto;
@@ -38,8 +38,8 @@ public class QuartoResource {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping
-    public ResponseEntity<QuartoCreateDTO> criarQuarto(@RequestBody QuartoCreateDTO quarto) {
-        QuartoCreateDTO novoQuarto = quartoService.criarQuarto(quarto);
+    public ResponseEntity<QuartoRequestDTO> criarQuarto(@RequestBody QuartoRequestDTO quarto) {
+        QuartoRequestDTO novoQuarto = quartoService.criarQuarto(quarto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoQuarto);
     }
 

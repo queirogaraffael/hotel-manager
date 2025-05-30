@@ -2,7 +2,7 @@ package com.example.gerenciador.hotel.domain.services;
 
 import com.example.gerenciador.hotel.domain.repositories.EnderecoRepository;
 import com.example.gerenciador.hotel.domain.repositories.FuncionarioRepository;
-import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioCreateDTO;
+import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioRequestDTO;
 import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioResponseDTO;
 import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioUpdateDTO;
 import com.example.gerenciador.hotel.domain.entities.Endereco;
@@ -31,7 +31,7 @@ public class FuncionarioService {
 
 
     @Transactional
-    public FuncionarioCreateDTO criarFuncionario(FuncionarioCreateDTO funcionarioDTO) {
+    public FuncionarioRequestDTO criarFuncionario(FuncionarioRequestDTO funcionarioDTO) {
         Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(funcionarioDTO.cpf());
 
         if (funcionarioOptional.isPresent()) {
