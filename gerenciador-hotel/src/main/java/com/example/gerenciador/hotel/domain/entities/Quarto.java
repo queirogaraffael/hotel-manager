@@ -48,6 +48,6 @@ public class Quarto {
     @NotNull(message = "Status do quarto é obrigatório")
     private StatusQuarto statusQuarto;
 
-    @OneToMany(mappedBy = "quarto", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "quarto", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reserva> reservas = new ArrayList<>();
 }

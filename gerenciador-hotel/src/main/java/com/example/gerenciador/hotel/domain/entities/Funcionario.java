@@ -31,7 +31,7 @@ public class Funcionario {
     @NotNull
     private User user;
 
-    @OneToMany(mappedBy = "funcionario", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "funcionario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ExtratoFuncionario> extratoFuncionario = new ArrayList<>();
 }
 

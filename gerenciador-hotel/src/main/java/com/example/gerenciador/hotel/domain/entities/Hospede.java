@@ -23,9 +23,8 @@ public class Hospede {
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
-    @NotNull
     private User user;
 
-    @OneToMany(mappedBy = "hospede", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hospede", cascade = CascadeType.ALL)
     private List<Reserva> reservas = new ArrayList<>();
 }

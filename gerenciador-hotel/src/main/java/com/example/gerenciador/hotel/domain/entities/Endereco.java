@@ -23,6 +23,6 @@ public class Endereco {
     private String estado;
     private String cep;
 
-    @OneToOne(mappedBy = "endereco", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "endereco", fetch = FetchType.LAZY)
     private User user;
 }

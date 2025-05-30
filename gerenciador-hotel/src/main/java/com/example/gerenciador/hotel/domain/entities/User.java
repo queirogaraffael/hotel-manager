@@ -3,12 +3,12 @@ package com.example.gerenciador.hotel.domain.entities;
 import com.example.gerenciador.hotel.domain.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,8 +33,7 @@ public class User {
     @Size(min = 11, max = 11, message = "CPF deve ter 11 caracteres")
     private String cpf;
 
-    @Temporal(TemporalType.DATE)
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     private String nome;
 
