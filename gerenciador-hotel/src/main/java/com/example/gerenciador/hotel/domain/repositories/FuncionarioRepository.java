@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
-
+    /*
     Optional<Funcionario> findByCpf(String cpf);
 
     @Query("SELECT new com.example.gerenciador.hotel.dtos.funcionario.FuncionarioResponseDTO(f.id, f.nome, f.cpf) FROM Funcionario f WHERE LOWER(f.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
@@ -25,4 +25,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
     @Query("SELECT f FROM Funcionario f LEFT JOIN FETCH f.extratoFuncionario WHERE f.cpf = :cpf")
     Optional<Funcionario> findFuncionarioComExtratoByCPF(@Param("cpf") String cpf);
 
+
+     */
 }

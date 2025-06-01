@@ -24,6 +24,7 @@ public class FuncionarioResource {
     @Autowired
     private FuncionarioService funcionarioService;
 
+    /*
 
     @Operation(summary = "Cria novo funcionario", description = "FuncionarioDTO. Não adiciona com endereço nem extrato. CPF precisa ter exatamento 11 caracteres.")
     @ApiResponses(value = {
@@ -110,4 +111,7 @@ public class FuncionarioResource {
 
         return ResponseEntity.status(HttpStatus.OK).body(funcionario);
     }
+
+
+     */
 }

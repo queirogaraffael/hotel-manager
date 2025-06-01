@@ -21,6 +21,7 @@ public class EnderecoResource {
     @Autowired
     private EnderecoService enderecoService;
 
+    /*
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza dados do endereco.", description = "Atualiza todos os dados do endereço.")
     @ApiResponses(value = {
@@ -32,4 +33,7 @@ public class EnderecoResource {
         Endereco endereco = enderecoService.modificaEnderecoById(id, enderecoAtualizado);
         return ResponseEntity.status(HttpStatus.OK).body(endereco);
     }
+
+
+     */
 }

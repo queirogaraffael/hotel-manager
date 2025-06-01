@@ -1,28 +1,10 @@
 package com.example.gerenciador.hotel.resources;
 
 
-import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoRequestDTO;
-import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoResponseDTO;
-import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoUpdateDTO;
-import com.example.gerenciador.hotel.domain.entities.Quarto;
-import com.example.gerenciador.hotel.domain.enums.StatusQuarto;
-import com.example.gerenciador.hotel.domain.enums.TipoQuarto;
-import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
 import com.example.gerenciador.hotel.domain.services.QuartoService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/quartos")
@@ -30,6 +12,8 @@ public class QuartoResource {
 
     @Autowired
     private QuartoService quartoService;
+
+    /*
 
     @Operation(summary = "Cria novo quarto", description = "Cria um quarto com um número único.")
     @ApiResponses(value = {
@@ -159,4 +143,6 @@ public class QuartoResource {
 
         return ResponseEntity.status(HttpStatus.OK).body(quartosDisponiveis);
     }
+
+     */
 }

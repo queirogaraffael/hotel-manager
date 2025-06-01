@@ -1,20 +1,10 @@
 package com.example.gerenciador.hotel.resources;
 
 
-import com.example.gerenciador.hotel.domain.entities.Reserva;
-import com.example.gerenciador.hotel.domain.enums.StatusReserva;
 import com.example.gerenciador.hotel.domain.services.ReservaService;
-import com.example.gerenciador.hotel.shared.dtos.reserva.ReservaResponseDTO;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/reservas")
@@ -22,6 +12,8 @@ public class ReservaResource {
 
     @Autowired
     private ReservaService reservaService;
+
+    /*
 
     @Operation(summary = "Criar nova reserva", description = "Cria uma nova reserva. Quarto tem que estar disponivel para data e hóspede precisa já estar cadastrado.")
     @ApiResponses(value = {
@@ -108,5 +100,7 @@ public class ReservaResource {
         return ResponseEntity.ok(reservasDTO);
     }
 
+
+     */
 
 }

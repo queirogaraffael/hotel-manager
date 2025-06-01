@@ -31,7 +31,7 @@ public class QuartoService {
     @Autowired
     private QuartoRepository quartoRepository;
 
-
+    /*
     @Transactional
     public QuartoRequestDTO criarQuarto(QuartoRequestDTO quartoDTO) {
         Optional<Quarto> quartoOptional = quartoRepository.findByNumero(quartoDTO.numero());
@@ -126,5 +126,6 @@ public class QuartoService {
         return quartoModificado;
 
     }
+     */
 
 }

@@ -20,6 +20,7 @@ import java.util.Optional;
 @Repository
 public interface QuartoRepository extends JpaRepository<Quarto, Long> {
 
+        /*
     Optional<Quarto> findByNumero(String numero);
 
     @Query("SELECT new com.example.gerenciador.hotel.dtos.quarto.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE q.tipoQuarto = :tipoQuarto")
@@ -48,4 +49,6 @@ public interface QuartoRepository extends JpaRepository<Quarto, Long> {
     @Query("SELECT new com.example.gerenciador.hotel.dtos.quarto.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE (q.tipoQuarto = :tipoQuarto AND q.statusQuarto = :statusQuarto)")
     List<QuartoResponseDTO> buscarQuartosDTOPorTipoEPorStatus(@Param("tipoQuarto") TipoQuarto tipoQuarto, @Param("statusQuarto") StatusQuarto statusQuarto);
 
+
+         */
 }

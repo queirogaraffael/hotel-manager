@@ -30,6 +30,7 @@ public class ReservaService {
     @Autowired
     private QuartoRepository quartoRepository;
 
+        /*
     @Transactional
     public Reserva criarReserva(Reserva reserva, String cpf, String numeroQuarto) {
 
@@ -85,6 +86,9 @@ public class ReservaService {
     public Page<ReservaResponseDTO> buscaReservasDTOHospedeFinalizadasCanceladasByCPF(String cpf, Pageable pageable) {
         return reservaRepository.findReservasDTOHospedeFinalizadasCanceladasByCPF(cpf, StatusReserva.FINALIZADO, StatusReserva.CANCELADO, pageable);
     }
+
+
+         */
 
 
 }

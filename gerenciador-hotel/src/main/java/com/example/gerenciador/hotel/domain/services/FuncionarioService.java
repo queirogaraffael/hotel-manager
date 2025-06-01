@@ -29,6 +29,7 @@ public class FuncionarioService {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
+        /*
 
     @Transactional
     public FuncionarioRequestDTO criarFuncionario(FuncionarioRequestDTO funcionarioDTO) {
@@ -101,5 +102,8 @@ public class FuncionarioService {
     public Endereco getEnderecoFuncionarioByCPF(String cpf) {
         return enderecoRepository.getEnderecoFuncionarioByCPF(cpf).orElseThrow(() -> new ResourceNotFoundException("Funcionario sem endereço cadastrado"));
     }
+
+
+         */
 
 }

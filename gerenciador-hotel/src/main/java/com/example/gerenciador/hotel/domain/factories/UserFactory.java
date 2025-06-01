@@ -3,27 +3,29 @@ package com.example.gerenciador.hotel.domain.factories;
 import com.example.gerenciador.hotel.domain.entities.Funcionario;
 import com.example.gerenciador.hotel.domain.entities.Hospede;
 import com.example.gerenciador.hotel.domain.entities.User;
-import com.example.gerenciador.hotel.domain.enums.UserRole;
 import com.example.gerenciador.hotel.domain.enums.Turno;
+import com.example.gerenciador.hotel.domain.enums.UserRole;
 import com.example.gerenciador.hotel.shared.dtos.endereco.EnderecoRequestDTO;
 import com.example.gerenciador.hotel.shared.mappers.EnderecoMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Component
 public class UserFactory {
 
+    @Autowired
     private final EnderecoMapper enderecoMapper;
 
     public UserFactory(EnderecoMapper enderecoMapper) {
         this.enderecoMapper = enderecoMapper;
     }
 
-    public User createUser(Set<UserRole> roles, String login, String senha, String nome, String email, String telefone, String cpf, Date dataNascimento, EnderecoRequestDTO enderecoDTO, String cargo, Turno turno) {
+    public User createUser(Set<UserRole> roles, String login, String senha, String nome, String email, String telefone, String cpf, LocalDate dataNascimento, EnderecoRequestDTO enderecoDTO, String cargo, Turno turno) {
         User user = new User();
         user.setLogin(login);
         user.setSenha(senha);
@@ -65,19 +67,19 @@ public class UserFactory {
         return user;
     }
 
-    public User createHospedeUser(String login, String senha, String nome, String email, String telefone, String cpf, Date dataNascimento, EnderecoRequestDTO endereco) {
+    public User createHospedeUser(String login, String senha, String nome, String email, String telefone, String cpf, LocalDate dataNascimento, EnderecoRequestDTO endereco) {
         return createUser(Set.of(UserRole.HOSPEDE), login, senha, nome, email, telefone, cpf, dataNascimento, endereco, null, null);
     }
 
-    public User createFuncionarioUser(String login, String senha, String nome, String email, String telefone, String cpf, Date dataNascimento, EnderecoRequestDTO endereco, String cargo, Turno turno) {
+    public User createFuncionarioUser(String login, String senha, String nome, String email, String telefone, String cpf, LocalDate  dataNascimento, EnderecoRequestDTO endereco, String cargo, Turno turno) {
         return createUser(Set.of(UserRole.FUNCIONARIO), login, senha, nome, email, telefone, cpf, dataNascimento, endereco, cargo, turno);
     }
 
-    public User createAdminUser(String login, String senha, String nome, String email, String telefone, String cpf, Date dataNascimento, EnderecoRequestDTO endereco) {
+    public User createAdminUser(String login, String senha, String nome, String email, String telefone, String cpf, LocalDate  dataNascimento, EnderecoRequestDTO endereco) {
         return createUser(Set.of(UserRole.ADMIN), login, senha, nome, email, telefone, cpf, dataNascimento, endereco, null, null);
     }
 
-    public User createEmployeeAndGuestUser(String login, String senha, String nome, String email, String telefone, String cpf, Date dataNascimento, EnderecoRequestDTO endereco, String cargo, Turno turno) {
+    public User createEmployeeAndGuestUser(String login, String senha, String nome, String email, String telefone, String cpf, LocalDate  dataNascimento, EnderecoRequestDTO endereco, String cargo, Turno turno) {
         return createUser(new HashSet<>(Arrays.asList(UserRole.HOSPEDE, UserRole.FUNCIONARIO)), login, senha, nome, email, telefone, cpf, dataNascimento, endereco, cargo, turno);
     }
 }

@@ -16,6 +16,7 @@ import java.util.Date;
 @Repository
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
+        /*
 
     @Query("SELECT NEW com.example.gerenciador.hotel.dtos.reserva.ReservaResponseDTO(r.id, r.dataEntrada, r.dataSaida, r.statusReserva) " +
             "FROM Reserva r LEFT JOIN r.hospede h " +
@@ -50,4 +51,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
                                          @Param("dataSaida") Date dataSaida,
                                          @Param("numeroQuarto") String numeroQuarto);
 
+
+         */
 }

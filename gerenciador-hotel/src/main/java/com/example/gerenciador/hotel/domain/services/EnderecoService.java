@@ -13,7 +13,7 @@ public class EnderecoService {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
-
+    /*
     @Transactional
     public Endereco modificaEnderecoById(Long id, Endereco enderecoModificado) {
         Endereco endereco = enderecoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Endereco com este id " + id + "não encontrado para modificação."));
@@ -27,5 +27,7 @@ public class EnderecoService {
         return enderecoRepository.save(endereco);
 
     }
+
+     */
 
 }

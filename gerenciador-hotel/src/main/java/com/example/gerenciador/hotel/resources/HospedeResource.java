@@ -1,19 +1,10 @@
 package com.example.gerenciador.hotel.resources;
 
 
-
-import com.example.gerenciador.hotel.domain.entities.Endereco;
-import com.example.gerenciador.hotel.domain.entities.Hospede;
 import com.example.gerenciador.hotel.domain.services.HospedeService;
-import com.example.gerenciador.hotel.shared.dtos.hospede.HospedeRequestDTO;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/hospedes")
@@ -22,6 +13,7 @@ public class HospedeResource {
     @Autowired
     private HospedeService hospedeService;
 
+    /*
     @Operation(summary = "Cria novo hóspede", description = "Não adiciona com endereço ou extratos. O CPF precisa ter exatamente 11 caracteres.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Hóspede criado com sucesso"),
@@ -94,5 +86,6 @@ public class HospedeResource {
         return ResponseEntity.status(HttpStatus.OK).body(hospede);
     }
 
+    */
 
 }

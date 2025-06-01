@@ -1,17 +1,9 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.domain.entities.ExtratoFuncionario;
-import com.example.gerenciador.hotel.domain.entities.Funcionario;
 import com.example.gerenciador.hotel.domain.repositories.ExtratoFuncionarioRepository;
 import com.example.gerenciador.hotel.domain.repositories.FuncionarioRepository;
-import com.example.gerenciador.hotel.shared.dtos.extratofuncionario.ExtratoFuncionarioDTO;
-import com.example.gerenciador.hotel.shared.exceptions.ExtratoJaExisteParaMesReferenteException;
-import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ExtratoFuncionarioService {
@@ -22,7 +14,7 @@ public class ExtratoFuncionarioService {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
-
+    /*
     @Transactional
     public ExtratoFuncionarioDTO criaExtratoFuncionario(String cpf, ExtratoFuncionarioDTO extratoFuncionarioDTO) {
 
@@ -83,5 +75,7 @@ public class ExtratoFuncionarioService {
         extratoFuncionarioRepository.deleteById(id);
     }
 
+
+     */
 
 }

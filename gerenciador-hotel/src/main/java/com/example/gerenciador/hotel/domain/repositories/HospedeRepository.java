@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface HospedeRepository extends JpaRepository<Hospede, Long> {
+        /*
     Optional<Hospede> findByCpf(String cpf);
+         */
 }

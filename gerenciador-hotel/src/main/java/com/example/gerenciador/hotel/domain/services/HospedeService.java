@@ -1,16 +1,9 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.domain.entities.Endereco;
-import com.example.gerenciador.hotel.domain.entities.Hospede;
 import com.example.gerenciador.hotel.domain.repositories.EnderecoRepository;
 import com.example.gerenciador.hotel.domain.repositories.HospedeRepository;
-import com.example.gerenciador.hotel.shared.dtos.hospede.HospedeRequestDTO;
-import com.example.gerenciador.hotel.shared.exceptions.HospedeJaExisteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 public class HospedeService {
@@ -20,6 +13,8 @@ public class HospedeService {
 
     @Autowired
     private EnderecoRepository enderecoRepository;
+
+    /*
 
 
     @Transactional
@@ -85,5 +80,7 @@ public class HospedeService {
 
     }
 
+
+     */
 
 }

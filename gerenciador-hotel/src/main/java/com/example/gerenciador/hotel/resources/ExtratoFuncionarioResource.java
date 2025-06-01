@@ -1,17 +1,9 @@
 package com.example.gerenciador.hotel.resources;
 
-import com.example.gerenciador.hotel.shared.dtos.extratofuncionario.ExtratoFuncionarioDTO;
-import com.example.gerenciador.hotel.domain.entities.ExtratoFuncionario;
 import com.example.gerenciador.hotel.domain.services.ExtratoFuncionarioService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -21,6 +13,7 @@ public class ExtratoFuncionarioResource {
     @Autowired
     private ExtratoFuncionarioService extratoFuncionarioService;
 
+    /*
     @PostMapping("/{cpf}")
     @Operation(summary = "Cria um extrato para o funcionário", description = "Cria um novo extrato para o funcionário com o CPF fornecido. Se existir extrato para o mes/ano referente, o programa lançará uma exceção.")
     @ApiResponses(value = {
@@ -93,4 +86,7 @@ public class ExtratoFuncionarioResource {
         extratoFuncionarioService.deletaExtratoFuncionarioById(id);
         return ResponseEntity.noContent().build();
     }
+
+
+     */
 }
