@@ -11,76 +11,71 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class UserFactory {
 
-    @Autowired
     private final EnderecoMapper enderecoMapper;
 
+    @Autowired
     public UserFactory(EnderecoMapper enderecoMapper) {
         this.enderecoMapper = enderecoMapper;
     }
 
-    public User createUser(Set<UserRole> roles, String login, String senha, String nome, String email, String telefone, String cpf, LocalDate dataNascimento, EnderecoRequestDTO enderecoDTO, String cargo, Turno turno) {
+    public User createUser(UserRole role, String username, String password, String nome, String email,
+                           String telefone, String cpf, LocalDate dataNascimento, EnderecoRequestDTO enderecoDTO,
+                           String cargo, Turno turno) {
         User user = new User();
-        user.setLogin(login);
-        user.setSenha(senha);
+        user.setUsername(username);
+        user.setPassword(password);
         user.setNome(nome);
         user.setEmail(email);
         user.setTelefone(telefone);
         user.setCpf(cpf);
         user.setDataNascimento(dataNascimento);
-        user.setEndereco(enderecoMapper.toEntity(enderecoDTO));
-        user.setRoles(roles);
+        if (enderecoDTO != null) {
+            user.setEndereco(enderecoMapper.toEntity(enderecoDTO));
+        }
+        user.setUserRole(role);
 
-        for (UserRole role : roles) {
-            switch (role) {
-                case ADMIN:
-                    break;
-
-                case HOSPEDE:
-                    Hospede hospede = new Hospede();
-                    hospede.setUser(user);
-                    user.setHospede(hospede);
-                    break;
-
-                case FUNCIONARIO:
-                    if (cargo == null || turno == null) {
-                        throw new IllegalArgumentException("Funcionário precisa de cargo e turno");
-                    }
-                    Funcionario funcionario = new Funcionario();
-                    funcionario.setUser(user);
-                    funcionario.setCargo(cargo);
-                    funcionario.setTurno(turno);
-                    user.setFuncionario(funcionario);
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Role desconhecida: " + role);
-            }
+        switch (role) {
+            case HOSPEDE:
+                Hospede hospede = new Hospede();
+                hospede.setUser(user);
+                user.setHospede(hospede);
+                break;
+            case FUNCIONARIO:
+                if (cargo == null || turno == null) {
+                    throw new IllegalArgumentException("Funcionário precisa de cargo e turno.");
+                }
+                Funcionario funcionario = new Funcionario();
+                funcionario.setUser(user);
+                funcionario.setCargo(cargo);
+                funcionario.setTurno(turno);
+                user.setFuncionario(funcionario);
+                break;
+            case ADMIN:
+                break;
+            default:
+                throw new IllegalArgumentException("Role de usuário não suportada: " + role);
         }
 
         return user;
     }
 
-    public User createHospedeUser(String login, String senha, String nome, String email, String telefone, String cpf, LocalDate dataNascimento, EnderecoRequestDTO endereco) {
-        return createUser(Set.of(UserRole.HOSPEDE), login, senha, nome, email, telefone, cpf, dataNascimento, endereco, null, null);
+    public User createHospedeUser(String username, String password, String nome, String email, String telefone,
+                                  String cpf, LocalDate dataNascimento, EnderecoRequestDTO endereco) {
+        return createUser(UserRole.HOSPEDE, username, password, nome, email, telefone, cpf, dataNascimento, endereco, null, null);
     }
 
-    public User createFuncionarioUser(String login, String senha, String nome, String email, String telefone, String cpf, LocalDate  dataNascimento, EnderecoRequestDTO endereco, String cargo, Turno turno) {
-        return createUser(Set.of(UserRole.FUNCIONARIO), login, senha, nome, email, telefone, cpf, dataNascimento, endereco, cargo, turno);
+    public User createFuncionarioUser(String username, String password, String nome, String email, String telefone,
+                                      String cpf, LocalDate dataNascimento, EnderecoRequestDTO endereco,
+                                      String cargo, Turno turno) {
+        return createUser(UserRole.FUNCIONARIO, username, password, nome, email, telefone, cpf, dataNascimento, endereco, cargo, turno);
     }
 
-    public User createAdminUser(String login, String senha, String nome, String email, String telefone, String cpf, LocalDate  dataNascimento, EnderecoRequestDTO endereco) {
-        return createUser(Set.of(UserRole.ADMIN), login, senha, nome, email, telefone, cpf, dataNascimento, endereco, null, null);
-    }
-
-    public User createEmployeeAndGuestUser(String login, String senha, String nome, String email, String telefone, String cpf, LocalDate  dataNascimento, EnderecoRequestDTO endereco, String cargo, Turno turno) {
-        return createUser(new HashSet<>(Arrays.asList(UserRole.HOSPEDE, UserRole.FUNCIONARIO)), login, senha, nome, email, telefone, cpf, dataNascimento, endereco, cargo, turno);
+    public User createAdminUser(String username, String password, String nome, String email, String telefone,
+                                String cpf, LocalDate dataNascimento, EnderecoRequestDTO endereco) {
+        return createUser(UserRole.ADMIN, username, password, nome, email, telefone, cpf, dataNascimento, endereco, null, null);
     }
 }
-
