@@ -1,6 +1,6 @@
 package com.example.gerenciador.hotel.infrastructure.security;
 
-import com.example.gerenciador.hotel.domain.repositories.UserRepository;
+import com.example.gerenciador.hotel.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

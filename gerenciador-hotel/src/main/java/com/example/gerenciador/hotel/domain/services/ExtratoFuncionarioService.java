@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.domain.repositories.ExtratoFuncionarioRepository;
-import com.example.gerenciador.hotel.domain.repositories.FuncionarioRepository;
+import com.example.gerenciador.hotel.repositories.ExtratoFuncionarioRepository;
+import com.example.gerenciador.hotel.repositories.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

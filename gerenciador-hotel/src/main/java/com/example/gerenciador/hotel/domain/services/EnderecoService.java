@@ -1,11 +1,8 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.domain.entities.Endereco;
-import com.example.gerenciador.hotel.domain.repositories.EnderecoRepository;
-import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
+import com.example.gerenciador.hotel.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EnderecoService {

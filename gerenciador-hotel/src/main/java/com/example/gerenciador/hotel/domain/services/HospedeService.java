@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.domain.repositories.EnderecoRepository;
-import com.example.gerenciador.hotel.domain.repositories.HospedeRepository;
+import com.example.gerenciador.hotel.repositories.EnderecoRepository;
+import com.example.gerenciador.hotel.repositories.HospedeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

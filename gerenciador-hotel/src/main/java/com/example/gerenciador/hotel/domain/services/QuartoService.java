@@ -1,28 +1,9 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.domain.repositories.QuartoRepository;
-import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoRequestDTO;
-import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoResponseDTO;
-import com.example.gerenciador.hotel.shared.dtos.quarto.QuartoUpdateDTO;
-import com.example.gerenciador.hotel.domain.entities.Quarto;
+import com.example.gerenciador.hotel.repositories.QuartoRepository;
 
-import com.example.gerenciador.hotel.domain.enums.StatusQuarto;
-import com.example.gerenciador.hotel.domain.enums.StatusReserva;
-import com.example.gerenciador.hotel.domain.enums.TipoQuarto;
-
-import com.example.gerenciador.hotel.shared.exceptions.QuartoJaExisteException;
-import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class QuartoService {

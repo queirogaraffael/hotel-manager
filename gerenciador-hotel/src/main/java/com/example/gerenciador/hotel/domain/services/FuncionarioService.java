@@ -1,23 +1,11 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.domain.repositories.EnderecoRepository;
-import com.example.gerenciador.hotel.domain.repositories.FuncionarioRepository;
-import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioRequestDTO;
-import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioResponseDTO;
-import com.example.gerenciador.hotel.shared.dtos.funcionario.FuncionarioUpdateDTO;
-import com.example.gerenciador.hotel.domain.entities.Endereco;
-import com.example.gerenciador.hotel.domain.entities.Funcionario;
+import com.example.gerenciador.hotel.repositories.EnderecoRepository;
+import com.example.gerenciador.hotel.repositories.FuncionarioRepository;
 
 
-import com.example.gerenciador.hotel.shared.exceptions.FuncionarioJaExisteException;
-import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 public class FuncionarioService {

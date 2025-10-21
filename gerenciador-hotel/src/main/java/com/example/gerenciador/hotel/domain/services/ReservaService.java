@@ -1,22 +1,10 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.domain.entities.Hospede;
-import com.example.gerenciador.hotel.domain.entities.Quarto;
-import com.example.gerenciador.hotel.domain.entities.Reserva;
-import com.example.gerenciador.hotel.domain.enums.StatusReserva;
-import com.example.gerenciador.hotel.domain.repositories.HospedeRepository;
-import com.example.gerenciador.hotel.domain.repositories.QuartoRepository;
-import com.example.gerenciador.hotel.domain.repositories.ReservaRepository;
-import com.example.gerenciador.hotel.shared.dtos.reserva.ReservaResponseDTO;
-import com.example.gerenciador.hotel.shared.exceptions.QuartoNaoEstaDisponivelParaDataException;
-import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
+import com.example.gerenciador.hotel.repositories.HospedeRepository;
+import com.example.gerenciador.hotel.repositories.QuartoRepository;
+import com.example.gerenciador.hotel.repositories.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 public class ReservaService {
