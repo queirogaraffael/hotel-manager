@@ -1,25 +1,14 @@
 package com.example.gerenciador.hotel.repositories;
 
 
-import com.example.gerenciador.hotel.dtos.quarto.QuartoResponseDTO;
 import com.example.gerenciador.hotel.entities.Quarto;
-import com.example.gerenciador.hotel.enums.StatusQuarto;
-import com.example.gerenciador.hotel.enums.StatusReserva;
-import com.example.gerenciador.hotel.enums.TipoQuarto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface QuartoRepository extends JpaRepository<Quarto, Long> {
 
+        /*
     Optional<Quarto> findByNumero(String numero);
 
     @Query("SELECT new com.example.gerenciador.hotel.dtos.quarto.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE q.tipoQuarto = :tipoQuarto")
@@ -48,4 +37,6 @@ public interface QuartoRepository extends JpaRepository<Quarto, Long> {
     @Query("SELECT new com.example.gerenciador.hotel.dtos.quarto.QuartoResponseDTO(q.id, q.numero, q.tipoQuarto) FROM Quarto q WHERE (q.tipoQuarto = :tipoQuarto AND q.statusQuarto = :statusQuarto)")
     List<QuartoResponseDTO> buscarQuartosDTOPorTipoEPorStatus(@Param("tipoQuarto") TipoQuarto tipoQuarto, @Param("statusQuarto") StatusQuarto statusQuarto);
 
+
+         */
 }
