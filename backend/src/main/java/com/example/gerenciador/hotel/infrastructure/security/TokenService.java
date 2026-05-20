@@ -1,12 +1,9 @@
 package com.example.gerenciador.hotel.infrastructure.security;
 
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-
-import com.example.gerenciador.hotel.entities.User;
 import com.example.gerenciador.hotel.shared.exceptions.TokenCreationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,12 +23,6 @@ public class TokenService {
 
     private final String issuer = "auth-api";
 
-    /** Mantido para compatibilidade com código legado que ainda injeta entities.User */
-    public String generateToken(User user) {
-        return generateTokenFromUsername(user.getUsername());
-    }
-
-    /** Novo método — não depende de entities.User */
     public String generateTokenFromUsername(String username) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
