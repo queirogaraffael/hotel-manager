@@ -1,81 +1,76 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.repositories.ExtratoFuncionarioRepository;
-import com.example.gerenciador.hotel.repositories.FuncionarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.gerenciador.hotel.domain.model.ExtratoFuncionario;
+import com.example.gerenciador.hotel.domain.model.Funcionario;
+import com.example.gerenciador.hotel.domain.port.in.ExtratoFuncionarioUseCase;
+import com.example.gerenciador.hotel.domain.port.out.ExtratoFuncionarioRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.FuncionarioRepositoryPort;
+import com.example.gerenciador.hotel.shared.exceptions.ExtratoJaExisteParaMesReferenteException;
+import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service
-public class ExtratoFuncionarioService {
+@RequiredArgsConstructor
+public class ExtratoFuncionarioService implements ExtratoFuncionarioUseCase {
 
-    @Autowired
-    private ExtratoFuncionarioRepository extratoFuncionarioRepository;
+    private final ExtratoFuncionarioRepositoryPort extratoRepository;
+    private final FuncionarioRepositoryPort funcionarioRepository;
 
-    @Autowired
-    private FuncionarioRepository funcionarioRepository;
-
-    /*
+    @Override
     @Transactional
-    public ExtratoFuncionarioDTO criaExtratoFuncionario(String cpf, ExtratoFuncionarioDTO extratoFuncionarioDTO) {
-
-        if (extratoFuncionarioRepository.existeExtratoDeFuncionarioParaMes(cpf, extratoFuncionarioDTO.dataExtrato())) {
+    public ExtratoFuncionario criarExtrato(String cpfFuncionario, Date dataExtrato, double horasTrabalhadas, double valorHora, double salario) {
+        if (extratoRepository.existeExtratoDeFuncionarioParaMes(cpfFuncionario, dataExtrato)) {
             throw new ExtratoJaExisteParaMesReferenteException("Extrato já existe para o mês referente.");
         }
 
-        ExtratoFuncionario extrato = new ExtratoFuncionario();
+        Funcionario funcionario = funcionarioRepository.findComExtratoByCpf(cpfFuncionario)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário com CPF " + cpfFuncionario + " não encontrado."));
 
-        extrato.setDataExtrato(extratoFuncionarioDTO.dataExtrato());
-        extrato.setHorasTrabalhadas(extratoFuncionarioDTO.horasTrabalhadas());
-        extrato.setValorHora(extratoFuncionarioDTO.valorHora());
-        extrato.setSalario(extratoFuncionarioDTO.salario());
+        ExtratoFuncionario extrato = ExtratoFuncionario.builder()
+                .dataExtrato(dataExtrato)
+                .horasTrabalhadas(horasTrabalhadas)
+                .valorHora(valorHora)
+                .salario(salario)
+                .funcionario(funcionario)
+                .build();
 
-        Funcionario funcionario = funcionarioRepository.findFuncionarioComExtratoByCPF(cpf).orElseThrow(() -> new ResourceNotFoundException("Funcionário com o CPF " + cpf + " não encontrado."));
-
-        extrato.setFuncionario(funcionario);
-        funcionario.getExtratoFuncionario().add(extrato);
-
-        extratoFuncionarioRepository.save(extrato);
-
-        return extratoFuncionarioDTO;
-
+        return extratoRepository.save(extrato);
     }
 
-
+    @Override
     @Transactional(readOnly = true)
-    public ExtratoFuncionario getExtratoFuncionarioUnicoById(Long idExtrato) {
-        return extratoFuncionarioRepository.findById(idExtrato).orElseThrow(() -> new ResourceNotFoundException("Extrato com id " + idExtrato + " não encontrado."));
+    public ExtratoFuncionario buscarExtratoPorId(Long id) {
+        return extratoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Extrato com id " + id + " não encontrado."));
     }
 
-
+    @Override
     @Transactional(readOnly = true)
-    public Page<ExtratoFuncionarioResponseDTO> getExtratosFuncionarioDTOPorCPFPaginados(String cpf, Pageable pageable) {
-        return extratoFuncionarioRepository.findExtratosFuncionarioDTOByCPF(cpf, pageable);
+    public Page<ExtratoFuncionario> buscarExtratosPorCpf(String cpf, Pageable pageable) {
+        return extratoRepository.findByCpfFuncionario(cpf, pageable);
     }
 
-
+    @Override
     @Transactional
-    public ExtratoFuncionarioDTO editaExtratoFuncionarioById(Long id, ExtratoFuncionarioDTO extratoFuncionarioModificado) {
-
-        ExtratoFuncionario extratoFuncionario = getExtratoFuncionarioUnicoById(id);
-
-        extratoFuncionario.setDataExtrato(extratoFuncionarioModificado.dataExtrato());
-        extratoFuncionario.setHorasTrabalhadas(extratoFuncionarioModificado.horasTrabalhadas());
-        extratoFuncionario.setValorHora(extratoFuncionarioModificado.valorHora());
-        extratoFuncionario.setSalario(extratoFuncionarioModificado.salario());
-
-        extratoFuncionarioRepository.save(extratoFuncionario);
-
-        return extratoFuncionarioModificado;
-
+    public ExtratoFuncionario editarExtrato(Long id, Date dataExtrato, double horasTrabalhadas, double valorHora, double salario) {
+        ExtratoFuncionario extrato = buscarExtratoPorId(id);
+        extrato.setDataExtrato(dataExtrato);
+        extrato.setHorasTrabalhadas(horasTrabalhadas);
+        extrato.setValorHora(valorHora);
+        extrato.setSalario(salario);
+        return extratoRepository.save(extrato);
     }
 
-
+    @Override
     @Transactional
-    public void deletaExtratoFuncionarioById(Long id) {
-        extratoFuncionarioRepository.deleteById(id);
+    public void deletarExtrato(Long id) {
+        buscarExtratoPorId(id); // garante que existe antes de deletar
+        extratoRepository.deleteById(id);
     }
-
-
-     */
-
 }

@@ -37,4 +37,9 @@ public class ExtratoFuncionarioJpaAdapter implements ExtratoFuncionarioRepositor
     public boolean existeExtratoDeFuncionarioParaMes(String funcionarioCpf, Date dataExtrato) {
         return jpaRepository.existeExtratoDeFuncionarioParaMes(funcionarioCpf, dataExtrato);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        jpaRepository.deleteById(id);
+    }
 }

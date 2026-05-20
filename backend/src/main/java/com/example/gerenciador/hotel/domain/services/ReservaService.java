@@ -1,82 +1,87 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.repositories.HospedeRepository;
-import com.example.gerenciador.hotel.repositories.QuartoRepository;
-import com.example.gerenciador.hotel.repositories.ReservaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.gerenciador.hotel.domain.enums.StatusReserva;
+import com.example.gerenciador.hotel.domain.model.Hospede;
+import com.example.gerenciador.hotel.domain.model.Quarto;
+import com.example.gerenciador.hotel.domain.model.Reserva;
+import com.example.gerenciador.hotel.domain.port.in.ReservaUseCase;
+import com.example.gerenciador.hotel.domain.port.out.HospedeRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.QuartoRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.ReservaRepositoryPort;
+import com.example.gerenciador.hotel.shared.exceptions.QuartoNaoEstaDisponivelParaDataException;
+import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
-public class ReservaService {
+@RequiredArgsConstructor
+public class ReservaService implements ReservaUseCase {
 
-    @Autowired
-    private ReservaRepository reservaRepository;
+    private final ReservaRepositoryPort reservaRepository;
+    private final HospedeRepositoryPort hospedeRepository;
+    private final QuartoRepositoryPort quartoRepository;
 
-    @Autowired
-    private HospedeRepository hospedeRepository;
-
-    @Autowired
-    private QuartoRepository quartoRepository;
-
-        /*
+    @Override
     @Transactional
-    public Reserva criarReserva(Reserva reserva, String cpf, String numeroQuarto) {
+    public Reserva criarReserva(String cpfHospede, String numeroQuarto, LocalDateTime dataEntrada, LocalDateTime dataSaida, Integer numeroHospedes) {
+        Quarto quarto = quartoRepository.findByNumero(numeroQuarto)
+                .orElseThrow(() -> new ResourceNotFoundException("Quarto com número " + numeroQuarto + " não encontrado."));
 
-        Optional<Quarto> quarto = quartoRepository.findByNumero(numeroQuarto);
-
-        if(!quarto.isPresent()){
-            throw new ResourceNotFoundException("Quarto inválido. Cadastre o quarto com o número " + numeroQuarto + " primeiro.");
+        boolean disponivel = reservaRepository.quartoEstaDisponivelParaData(dataEntrada, dataSaida, numeroQuarto);
+        if (!disponivel) {
+            throw new QuartoNaoEstaDisponivelParaDataException("Quarto não está disponível para reserva nesta data.");
         }
 
-        boolean quartoEstaDisponivelParaData = reservaRepository.quartoEstaDisponivelParaDataDeReserva(reserva.getDataEntrada(), reserva.getDataSaida(), numeroQuarto);
+        Hospede hospede = hospedeRepository.findByCpf(cpfHospede)
+                .orElseThrow(() -> new ResourceNotFoundException("Hóspede com CPF " + cpfHospede + " não encontrado."));
 
-        if (!quartoEstaDisponivelParaData) {
-            throw new QuartoNaoEstaDisponivelParaDataException("Quarto não está disponivel para reserva para esta data.");
-        }
+        Reserva reserva = Reserva.builder()
+                .dataEntrada(dataEntrada)
+                .dataSaida(dataSaida)
+                .numeroHospedes(numeroHospedes)
+                .statusReserva(StatusReserva.AGENDADO)
+                .quarto(quarto)
+                .hospede(hospede)
+                .build();
 
-        Hospede hospede = hospedeRepository.findByCpf(cpf).orElseThrow(() -> new ResourceNotFoundException("Hóspede não encontrado."));
-
-        reserva.setHospede(hospede);
-        reserva.setQuarto(quarto.get());
         return reservaRepository.save(reserva);
     }
 
-
+    @Override
     @Transactional(readOnly = true)
-    public Reserva getReservaById(Long id) {
-        return reservaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reserva não encontrada para esse id " + id));
+    public Reserva buscarReservaPorId(Long id) {
+        return reservaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva com id " + id + " não encontrada."));
     }
 
-
+    @Override
     @Transactional
-    public Reserva modificaStatusReservaById(Long id, StatusReserva statusReserva) {
-        Reserva reserva = getReservaById(id);
-
+    public Reserva modificarStatusReserva(Long id, StatusReserva statusReserva) {
+        Reserva reserva = buscarReservaPorId(id);
         reserva.setStatusReserva(statusReserva);
-
         return reservaRepository.save(reserva);
     }
 
-
+    @Override
     @Transactional(readOnly = true)
-    public Page<ReservaResponseDTO> buscarReservasDTOPorHospedeEStatusPaginadas(String cpfHospede, StatusReserva status, Pageable pageable) {
-        return reservaRepository.buscarReservasDTOPorHospedeEStatusPaginadas(cpfHospede, status, pageable);
+    public Page<Reserva> buscarReservasPorHospedeEStatus(String cpf, StatusReserva status, Pageable pageable) {
+        return reservaRepository.findByHospedeEStatus(cpf, status, pageable);
     }
 
-
+    @Override
     @Transactional(readOnly = true)
-    public Page<ReservaResponseDTO> buscarReservasDTOAgendadasEmUsoPorCPF(String cpf, Pageable pageable) {
-        return reservaRepository.findReservasDTOAgendadasEmUsoPorCPF(cpf, StatusReserva.AGENDADO, StatusReserva.EM_USO, pageable);
+    public Page<Reserva> buscarReservasAgendadasEmUsoPorCpf(String cpf, Pageable pageable) {
+        return reservaRepository.findAgendadasEmUsoPorCpf(cpf, pageable);
     }
 
-
+    @Override
     @Transactional(readOnly = true)
-    public Page<ReservaResponseDTO> buscaReservasDTOHospedeFinalizadasCanceladasByCPF(String cpf, Pageable pageable) {
-        return reservaRepository.findReservasDTOHospedeFinalizadasCanceladasByCPF(cpf, StatusReserva.FINALIZADO, StatusReserva.CANCELADO, pageable);
+    public Page<Reserva> buscarReservasFinalizadasCanceladasPorCpf(String cpf, Pageable pageable) {
+        return reservaRepository.findFinalizadasCanceladasPorCpf(cpf, pageable);
     }
-
-
-         */
-
-
 }

@@ -1,97 +1,68 @@
 package com.example.gerenciador.hotel.domain.services;
 
-import com.example.gerenciador.hotel.repositories.EnderecoRepository;
-import com.example.gerenciador.hotel.repositories.FuncionarioRepository;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.gerenciador.hotel.domain.enums.Turno;
+import com.example.gerenciador.hotel.domain.model.Endereco;
+import com.example.gerenciador.hotel.domain.model.Funcionario;
+import com.example.gerenciador.hotel.domain.port.in.FuncionarioUseCase;
+import com.example.gerenciador.hotel.domain.port.out.EnderecoRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.FuncionarioRepositoryPort;
+import com.example.gerenciador.hotel.shared.exceptions.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class FuncionarioService {
+@RequiredArgsConstructor
+public class FuncionarioService implements FuncionarioUseCase {
 
+    private final FuncionarioRepositoryPort funcionarioRepository;
+    private final EnderecoRepositoryPort enderecoRepository;
 
-    @Autowired
-    private FuncionarioRepository funcionarioRepository;
-
-    @Autowired
-    private EnderecoRepository enderecoRepository;
-
-        /*
-
-    @Transactional
-    public FuncionarioRequestDTO criarFuncionario(FuncionarioRequestDTO funcionarioDTO) {
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(funcionarioDTO.cpf());
-
-        if (funcionarioOptional.isPresent()) {
-            throw new FuncionarioJaExisteException("Funcionario com este CPF já existe!");
-        }
-
-        Funcionario funcionario = new Funcionario();
-
-        funcionario.setCpf(funcionarioDTO.cpf());
-        funcionario.setNome(funcionarioDTO.nome());
-        funcionario.setDataNascimento(funcionarioDTO.dataNascimento());
-        funcionario.setNumeroTelefone(funcionarioDTO.numeroTelefone());
-        funcionario.setCargo(funcionarioDTO.cargo());
-        funcionario.setTurno(funcionarioDTO.turno());
-
-        funcionarioRepository.save(funcionario);
-
-        return funcionarioDTO;
-
-    }
-
-
-    @Transactional
-    public Endereco criaEnderecoParaFuncionario(String cpf, Endereco endereco) {
-
-        Funcionario funcionario = funcionarioRepository.findByCpf(cpf).orElseThrow(() -> new ResourceNotFoundException("Funcionario com o CPF " + cpf + " não encontrado."));
-
-        funcionario.setEnderecoHospede(endereco);
-
-        funcionarioRepository.save(funcionario);
-
-        return endereco;
-    }
-
-
+    @Override
     @Transactional(readOnly = true)
-    public Funcionario getFuncionarioByCPF(String cpf) {
+    public Funcionario buscarFuncionarioPorCpf(String cpf) {
         return funcionarioRepository.findByCpf(cpf)
-                .orElseThrow(() -> new ResourceNotFoundException("Funcionário com o CPF " + cpf + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário com CPF " + cpf + " não encontrado."));
     }
 
-
-    @Transactional(readOnly = true)
-    public Page<FuncionarioResponseDTO> getFuncionariosDTOPorNomePaginados(String nome, Pageable pageable) {
-        return funcionarioRepository.findFuncionariosDTOByNamePageados(nome, pageable);
-    }
-
-
+    @Override
     @Transactional
-    public FuncionarioUpdateDTO editaFuncionarioByCPF(String cpf, FuncionarioUpdateDTO funcionarioModificado) {
-        Funcionario funcionario = getFuncionarioByCPF(cpf);
-
-        funcionario.setNome(funcionarioModificado.nome());
-        funcionario.setDataNascimento(funcionarioModificado.dataNascimento());
-        funcionario.setNumeroTelefone(funcionarioModificado.numeroTelefone());
-        funcionario.setCargo(funcionarioModificado.cargo());
-        funcionario.setTurno(funcionarioModificado.turno());
-
-        funcionarioRepository.save(funcionario);
-
-        return funcionarioModificado;
-
+    public Funcionario criarFuncionario(String cpf, String nome, String cargo, Turno turno) {
+        // A criação do Funcionario passa pelo User — orquestrada pelo UserService
+        return buscarFuncionarioPorCpf(cpf);
     }
 
+    @Override
+    @Transactional
+    public Funcionario editarFuncionario(String cpf, String nome, String cargo, Turno turno) {
+        Funcionario funcionario = buscarFuncionarioPorCpf(cpf);
+        funcionario.setCargo(cargo);
+        funcionario.setTurno(turno);
+        return funcionarioRepository.save(funcionario);
+    }
 
+    @Override
     @Transactional(readOnly = true)
-    public Endereco getEnderecoFuncionarioByCPF(String cpf) {
-        return enderecoRepository.getEnderecoFuncionarioByCPF(cpf).orElseThrow(() -> new ResourceNotFoundException("Funcionario sem endereço cadastrado"));
+    public Page<Funcionario> buscarFuncionariosPorNome(String nome, Pageable pageable) {
+        return funcionarioRepository.findByNome(nome, pageable);
     }
 
+    @Override
+    @Transactional
+    public Endereco criarEnderecoParaFuncionario(String cpf, Endereco endereco) {
+        Funcionario funcionario = buscarFuncionarioPorCpf(cpf);
+        Endereco enderecoSalvo = enderecoRepository.save(endereco);
+        funcionario.getUser().setEndereco(enderecoSalvo);
+        funcionarioRepository.save(funcionario);
+        return enderecoSalvo;
+    }
 
-         */
-
+    @Override
+    @Transactional(readOnly = true)
+    public Endereco buscarEnderecoFuncionarioPorCpf(String cpf) {
+        return enderecoRepository.getEnderecoFuncionarioByCpf(cpf)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário sem endereço cadastrado."));
+    }
 }

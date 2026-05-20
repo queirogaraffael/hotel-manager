@@ -13,4 +13,5 @@ public interface ExtratoFuncionarioRepositoryPort {
     Optional<ExtratoFuncionario> findById(Long id);
     Page<ExtratoFuncionario> findByCpfFuncionario(String cpf, Pageable pageable);
     boolean existeExtratoDeFuncionarioParaMes(String funcionarioCpf, Date dataExtrato);
+    void deleteById(Long id);
 }
