@@ -1,106 +1,82 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 
-
-
-import com.example.gerenciador.hotel.domain.services.FuncionarioService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.gerenciador.hotel.domain.model.Endereco;
+import com.example.gerenciador.hotel.domain.model.Funcionario;
+import com.example.gerenciador.hotel.domain.port.in.FuncionarioUseCase;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.endereco.EnderecoRequestDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.endereco.EnderecoResponseDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.funcionario.FuncionarioResponseDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.funcionario.FuncionarioUpdateDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.mapper.EnderecoWebMapper;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.mapper.FuncionarioWebMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/funcionarios")
+@RequiredArgsConstructor
 public class FuncionarioController {
 
-    @Autowired
-    private FuncionarioService funcionarioService;
+    private final FuncionarioUseCase funcionarioUseCase;
+    private final FuncionarioWebMapper funcionarioMapper;
+    private final EnderecoWebMapper enderecoMapper;
 
-    /*
-
-    @Operation(summary = "Cria novo funcionario", description = "FuncionarioDTO. Não adiciona com endereço nem extrato. CPF precisa ter exatamento 11 caracteres.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Funcionário criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "409", description = "Conflito: Funcionário já existe"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    @PostMapping
-    public ResponseEntity<FuncionarioRequestDTO> criaFuncionario(@Valid @RequestBody FuncionarioRequestDTO funcionario) {
-
-        FuncionarioRequestDTO funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioCriado);
-    }
-
-
-    @Operation(summary = "Cria endereco", description = "Se o funcionário já tiver um endereço, o novo endereço será substituido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Endereço criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    @PostMapping("/endereco/{cpf}")
-    public ResponseEntity<Endereco> criaEnderecoFuncionario(@PathVariable String cpf, @RequestBody Endereco endereco) {
-        Endereco enderecoCriado = funcionarioService.criaEnderecoParaFuncionario(cpf, endereco);
-        return ResponseEntity.status(HttpStatus.CREATED).body(enderecoCriado);
-    }
-
-
-    @Operation(summary = "Pega endereço de um funcionário pelo CPF")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Endereço encontrado com sucesso."),
-            @ApiResponse(responseCode = "404", description = "Endereço não encontrado para o CPF fornecido."),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    @GetMapping("/endereco/{cpf}")
-    public ResponseEntity<Endereco> getEnderecoFuncionarioByCPF(@PathVariable String cpf) {
-        Endereco endereco = funcionarioService.getEnderecoFuncionarioByCPF(cpf);
-        return ResponseEntity.status(HttpStatus.OK).body(endereco);
-    }
-
-
-    @Operation(summary = "Retorna Funcionario pelo CPF.", description = "Apenas os atributos principais.")
+    @Operation(summary = "Buscar funcionário por CPF")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Funcionário encontrado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "404", description = "Funcionário não encontrado")
     })
     @GetMapping("/{cpf}")
-    public ResponseEntity<Funcionario> getFuncionarioByCpf(@PathVariable String cpf) {
-        Funcionario funcionario = funcionarioService.getFuncionarioByCPF(cpf);
-
-        if (funcionario == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return ResponseEntity.ok(funcionario);
+    public ResponseEntity<FuncionarioResponseDTO> getFuncionarioByCpf(@PathVariable String cpf) {
+        Funcionario funcionario = funcionarioUseCase.buscarFuncionarioPorCpf(cpf);
+        return ResponseEntity.ok(funcionarioMapper.toResponse(funcionario));
     }
 
-
+    @Operation(summary = "Buscar funcionários por nome (paginado)")
     @GetMapping("/nome")
-    @Operation(summary = "Busca funcionários DTO por nome de forma paginada.", description = "Retorna uma página de funcionários DTO cujo nome contém o valor fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Funcionários encontrados com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos fornecidos"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    public Page<FuncionarioResponseDTO> buscaFuncionariosPorNome(
+    public ResponseEntity<Page<FuncionarioResponseDTO>> buscarPorNome(
             @RequestParam String nome,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return funcionarioService.getFuncionariosDTOPorNomePaginados(nome, pageable);
+        Page<FuncionarioResponseDTO> resultado = funcionarioUseCase
+                .buscarFuncionariosPorNome(nome, pageable)
+                .map(funcionarioMapper::toResponse);
+        return ResponseEntity.ok(resultado);
     }
 
-
-    @PutMapping("/{cpf}")
-    @Operation(summary = "Atualiza dados do funcionario.", description = "Atributos principais")
+    @Operation(summary = "Atualizar cargo e turno do funcionário")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Funcionário atualizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "404", description = "Funcionário não encontrado")
     })
-    public ResponseEntity<FuncionarioUpdateDTO> atualizaFuncionario(@PathVariable String cpf, @RequestBody FuncionarioUpdateDTO funcionarioAtualizado) {
-        FuncionarioUpdateDTO funcionario = funcionarioService.editaFuncionarioByCPF(cpf, funcionarioAtualizado);
-
-        return ResponseEntity.status(HttpStatus.OK).body(funcionario);
+    @PutMapping("/{cpf}")
+    public ResponseEntity<FuncionarioResponseDTO> atualizar(
+            @PathVariable String cpf,
+            @RequestBody FuncionarioUpdateDTO dto) {
+        Funcionario atualizado = funcionarioUseCase.editarFuncionario(cpf, null, dto.getCargo(), dto.getTurno());
+        return ResponseEntity.status(HttpStatus.OK).body(funcionarioMapper.toResponse(atualizado));
     }
 
+    @Operation(summary = "Criar endereço para funcionário", description = "Se já tiver endereço, o novo substituirá o anterior.")
+    @PostMapping("/endereco/{cpf}")
+    public ResponseEntity<EnderecoResponseDTO> criaEnderecoFuncionario(
+            @PathVariable String cpf,
+            @RequestBody EnderecoRequestDTO dto) {
+        Endereco enderecoSalvo = funcionarioUseCase.criarEnderecoParaFuncionario(cpf, enderecoMapper.toDomain(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(enderecoMapper.toResponse(enderecoSalvo));
+    }
 
-     */
+    @Operation(summary = "Buscar endereço de funcionário por CPF")
+    @GetMapping("/endereco/{cpf}")
+    public ResponseEntity<EnderecoResponseDTO> getEnderecoFuncionarioByCpf(@PathVariable String cpf) {
+        Endereco endereco = funcionarioUseCase.buscarEnderecoFuncionarioPorCpf(cpf);
+        return ResponseEntity.ok(enderecoMapper.toResponse(endereco));
+    }
 }

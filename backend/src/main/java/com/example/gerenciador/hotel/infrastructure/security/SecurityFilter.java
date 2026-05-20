@@ -1,6 +1,6 @@
 package com.example.gerenciador.hotel.infrastructure.security;
 
-import com.example.gerenciador.hotel.repositories.UserRepository;
+import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.UserJpaRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,11 +17,11 @@ import java.io.IOException;
 public class SecurityFilter extends OncePerRequestFilter {
 
     private TokenService tokenService;
-    private UserRepository userRepository;
+    private UserJpaRepository userJpaRepository;
 
-    public SecurityFilter(TokenService tokenService, UserRepository userRepository) {
+    public SecurityFilter(TokenService tokenService, UserJpaRepository userJpaRepository) {
         this.tokenService = tokenService;
-        this.userRepository = userRepository;
+        this.userJpaRepository = userJpaRepository;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             if (token != null) {
                 String username = tokenService.validateToken(token);
                 if (username != null) {
-                    UserDetails user = userRepository.findByUsername(username);
+                    UserDetails user = userJpaRepository.findByUsername(username);
                     if (user != null) {
                         var authentication = new UsernamePasswordAuthenticationToken(
                                 user, null, user.getAuthorities());

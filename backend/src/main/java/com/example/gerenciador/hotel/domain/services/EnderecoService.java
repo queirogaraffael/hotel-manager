@@ -32,21 +32,3 @@ public class EnderecoService implements EnderecoUseCase {
 }
 
 
-    /*
-    @Transactional
-    public Endereco modificaEnderecoById(Long id, Endereco enderecoModificado) {
-        Endereco endereco = enderecoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Endereco com este id " + id + "não encontrado para modificação."));
-
-        endereco.setRua(enderecoModificado.getRua());
-        endereco.setNumero(enderecoModificado.getNumero());
-        endereco.setCidade(enderecoModificado.getCidade());
-        endereco.setBairro(enderecoModificado.getBairro());
-        endereco.setEstado(enderecoModificado.getEstado());
-
-        return enderecoRepository.save(endereco);
-
-    }
-
-     */
-
-}

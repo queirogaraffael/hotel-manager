@@ -1,148 +1,112 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 
+import com.example.gerenciador.hotel.domain.enums.StatusQuarto;
+import com.example.gerenciador.hotel.domain.enums.TipoQuarto;
+import com.example.gerenciador.hotel.domain.model.Quarto;
+import com.example.gerenciador.hotel.domain.port.in.QuartoUseCase;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.quarto.QuartoRequestDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.quarto.QuartoResponseDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.quarto.QuartoUpdateDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.mapper.QuartoWebMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.gerenciador.hotel.domain.services.QuartoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/quartos")
+@RequiredArgsConstructor
 public class QuartoController {
 
-    @Autowired
-    private QuartoService quartoService;
+    private final QuartoUseCase quartoUseCase;
+    private final QuartoWebMapper mapper;
 
-    /*
-
-    @Operation(summary = "Cria novo quarto", description = "Cria um quarto com um número único.")
+    @Operation(summary = "Criar novo quarto")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Quarto criado com sucesso"),
-            @ApiResponse(responseCode = "409", description = "Conflito: Quarto já existe"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "409", description = "Quarto já existe")
     })
     @PostMapping
-    public ResponseEntity<QuartoRequestDTO> criarQuarto(@RequestBody QuartoRequestDTO quarto) {
-        QuartoRequestDTO novoQuarto = quartoService.criarQuarto(quarto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoQuarto);
+    public ResponseEntity<QuartoResponseDTO> criarQuarto(@Valid @RequestBody QuartoRequestDTO dto) {
+        Quarto quarto = quartoUseCase.criarQuarto(
+                dto.getNumero(), dto.getTipoQuarto(), dto.getCapacidade(),
+                dto.getPrecoDiaria(), dto.getStatusQuarto()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(quarto));
     }
 
-
-    @Operation(summary = "Obter quarto por número", description = "Recupera um quarto com base no número fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Quarto encontrado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Quarto não encontrado"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
+    @Operation(summary = "Buscar quarto por número")
     @GetMapping("/{numero}")
-    public ResponseEntity<Quarto> getQuartoByNumero(@PathVariable String numero) {
-        Quarto quarto = quartoService.getQuartoByNumero(numero);
-        return ResponseEntity.status(HttpStatus.OK).body(quarto);
+    public ResponseEntity<QuartoResponseDTO> getQuartoByNumero(@PathVariable String numero) {
+        return ResponseEntity.ok(mapper.toResponse(quartoUseCase.buscarQuartoPorNumero(numero)));
     }
 
-
-    @Operation(summary = "Editar quarto por número", description = "Atualiza as informações de um quarto com base no número fornecido. Atualiza todos os campos.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Quarto atualizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Quarto não encontrado"),
-            @ApiResponse(responseCode = "409", description = "Conflito: Quarto com o mesmo número já existe"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
+    @Operation(summary = "Editar quarto por número")
     @PutMapping("/{numero}")
-    public ResponseEntity<QuartoUpdateDTO> editaQuartoByNumero(@PathVariable String numero, @RequestBody QuartoUpdateDTO quartoModificado) {
-        QuartoUpdateDTO quartoAtualizado = quartoService.editaQuartoByNumero(numero, quartoModificado);
-        return ResponseEntity.status(HttpStatus.OK).body(quartoAtualizado);
+    public ResponseEntity<QuartoResponseDTO> editarQuarto(
+            @PathVariable String numero,
+            @RequestBody QuartoUpdateDTO dto) {
+        Quarto atualizado = quartoUseCase.editarQuarto(
+                numero, dto.getTipoQuarto(), dto.getCapacidade(), dto.getPrecoDiaria(), dto.getStatusQuarto()
+        );
+        return ResponseEntity.ok(mapper.toResponse(atualizado));
     }
 
+    @Operation(summary = "Modificar status do quarto")
+    @PatchMapping("/{numero}/status")
+    public ResponseEntity<QuartoResponseDTO> modificarStatus(
+            @PathVariable String numero,
+            @RequestParam StatusQuarto statusQuarto) {
+        Quarto quarto = quartoUseCase.modificarStatusQuarto(numero, statusQuarto);
+        return ResponseEntity.ok(mapper.toResponse(quarto));
+    }
 
-    @Operation(summary = "Busca paginada de quartos DTO por tipo", description = "Recupera quartos com base no tipo de quarto, paginados.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Quartos encontrados com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Nenhum quarto encontrado para o status fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
+    @Operation(summary = "Buscar quartos por tipo (paginado)")
     @GetMapping("/por-tipo/{tipoQuarto}")
-    public ResponseEntity<Page<QuartoResponseDTO>> buscarQuartosPorTipo(
+    public ResponseEntity<Page<QuartoResponseDTO>> buscarPorTipo(
             @PathVariable TipoQuarto tipoQuarto,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-
-        Page<QuartoResponseDTO> quartosDTO = quartoService.buscarQuartosDTOPorTipoPaginadas(tipoQuarto, pageable);
-
-        if (quartosDTO.isEmpty()) {
-            throw new ResourceNotFoundException("Nenhum quarto encontrado para o tipo fornecidos.");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(quartosDTO);
+        return ResponseEntity.ok(quartoUseCase.buscarQuartosPorTipo(tipoQuarto, pageable).map(mapper::toResponse));
     }
 
-
-    @Operation(summary = "Busca paginada de quartos DTO por tipo e status", description = "Recupera quartos com base no tipo e status, paginados.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Quartos encontrados com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Nenhum quarto encontrado para o status fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
+    @Operation(summary = "Buscar quartos por tipo e status (paginado)")
     @GetMapping("/por-tipo/{tipoQuarto}/status/{statusQuarto}")
-    public ResponseEntity<Page<QuartoResponseDTO>> buscarQuartosPorTipoEStatus(
+    public ResponseEntity<Page<QuartoResponseDTO>> buscarPorTipoEStatus(
             @PathVariable TipoQuarto tipoQuarto,
             @PathVariable StatusQuarto statusQuarto,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-
-        Page<QuartoResponseDTO> quartosDTO = quartoService.buscarQuartosDTOPorTipoEPorStatusPaginadas(tipoQuarto, statusQuarto, pageable);
-
-        if (quartosDTO.isEmpty()) {
-            throw new ResourceNotFoundException("Nenhum quarto encontrado para o tipo e status fornecidos.");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(quartosDTO);
+        return ResponseEntity.ok(quartoUseCase.buscarQuartosPorTipoEStatus(tipoQuarto, statusQuarto, pageable).map(mapper::toResponse));
     }
 
-
-    @Operation(summary = "Busca paginada de quartos DTO por status", description = "Recupera quartos com base no status, paginados.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Quartos encontrados com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Nenhum quarto encontrado para o status fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
+    @Operation(summary = "Buscar quartos por status (paginado)")
     @GetMapping("/por-status/{statusQuarto}")
-    public ResponseEntity<Page<QuartoResponseDTO>> buscarQuartosPorStatus(
+    public ResponseEntity<Page<QuartoResponseDTO>> buscarPorStatus(
             @PathVariable StatusQuarto statusQuarto,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-
-        Page<QuartoResponseDTO> quartosDTO = quartoService.buscarQuartosDTOPorStatusPaginadas(statusQuarto, pageable);
-
-        if (quartosDTO.isEmpty()) {
-            throw new ResourceNotFoundException("Nenhum quarto encontrado para o status fornecido.");
-        }
-
-        return ResponseEntity.ok(quartosDTO);
+        return ResponseEntity.ok(quartoUseCase.buscarQuartosPorStatus(statusQuarto, pageable).map(mapper::toResponse));
     }
 
-
-    @Operation(summary = "Obter quartos DTO disponíveis por tipo e data",
-            description = "Recupera uma lista paginada de quartos disponíveis com base no tipo de quarto e no intervalo de datas fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Quartos encontrados com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Quartos não encontrados para os critérios fornecidos"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    @GetMapping("/quartos/disponiveis")
-    public ResponseEntity<Page<QuartoResponseDTO>> buscarQuartosDisponiveis(
+    @Operation(summary = "Buscar quartos disponíveis por tipo e data")
+    @GetMapping("/disponiveis")
+    public ResponseEntity<List<QuartoResponseDTO>> buscarDisponiveis(
             @RequestParam TipoQuarto tipoQuarto,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataEntrada,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataSaida,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<QuartoResponseDTO> quartosDisponiveis = quartoService.buscaQuartoPorTipoDisponiveisPorData(tipoQuarto, dataEntrada, dataSaida, pageable);
-
-        if (quartosDisponiveis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(quartosDisponiveis);
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataSaida) {
+        List<QuartoResponseDTO> quartos = quartoUseCase
+                .buscarQuartosDisponiveisPorTipoEData(tipoQuarto, dataEntrada, dataSaida)
+                .stream().map(mapper::toResponse).collect(Collectors.toList());
+        return ResponseEntity.ok(quartos);
     }
-
-     */
 }

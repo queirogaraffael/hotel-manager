@@ -26,12 +26,18 @@ public class TokenService {
 
     private final String issuer = "auth-api";
 
+    /** Mantido para compatibilidade com código legado que ainda injeta entities.User */
     public String generateToken(User user) {
+        return generateTokenFromUsername(user.getUsername());
+    }
+
+    /** Novo método — não depende de entities.User */
+    public String generateTokenFromUsername(String username) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer(issuer)
-                    .withSubject(user.getUsername())
+                    .withSubject(username)
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

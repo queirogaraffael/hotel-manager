@@ -1,106 +1,86 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 
-
-import com.example.gerenciador.hotel.domain.services.ReservaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.gerenciador.hotel.domain.enums.StatusReserva;
+import com.example.gerenciador.hotel.domain.model.Reserva;
+import com.example.gerenciador.hotel.domain.port.in.ReservaUseCase;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.reserva.ReservaRequestDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.reserva.ReservaResponseDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.mapper.ReservaWebMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reservas")
+@RequiredArgsConstructor
 public class ReservaController {
 
-    @Autowired
-    private ReservaService reservaService;
+    private final ReservaUseCase reservaUseCase;
+    private final ReservaWebMapper mapper;
 
-    /*
-
-    @Operation(summary = "Criar nova reserva", description = "Cria uma nova reserva. Quarto tem que estar disponivel para data e hóspede precisa já estar cadastrado.")
+    @Operation(summary = "Criar reserva para hóspede")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Reserva criada com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "404", description = "Hóspede ou quarto não encontrado"),
+            @ApiResponse(responseCode = "409", description = "Quarto não está disponível para a data")
     })
-    @PostMapping("{cpf}/{numeroQuarto}")
-    public ResponseEntity<Reserva> criarReserva(@PathVariable String cpf, @PathVariable String numeroQuarto, @RequestBody Reserva reserva) {
-        Reserva novaReserva = reservaService.criarReserva(reserva, cpf, numeroQuarto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novaReserva);
+    @PostMapping("/{cpfHospede}")
+    public ResponseEntity<ReservaResponseDTO> criarReserva(
+            @PathVariable String cpfHospede,
+            @Valid @RequestBody ReservaRequestDTO dto) {
+        Reserva reserva = reservaUseCase.criarReserva(
+                cpfHospede, dto.getNumeroQuarto(),
+                dto.getDataEntrada(), dto.getDataSaida(),
+                dto.getNumeroHospedes()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(reserva));
     }
 
-
-    @Operation(summary = "Obter reserva por ID", description = "Recupera uma reserva com base no ID fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Reserva encontrada com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Reserva não encontrada"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
+    @Operation(summary = "Buscar reserva por ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Reserva> getReservaById(@PathVariable Long id) {
-        Reserva reserva = reservaService.getReservaById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(reserva);
+    public ResponseEntity<ReservaResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(mapper.toResponse(reservaUseCase.buscarReservaPorId(id)));
     }
 
-
-    @Operation(summary = "Modificar status da reserva", description = "Atualiza o status de uma reserva com base no ID fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Status da reserva atualizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Reserva não encontrada"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
+    @Operation(summary = "Modificar status da reserva")
     @PutMapping("/{id}/status")
-    public ResponseEntity<Reserva> modificaStatusReservaById(@PathVariable Long id, @RequestBody StatusReserva statusReserva) {
-        Reserva reservaAtualizada = reservaService.modificaStatusReservaById(id, statusReserva);
-        return ResponseEntity.status(HttpStatus.OK).body(reservaAtualizada);
+    public ResponseEntity<ReservaResponseDTO> modificarStatus(
+            @PathVariable Long id,
+            @RequestParam StatusReserva statusReserva) {
+        Reserva reserva = reservaUseCase.modificarStatusReserva(id, statusReserva);
+        return ResponseEntity.ok(mapper.toResponse(reserva));
     }
 
-
-    @Operation(summary = "Busca paginada de reservas AGENDADAS e EM USO por CPF", description = "Recupera reservas AGENDADAS e EM USO paginadas de um hóspede com base no CPF.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Reservas encontradas com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Nenhuma reserva encontrada para o CPF fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    @GetMapping("/reservas/agendadas-em-uso/por-cpf/{cpf}")
-    public ResponseEntity<Page<ReservaResponseDTO>> buscarReservasDTOAgendadasEmUsoPorCPF(
+    @Operation(summary = "Buscar reservas agendadas/em uso por CPF do hóspede")
+    @GetMapping("/agendadas-em-uso/por-cpf/{cpf}")
+    public ResponseEntity<Page<ReservaResponseDTO>> buscarAgendadasEmUso(
             @PathVariable String cpf,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        Page<ReservaResponseDTO> reservasDTO = reservaService.buscarReservasDTOAgendadasEmUsoPorCPF(cpf,pageable);
-        return ResponseEntity.ok(reservasDTO);
+        return ResponseEntity.ok(reservaUseCase.buscarReservasAgendadasEmUsoPorCpf(cpf, pageable).map(mapper::toResponse));
     }
 
+    @Operation(summary = "Buscar reservas finalizadas/canceladas por CPF do hóspede")
+    @GetMapping("/historico/por-cpf/{cpf}")
+    public ResponseEntity<Page<ReservaResponseDTO>> buscarHistorico(
+            @PathVariable String cpf,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return ResponseEntity.ok(reservaUseCase.buscarReservasFinalizadasCanceladasPorCpf(cpf, pageable).map(mapper::toResponse));
+    }
 
-    @Operation(summary = "Busca paginada de reservas DTO por hóspede e status", description = "Recupera reservas de um hóspede com base no CPF e status, paginadas.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Reservas encontradas com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Nenhuma reserva encontrada para o hóspede ou status fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    @GetMapping("/por-hospede/{cpfHospede}/status/{status}")
-    public ResponseEntity<Page<ReservaResponseDTO>> buscarReservasPorHospedeEStatus(
-            @PathVariable String cpfHospede,
+    @Operation(summary = "Buscar reservas por hóspede e status")
+    @GetMapping("/por-hospede/{cpf}/status/{status}")
+    public ResponseEntity<Page<ReservaResponseDTO>> buscarPorHospedeEStatus(
+            @PathVariable String cpf,
             @PathVariable StatusReserva status,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-
-        Page<ReservaResponseDTO> reservasDTO = reservaService.buscarReservasDTOPorHospedeEStatusPaginadas(cpfHospede, status, pageable);
-
-        return ResponseEntity.ok(reservasDTO);
+        return ResponseEntity.ok(reservaUseCase.buscarReservasPorHospedeEStatus(cpf, status, pageable).map(mapper::toResponse));
     }
-
-
-    @Operation(summary = "Busca paginada de reservas FINALIZADAS e CANCELADAS (Histórico) por CPF.", description = "Recupera histórico (reservas finalizadas e canceladas) paginado de um hóspede com base no CPF.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Reservas encontradas com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Nenhuma reserva encontrada para o CPF fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    @GetMapping("/reservas/finalizadas-canceladas/por-cpf/{cpf}")
-    public ResponseEntity<Page<ReservaResponseDTO>> buscarReservasFinalizadasCanceladasPorCPF(
-            @PathVariable String cpf,
-            @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        Page<ReservaResponseDTO> reservasDTO = reservaService.buscaReservasDTOHospedeFinalizadasCanceladasByCPF(cpf, pageable);
-        return ResponseEntity.ok(reservasDTO);
-    }
-
-
-     */
-
 }

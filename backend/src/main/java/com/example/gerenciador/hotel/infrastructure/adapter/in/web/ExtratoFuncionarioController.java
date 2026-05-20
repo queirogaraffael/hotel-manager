@@ -1,92 +1,75 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 
-import com.example.gerenciador.hotel.domain.services.ExtratoFuncionarioService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.example.gerenciador.hotel.domain.model.ExtratoFuncionario;
+import com.example.gerenciador.hotel.domain.port.in.ExtratoFuncionarioUseCase;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.extratofuncionario.ExtratoFuncionarioRequestDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.extratofuncionario.ExtratoFuncionarioResponseDTO;
+import com.example.gerenciador.hotel.infrastructure.adapter.in.web.mapper.ExtratoFuncionarioWebMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/extratos")
+@RequiredArgsConstructor
 public class ExtratoFuncionarioController {
 
-    @Autowired
-    private ExtratoFuncionarioService extratoFuncionarioService;
+    private final ExtratoFuncionarioUseCase extratoUseCase;
+    private final ExtratoFuncionarioWebMapper mapper;
 
-    /*
-    @PostMapping("/{cpf}")
-    @Operation(summary = "Cria um extrato para o funcionário", description = "Cria um novo extrato para o funcionário com o CPF fornecido. Se existir extrato para o mes/ano referente, o programa lançará uma exceção.")
+    @Operation(summary = "Criar extrato para funcionário pelo CPF")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Extrato criado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "404", description = "Funcionário não encontrado"),
+            @ApiResponse(responseCode = "409", description = "Extrato já existe para o mês referente")
     })
-    public ResponseEntity<ExtratoFuncionarioDTO> criaExtratoFuncionario(
+    @PostMapping("/{cpf}")
+    public ResponseEntity<ExtratoFuncionarioResponseDTO> criarExtrato(
             @PathVariable String cpf,
-            @RequestBody ExtratoFuncionarioDTO extratoFuncionarioDTO) {
-
-        ExtratoFuncionarioDTO extrato = extratoFuncionarioService.criaExtratoFuncionario(cpf, extratoFuncionarioDTO);
-        return ResponseEntity.status(201).body(extrato);
+            @Valid @RequestBody ExtratoFuncionarioRequestDTO dto) {
+        ExtratoFuncionario extrato = extratoUseCase.criarExtrato(
+                cpf, dto.getDataExtrato(), dto.getHorasTrabalhadas(), dto.getValorHora(), dto.getSalario()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(extrato));
     }
 
-
-    @GetMapping("/{idExtrato}")
-    @Operation(summary = "Obtém um extrato único pelo ID", description = "Retorna o extrato correspondente ao ID fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Extrato encontrado"),
-            @ApiResponse(responseCode = "404", description = "Extrato não encontrado com o ID fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    public ResponseEntity<ExtratoFuncionario> getExtratoFuncionarioUnicoById(
-            @PathVariable Long idExtrato) {
-        ExtratoFuncionario extrato = extratoFuncionarioService.getExtratoFuncionarioUnicoById(idExtrato);
-        return ResponseEntity.ok(extrato);
+    @Operation(summary = "Buscar extrato por ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<ExtratoFuncionarioResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(mapper.toResponse(extratoUseCase.buscarExtratoPorId(id)));
     }
 
-
+    @Operation(summary = "Buscar extratos por CPF do funcionário (paginado)")
     @GetMapping("/cpf/{cpf}")
-    @Operation(summary = "Obtém extratos DTO paginados pelo CPF", description = "Retorna uma lista paginada de extratos para o funcionário com o CPF fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de extratos encontrada"),
-            @ApiResponse(responseCode = "404", description = "Funcionário não encontrado com o CPF fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    public ResponseEntity<Page<ExtratoFuncionarioResponseDTO>> getExtratosFuncionarioDTOPorCPFPaginados(
+    public ResponseEntity<Page<ExtratoFuncionarioResponseDTO>> getByCpf(
             @PathVariable String cpf,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        Page<ExtratoFuncionarioResponseDTO> extratos = extratoFuncionarioService.getExtratosFuncionarioDTOPorCPFPaginados(cpf, pageable);
-        return ResponseEntity.ok(extratos);
+        return ResponseEntity.ok(extratoUseCase.buscarExtratosPorCpf(cpf, pageable).map(mapper::toResponse));
     }
 
-
+    @Operation(summary = "Editar extrato por ID")
     @PutMapping("/{id}")
-    @Operation(summary = "Edita um extrato existente pelo ID", description = "Atualiza os dados do extrato correspondente ao ID fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Extrato atualizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Extrato não encontrado com o ID fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    public ResponseEntity<ExtratoFuncionarioDTO> editaExtratoFuncionarioById(
+    public ResponseEntity<ExtratoFuncionarioResponseDTO> editar(
             @PathVariable Long id,
-            @RequestBody ExtratoFuncionarioDTO extratoFuncionarioModificado) {
-        ExtratoFuncionarioDTO extratoAtualizado = extratoFuncionarioService.editaExtratoFuncionarioById(id, extratoFuncionarioModificado);
-        return ResponseEntity.ok(extratoAtualizado);
+            @RequestBody ExtratoFuncionarioRequestDTO dto) {
+        ExtratoFuncionario atualizado = extratoUseCase.editarExtrato(
+                id, dto.getDataExtrato(), dto.getHorasTrabalhadas(), dto.getValorHora(), dto.getSalario()
+        );
+        return ResponseEntity.ok(mapper.toResponse(atualizado));
     }
 
-
+    @Operation(summary = "Deletar extrato por ID")
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deleta um extrato pelo ID", description = "Remove o extrato correspondente ao ID fornecido.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Extrato deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Extrato não encontrado com o ID fornecido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-    })
-    public ResponseEntity<Void> deletaExtratoFuncionarioById(
-            @PathVariable Long id) {
-        extratoFuncionarioService.deletaExtratoFuncionarioById(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        extratoUseCase.deletarExtrato(id);
         return ResponseEntity.noContent().build();
     }
-
-
-     */
 }
