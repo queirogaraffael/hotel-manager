@@ -1,4 +1,4 @@
-package com.example.gerenciador.hotel.domain.usecase;
+package com.example.gerenciador.hotel.domain.usecase.endereco;
 
 import com.example.gerenciador.hotel.domain.model.Endereco;
 import com.example.gerenciador.hotel.domain.port.in.endereco.ModificarEnderecoInputPort;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class EnderecoService implements ModificarEnderecoInputPort {
+public class ModificarEnderecoUseCase implements ModificarEnderecoInputPort {
 
     private final FindEnderecoByIdOutputPort findEnderecoByIdOutputPort;
     private final SaveEnderecoOutputPort saveEnderecoOutputPort;

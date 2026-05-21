@@ -1,0 +1,30 @@
+package com.example.gerenciador.hotel.domain.usecase.quarto;
+
+import com.example.gerenciador.hotel.domain.enums.TipoQuarto;
+import com.example.gerenciador.hotel.domain.enums.StatusQuarto;
+import com.example.gerenciador.hotel.domain.model.Quarto;
+import com.example.gerenciador.hotel.domain.port.in.quarto.BuscarQuartoPorNumeroInputPort;
+import com.example.gerenciador.hotel.domain.port.in.quarto.EditarQuartoInputPort;
+import com.example.gerenciador.hotel.domain.port.out.quarto.SaveQuartoOutputPort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class EditarQuartoUseCase implements EditarQuartoInputPort {
+
+    private final BuscarQuartoPorNumeroInputPort buscarQuartoPorNumeroInputPort;
+    private final SaveQuartoOutputPort saveQuartoOutputPort;
+
+    @Override
+    @Transactional
+    public Quarto editarQuarto(String numero, TipoQuarto tipoQuarto, int capacidade, double precoDiaria, StatusQuarto statusQuarto) {
+        Quarto quarto = buscarQuartoPorNumeroInputPort.buscarQuartoPorNumero(numero);
+        quarto.setTipoQuarto(tipoQuarto);
+        quarto.setCapacidade(capacidade);
+        quarto.setPrecoDiaria(precoDiaria);
+        quarto.setStatusQuarto(statusQuarto);
+        return saveQuartoOutputPort.save(quarto);
+    }
+}

@@ -1,12 +1,10 @@
-package com.example.gerenciador.hotel.domain.usecase;
+package com.example.gerenciador.hotel.domain.usecase.user;
 
 import com.example.gerenciador.hotel.domain.enums.Turno;
 import com.example.gerenciador.hotel.domain.enums.UserRole;
 import com.example.gerenciador.hotel.domain.model.User;
-import com.example.gerenciador.hotel.domain.port.in.user.*;
-import com.example.gerenciador.hotel.domain.port.out.user.FindUserByUsernameOutputPort;
+import com.example.gerenciador.hotel.domain.port.in.user.RegistrarUsuarioInputPort;
 import com.example.gerenciador.hotel.domain.port.out.user.SaveUserOutputPort;
-import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,13 +14,9 @@ import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements
-        RegistrarUsuarioInputPort,
-        AutenticarInputPort,
-        BuscarPorUsernameInputPort {
+public class RegistrarUsuarioUseCase implements RegistrarUsuarioInputPort {
 
     private final SaveUserOutputPort saveUserOutputPort;
-    private final FindUserByUsernameOutputPort findUserByUsernameOutputPort;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -41,19 +35,5 @@ public class UserService implements
                 .userRole(role)
                 .build();
         return saveUserOutputPort.save(user);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User autenticar(String username, String password) {
-        return findUserByUsernameOutputPort.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário '" + username + "' não encontrado."));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User buscarPorUsername(String username) {
-        return findUserByUsernameOutputPort.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário '" + username + "' não encontrado."));
     }
 }
