@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 
 
-import com.example.gerenciador.hotel.domain.services.EnderecoService;
+import com.example.gerenciador.hotel.domain.usecase.EnderecoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

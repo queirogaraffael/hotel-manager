@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 
 import com.example.gerenciador.hotel.domain.model.ExtratoFuncionario;
-import com.example.gerenciador.hotel.domain.port.in.ExtratoFuncionarioUseCase;
+import com.example.gerenciador.hotel.domain.port.in.extratofuncionario.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.extratofuncionario.ExtratoFuncionarioRequestDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.extratofuncionario.ExtratoFuncionarioResponseDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.mapper.ExtratoFuncionarioWebMapper;
@@ -22,7 +22,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ExtratoFuncionarioController {
 
-    private final ExtratoFuncionarioUseCase extratoUseCase;
+    private final CriarExtratoUseCase criarExtratoUseCase;
+    private final BuscarExtratoPorIdUseCase buscarExtratoPorIdUseCase;
+    private final BuscarExtratosPorCpfUseCase buscarExtratosPorCpfUseCase;
+    private final EditarExtratoUseCase editarExtratoUseCase;
+    private final DeletarExtratoUseCase deletarExtratoUseCase;
+
     private final ExtratoFuncionarioWebMapper mapper;
 
     @Operation(summary = "Criar extrato para funcionário pelo CPF")
@@ -35,7 +40,7 @@ public class ExtratoFuncionarioController {
     public ResponseEntity<ExtratoFuncionarioResponseDTO> criarExtrato(
             @PathVariable String cpf,
             @Valid @RequestBody ExtratoFuncionarioRequestDTO dto) {
-        ExtratoFuncionario extrato = extratoUseCase.criarExtrato(
+        ExtratoFuncionario extrato = criarExtratoUseCase.criarExtrato(
                 cpf, dto.getDataExtrato(), dto.getHorasTrabalhadas(), dto.getValorHora(), dto.getSalario()
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(extrato));
@@ -44,7 +49,7 @@ public class ExtratoFuncionarioController {
     @Operation(summary = "Buscar extrato por ID")
     @GetMapping("/{id}")
     public ResponseEntity<ExtratoFuncionarioResponseDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(mapper.toResponse(extratoUseCase.buscarExtratoPorId(id)));
+        return ResponseEntity.ok(mapper.toResponse(buscarExtratoPorIdUseCase.buscarExtratoPorId(id)));
     }
 
     @Operation(summary = "Buscar extratos por CPF do funcionário (paginado)")
@@ -52,7 +57,7 @@ public class ExtratoFuncionarioController {
     public ResponseEntity<Page<ExtratoFuncionarioResponseDTO>> getByCpf(
             @PathVariable String cpf,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseEntity.ok(extratoUseCase.buscarExtratosPorCpf(cpf, pageable).map(mapper::toResponse));
+        return ResponseEntity.ok(buscarExtratosPorCpfUseCase.buscarExtratosPorCpf(cpf, pageable).map(mapper::toResponse));
     }
 
     @Operation(summary = "Editar extrato por ID")
@@ -60,7 +65,7 @@ public class ExtratoFuncionarioController {
     public ResponseEntity<ExtratoFuncionarioResponseDTO> editar(
             @PathVariable Long id,
             @RequestBody ExtratoFuncionarioRequestDTO dto) {
-        ExtratoFuncionario atualizado = extratoUseCase.editarExtrato(
+        ExtratoFuncionario atualizado = editarExtratoUseCase.editarExtrato(
                 id, dto.getDataExtrato(), dto.getHorasTrabalhadas(), dto.getValorHora(), dto.getSalario()
         );
         return ResponseEntity.ok(mapper.toResponse(atualizado));
@@ -69,7 +74,7 @@ public class ExtratoFuncionarioController {
     @Operation(summary = "Deletar extrato por ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        extratoUseCase.deletarExtrato(id);
+        deletarExtratoUseCase.deletarExtrato(id);
         return ResponseEntity.noContent().build();
     }
 }

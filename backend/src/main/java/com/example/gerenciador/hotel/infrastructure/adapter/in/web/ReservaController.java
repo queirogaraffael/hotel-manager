@@ -2,7 +2,7 @@ package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 
 import com.example.gerenciador.hotel.domain.enums.StatusReserva;
 import com.example.gerenciador.hotel.domain.model.Reserva;
-import com.example.gerenciador.hotel.domain.port.in.ReservaUseCase;
+import com.example.gerenciador.hotel.domain.port.in.reserva.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.reserva.ReservaRequestDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.reserva.ReservaResponseDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.mapper.ReservaWebMapper;
@@ -23,7 +23,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ReservaController {
 
-    private final ReservaUseCase reservaUseCase;
+    private final CriarReservaUseCase criarReservaUseCase;
+    private final BuscarReservaPorIdUseCase buscarReservaPorIdUseCase;
+    private final ModificarStatusReservaUseCase modificarStatusReservaUseCase;
+    private final BuscarReservasPorHospedeEStatusUseCase buscarReservasPorHospedeEStatusUseCase;
+    private final BuscarReservasAgendadasEmUsoPorCpfUseCase buscarReservasAgendadasEmUsoPorCpfUseCase;
+    private final BuscarReservasFinalizadasCanceladasPorCpfUseCase buscarReservasFinalizadasCanceladasPorCpfUseCase;
+
     private final ReservaWebMapper mapper;
 
     @Operation(summary = "Criar reserva para hóspede")
@@ -36,7 +42,7 @@ public class ReservaController {
     public ResponseEntity<ReservaResponseDTO> criarReserva(
             @PathVariable String cpfHospede,
             @Valid @RequestBody ReservaRequestDTO dto) {
-        Reserva reserva = reservaUseCase.criarReserva(
+        Reserva reserva = criarReservaUseCase.criarReserva(
                 cpfHospede, dto.getNumeroQuarto(),
                 dto.getDataEntrada(), dto.getDataSaida(),
                 dto.getNumeroHospedes()
@@ -47,7 +53,7 @@ public class ReservaController {
     @Operation(summary = "Buscar reserva por ID")
     @GetMapping("/{id}")
     public ResponseEntity<ReservaResponseDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(mapper.toResponse(reservaUseCase.buscarReservaPorId(id)));
+        return ResponseEntity.ok(mapper.toResponse(buscarReservaPorIdUseCase.buscarReservaPorId(id)));
     }
 
     @Operation(summary = "Modificar status da reserva")
@@ -55,7 +61,7 @@ public class ReservaController {
     public ResponseEntity<ReservaResponseDTO> modificarStatus(
             @PathVariable Long id,
             @RequestParam StatusReserva statusReserva) {
-        Reserva reserva = reservaUseCase.modificarStatusReserva(id, statusReserva);
+        Reserva reserva = modificarStatusReservaUseCase.modificarStatusReserva(id, statusReserva);
         return ResponseEntity.ok(mapper.toResponse(reserva));
     }
 
@@ -64,7 +70,7 @@ public class ReservaController {
     public ResponseEntity<Page<ReservaResponseDTO>> buscarAgendadasEmUso(
             @PathVariable String cpf,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseEntity.ok(reservaUseCase.buscarReservasAgendadasEmUsoPorCpf(cpf, pageable).map(mapper::toResponse));
+        return ResponseEntity.ok(buscarReservasAgendadasEmUsoPorCpfUseCase.buscarReservasAgendadasEmUsoPorCpf(cpf, pageable).map(mapper::toResponse));
     }
 
     @Operation(summary = "Buscar reservas finalizadas/canceladas por CPF do hóspede")
@@ -72,7 +78,7 @@ public class ReservaController {
     public ResponseEntity<Page<ReservaResponseDTO>> buscarHistorico(
             @PathVariable String cpf,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseEntity.ok(reservaUseCase.buscarReservasFinalizadasCanceladasPorCpf(cpf, pageable).map(mapper::toResponse));
+        return ResponseEntity.ok(buscarReservasFinalizadasCanceladasPorCpfUseCase.buscarReservasFinalizadasCanceladasPorCpf(cpf, pageable).map(mapper::toResponse));
     }
 
     @Operation(summary = "Buscar reservas por hóspede e status")
@@ -81,6 +87,6 @@ public class ReservaController {
             @PathVariable String cpf,
             @PathVariable StatusReserva status,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseEntity.ok(reservaUseCase.buscarReservasPorHospedeEStatus(cpf, status, pageable).map(mapper::toResponse));
+        return ResponseEntity.ok(buscarReservasPorHospedeEStatusUseCase.buscarReservasPorHospedeEStatus(cpf, status, pageable).map(mapper::toResponse));
     }
 }

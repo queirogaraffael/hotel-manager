@@ -2,7 +2,7 @@ package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 
 import com.example.gerenciador.hotel.domain.model.Endereco;
 import com.example.gerenciador.hotel.domain.model.Funcionario;
-import com.example.gerenciador.hotel.domain.port.in.FuncionarioUseCase;
+import com.example.gerenciador.hotel.domain.port.in.funcionario.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.endereco.EnderecoRequestDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.endereco.EnderecoResponseDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.funcionario.FuncionarioResponseDTO;
@@ -25,7 +25,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FuncionarioController {
 
-    private final FuncionarioUseCase funcionarioUseCase;
+    private final BuscarFuncionarioPorCpfUseCase buscarFuncionarioPorCpfUseCase;
+    private final BuscarFuncionariosPorNomeUseCase buscarFuncionariosPorNomeUseCase;
+    private final EditarFuncionarioUseCase editarFuncionarioUseCase;
+    private final CriarEnderecoParaFuncionarioUseCase criarEnderecoParaFuncionarioUseCase;
+    private final BuscarEnderecoFuncionarioPorCpfUseCase buscarEnderecoFuncionarioPorCpfUseCase;
+
     private final FuncionarioWebMapper funcionarioMapper;
     private final EnderecoWebMapper enderecoMapper;
 
@@ -36,7 +41,7 @@ public class FuncionarioController {
     })
     @GetMapping("/{cpf}")
     public ResponseEntity<FuncionarioResponseDTO> getFuncionarioByCpf(@PathVariable String cpf) {
-        Funcionario funcionario = funcionarioUseCase.buscarFuncionarioPorCpf(cpf);
+        Funcionario funcionario = buscarFuncionarioPorCpfUseCase.buscarFuncionarioPorCpf(cpf);
         return ResponseEntity.ok(funcionarioMapper.toResponse(funcionario));
     }
 
@@ -45,7 +50,7 @@ public class FuncionarioController {
     public ResponseEntity<Page<FuncionarioResponseDTO>> buscarPorNome(
             @RequestParam String nome,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        Page<FuncionarioResponseDTO> resultado = funcionarioUseCase
+        Page<FuncionarioResponseDTO> resultado = buscarFuncionariosPorNomeUseCase
                 .buscarFuncionariosPorNome(nome, pageable)
                 .map(funcionarioMapper::toResponse);
         return ResponseEntity.ok(resultado);
@@ -60,7 +65,7 @@ public class FuncionarioController {
     public ResponseEntity<FuncionarioResponseDTO> atualizar(
             @PathVariable String cpf,
             @RequestBody FuncionarioUpdateDTO dto) {
-        Funcionario atualizado = funcionarioUseCase.editarFuncionario(cpf, null, dto.getCargo(), dto.getTurno());
+        Funcionario atualizado = editarFuncionarioUseCase.editarFuncionario(cpf, null, dto.getCargo(), dto.getTurno());
         return ResponseEntity.status(HttpStatus.OK).body(funcionarioMapper.toResponse(atualizado));
     }
 
@@ -69,14 +74,14 @@ public class FuncionarioController {
     public ResponseEntity<EnderecoResponseDTO> criaEnderecoFuncionario(
             @PathVariable String cpf,
             @RequestBody EnderecoRequestDTO dto) {
-        Endereco enderecoSalvo = funcionarioUseCase.criarEnderecoParaFuncionario(cpf, enderecoMapper.toDomain(dto));
+        Endereco enderecoSalvo = criarEnderecoParaFuncionarioUseCase.criarEnderecoParaFuncionario(cpf, enderecoMapper.toDomain(dto));
         return ResponseEntity.status(HttpStatus.CREATED).body(enderecoMapper.toResponse(enderecoSalvo));
     }
 
     @Operation(summary = "Buscar endereço de funcionário por CPF")
     @GetMapping("/endereco/{cpf}")
     public ResponseEntity<EnderecoResponseDTO> getEnderecoFuncionarioByCpf(@PathVariable String cpf) {
-        Endereco endereco = funcionarioUseCase.buscarEnderecoFuncionarioPorCpf(cpf);
+        Endereco endereco = buscarEnderecoFuncionarioPorCpfUseCase.buscarEnderecoFuncionarioPorCpf(cpf);
         return ResponseEntity.ok(enderecoMapper.toResponse(endereco));
     }
 }

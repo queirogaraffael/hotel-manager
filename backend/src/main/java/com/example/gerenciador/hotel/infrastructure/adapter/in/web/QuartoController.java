@@ -3,7 +3,7 @@ package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 import com.example.gerenciador.hotel.domain.enums.StatusQuarto;
 import com.example.gerenciador.hotel.domain.enums.TipoQuarto;
 import com.example.gerenciador.hotel.domain.model.Quarto;
-import com.example.gerenciador.hotel.domain.port.in.QuartoUseCase;
+import com.example.gerenciador.hotel.domain.port.in.quarto.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.quarto.QuartoRequestDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.quarto.QuartoResponseDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.quarto.QuartoUpdateDTO;
@@ -30,7 +30,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QuartoController {
 
-    private final QuartoUseCase quartoUseCase;
+    private final CriarQuartoUseCase criarQuartoUseCase;
+    private final BuscarQuartoPorNumeroUseCase buscarQuartoPorNumeroUseCase;
+    private final EditarQuartoUseCase editarQuartoUseCase;
+    private final ModificarStatusQuartoUseCase modificarStatusQuartoUseCase;
+    private final BuscarQuartosPorTipoUseCase buscarQuartosPorTipoUseCase;
+    private final BuscarQuartosPorTipoEStatusUseCase buscarQuartosPorTipoEStatusUseCase;
+    private final BuscarQuartosPorStatusUseCase buscarQuartosPorStatusUseCase;
+    private final BuscarQuartosDisponiveisPorTipoEDataUseCase buscarQuartosDisponiveisPorTipoEDataUseCase;
+
     private final QuartoWebMapper mapper;
 
     @Operation(summary = "Criar novo quarto")
@@ -40,7 +48,7 @@ public class QuartoController {
     })
     @PostMapping
     public ResponseEntity<QuartoResponseDTO> criarQuarto(@Valid @RequestBody QuartoRequestDTO dto) {
-        Quarto quarto = quartoUseCase.criarQuarto(
+        Quarto quarto = criarQuartoUseCase.criarQuarto(
                 dto.getNumero(), dto.getTipoQuarto(), dto.getCapacidade(),
                 dto.getPrecoDiaria(), dto.getStatusQuarto()
         );
@@ -50,7 +58,7 @@ public class QuartoController {
     @Operation(summary = "Buscar quarto por número")
     @GetMapping("/{numero}")
     public ResponseEntity<QuartoResponseDTO> getQuartoByNumero(@PathVariable String numero) {
-        return ResponseEntity.ok(mapper.toResponse(quartoUseCase.buscarQuartoPorNumero(numero)));
+        return ResponseEntity.ok(mapper.toResponse(buscarQuartoPorNumeroUseCase.buscarQuartoPorNumero(numero)));
     }
 
     @Operation(summary = "Editar quarto por número")
@@ -58,7 +66,7 @@ public class QuartoController {
     public ResponseEntity<QuartoResponseDTO> editarQuarto(
             @PathVariable String numero,
             @RequestBody QuartoUpdateDTO dto) {
-        Quarto atualizado = quartoUseCase.editarQuarto(
+        Quarto atualizado = editarQuartoUseCase.editarQuarto(
                 numero, dto.getTipoQuarto(), dto.getCapacidade(), dto.getPrecoDiaria(), dto.getStatusQuarto()
         );
         return ResponseEntity.ok(mapper.toResponse(atualizado));
@@ -69,7 +77,7 @@ public class QuartoController {
     public ResponseEntity<QuartoResponseDTO> modificarStatus(
             @PathVariable String numero,
             @RequestParam StatusQuarto statusQuarto) {
-        Quarto quarto = quartoUseCase.modificarStatusQuarto(numero, statusQuarto);
+        Quarto quarto = modificarStatusQuartoUseCase.modificarStatusQuarto(numero, statusQuarto);
         return ResponseEntity.ok(mapper.toResponse(quarto));
     }
 
@@ -78,7 +86,7 @@ public class QuartoController {
     public ResponseEntity<Page<QuartoResponseDTO>> buscarPorTipo(
             @PathVariable TipoQuarto tipoQuarto,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseEntity.ok(quartoUseCase.buscarQuartosPorTipo(tipoQuarto, pageable).map(mapper::toResponse));
+        return ResponseEntity.ok(buscarQuartosPorTipoUseCase.buscarQuartosPorTipo(tipoQuarto, pageable).map(mapper::toResponse));
     }
 
     @Operation(summary = "Buscar quartos por tipo e status (paginado)")
@@ -87,7 +95,7 @@ public class QuartoController {
             @PathVariable TipoQuarto tipoQuarto,
             @PathVariable StatusQuarto statusQuarto,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseEntity.ok(quartoUseCase.buscarQuartosPorTipoEStatus(tipoQuarto, statusQuarto, pageable).map(mapper::toResponse));
+        return ResponseEntity.ok(buscarQuartosPorTipoEStatusUseCase.buscarQuartosPorTipoEStatus(tipoQuarto, statusQuarto, pageable).map(mapper::toResponse));
     }
 
     @Operation(summary = "Buscar quartos por status (paginado)")
@@ -95,7 +103,7 @@ public class QuartoController {
     public ResponseEntity<Page<QuartoResponseDTO>> buscarPorStatus(
             @PathVariable StatusQuarto statusQuarto,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseEntity.ok(quartoUseCase.buscarQuartosPorStatus(statusQuarto, pageable).map(mapper::toResponse));
+        return ResponseEntity.ok(buscarQuartosPorStatusUseCase.buscarQuartosPorStatus(statusQuarto, pageable).map(mapper::toResponse));
     }
 
     @Operation(summary = "Buscar quartos disponíveis por tipo e data")
@@ -104,7 +112,7 @@ public class QuartoController {
             @RequestParam TipoQuarto tipoQuarto,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataEntrada,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataSaida) {
-        List<QuartoResponseDTO> quartos = quartoUseCase
+        List<QuartoResponseDTO> quartos = buscarQuartosDisponiveisPorTipoEDataUseCase
                 .buscarQuartosDisponiveisPorTipoEData(tipoQuarto, dataEntrada, dataSaida)
                 .stream().map(mapper::toResponse).collect(Collectors.toList());
         return ResponseEntity.ok(quartos);

@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.in.web;
 
 import com.example.gerenciador.hotel.domain.model.User;
-import com.example.gerenciador.hotel.domain.port.in.UserUseCase;
+import com.example.gerenciador.hotel.domain.port.in.user.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.user.LoginRequestDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.user.LoginResponseDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.user.UserRegistrationDTO;
@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserUseCase userUseCase;
+    private final RegistrarUsuarioUseCase registrarUsuarioUseCase;
+    private final BuscarPorUsernameUseCase buscarPorUsernameUseCase;
     private final UserWebMapper mapper;
     private final TokenService tokenService;
     private final UserJpaRepository userJpaRepository; // Necessário para UserDetails até mover Spring Security p/ infra
@@ -37,7 +38,7 @@ public class UserController {
     })
     @PostMapping("/registrar")
     public ResponseEntity<UserResponseDTO> registrar(@Valid @RequestBody UserRegistrationDTO dto) {
-        User user = userUseCase.registrarUsuario(
+        User user = registrarUsuarioUseCase.registrarUsuario(
                 dto.getRole(), dto.getUsername(), dto.getSenha(), dto.getNome(),
                 dto.getEmail(), dto.getTelefone(), dto.getCpf(), dto.getDataNascimento(),
                 dto.getCargo(), dto.getTurno()
@@ -65,6 +66,6 @@ public class UserController {
     @Operation(summary = "Buscar usuário por username")
     @GetMapping("/{username}")
     public ResponseEntity<UserResponseDTO> buscar(@PathVariable String username) {
-        return ResponseEntity.ok(mapper.toResponse(userUseCase.buscarPorUsername(username)));
+        return ResponseEntity.ok(mapper.toResponse(buscarPorUsernameUseCase.buscarPorUsername(username)));
     }
 }
