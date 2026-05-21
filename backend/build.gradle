@@ -70,4 +70,5 @@ tasks.withType(Javadoc).configureEach {
 
 tasks.named('test') {
     useJUnitPlatform()
+    systemProperty 'spring.profiles.active', 'test'
 }

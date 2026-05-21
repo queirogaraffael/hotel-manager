@@ -24,5 +24,5 @@ public class ExtratoFuncionario {
     private double valorHora;
     private double salario;
 
-    private Funcionario funcionario;
+    private Long funcionarioId;
 }

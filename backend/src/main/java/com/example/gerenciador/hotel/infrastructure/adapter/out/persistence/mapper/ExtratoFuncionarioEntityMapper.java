@@ -5,12 +5,12 @@ import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.enti
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {FuncionarioEntityMapper.class})
+@Mapper(componentModel = "spring")
 public interface ExtratoFuncionarioEntityMapper {
 
+    @Mapping(target = "funcionario.id", source = "funcionarioId")
     ExtratoFuncionarioEntity toEntity(ExtratoFuncionario domain);
 
-    // Ignora o funcionario para evitar ciclo Extrato→Funcionario→Extrato
-    @Mapping(target = "funcionario", ignore = true)
+    @Mapping(target = "funcionarioId", source = "funcionario.id")
     ExtratoFuncionario toDomain(ExtratoFuncionarioEntity entity);
 }

@@ -5,12 +5,11 @@ import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.enti
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {UserEntityMapper.class, ReservaEntityMapper.class})
+@Mapper(componentModel = "spring", uses = {UserEntityMapper.class})
 public interface HospedeEntityMapper {
 
+    @Mapping(target = "reservas", ignore = true)
     HospedeEntity toEntity(Hospede domain);
 
-    // Ignora a lista de reservas no mapeamento inverso para evitar ciclo Hospede→Reserva→Hospede
-    @Mapping(target = "reservas", ignore = true)
     Hospede toDomain(HospedeEntity entity);
 }

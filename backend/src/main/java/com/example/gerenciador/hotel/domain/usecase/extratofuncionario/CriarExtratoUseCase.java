@@ -43,7 +43,7 @@ public class CriarExtratoUseCase implements CriarExtratoInputPort {
                 .horasTrabalhadas(horasTrabalhadas)
                 .valorHora(valorHora)
                 .salario(salario)
-                .funcionario(funcionario)
+                .funcionarioId(funcionario.getId())
                 .build();
 
         return saveExtratoFuncionarioOutputPort.save(extrato);

@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,7 +13,4 @@ public class Hospede {
 
     private Long id;
     private User user;
-
-    @Builder.Default
-    private List<Reserva> reservas = new ArrayList<>();
 }
