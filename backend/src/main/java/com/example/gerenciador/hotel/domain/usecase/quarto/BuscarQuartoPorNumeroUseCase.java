@@ -3,7 +3,7 @@ package com.example.gerenciador.hotel.domain.usecase.quarto;
 import com.example.gerenciador.hotel.domain.model.Quarto;
 import com.example.gerenciador.hotel.domain.port.in.quarto.BuscarQuartoPorNumeroInputPort;
 import com.example.gerenciador.hotel.domain.port.out.quarto.FindQuartoByNumeroOutputPort;
-import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
+import com.example.gerenciador.hotel.domain.exception.QuartoNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class BuscarQuartoPorNumeroUseCase implements BuscarQuartoPorNumeroInputPort {
@@ -18,6 +18,6 @@ public class BuscarQuartoPorNumeroUseCase implements BuscarQuartoPorNumeroInputP
     @Transactional(readOnly = true)
     public Quarto buscarQuartoPorNumero(String numero) {
         return findQuartoByNumeroOutputPort.findByNumero(numero)
-                .orElseThrow(() -> new ResourceNotFoundException("Quarto com número " + numero + " não encontrado."));
+                .orElseThrow(() -> new QuartoNotFoundException("Quarto com número " + numero + " não encontrado."));
     }
 }

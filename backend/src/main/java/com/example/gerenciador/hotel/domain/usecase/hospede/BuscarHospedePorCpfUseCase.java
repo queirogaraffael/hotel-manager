@@ -3,7 +3,7 @@ package com.example.gerenciador.hotel.domain.usecase.hospede;
 import com.example.gerenciador.hotel.domain.model.Hospede;
 import com.example.gerenciador.hotel.domain.port.in.hospede.BuscarHospedePorCpfInputPort;
 import com.example.gerenciador.hotel.domain.port.out.hospede.FindHospedeByCpfOutputPort;
-import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
+import com.example.gerenciador.hotel.domain.exception.HospedeNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class BuscarHospedePorCpfUseCase implements BuscarHospedePorCpfInputPort {
@@ -18,6 +18,6 @@ public class BuscarHospedePorCpfUseCase implements BuscarHospedePorCpfInputPort 
     @Transactional(readOnly = true)
     public Hospede buscarHospedePorCpf(String cpf) {
         return findHospedeByCpfOutputPort.findByCpf(cpf)
-                .orElseThrow(() -> new ResourceNotFoundException("Hóspede com CPF " + cpf + " não encontrado."));
+                .orElseThrow(() -> new HospedeNotFoundException("Hóspede com CPF " + cpf + " não encontrado."));
     }
 }

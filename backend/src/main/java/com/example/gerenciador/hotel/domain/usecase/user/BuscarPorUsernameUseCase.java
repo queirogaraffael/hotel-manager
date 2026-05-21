@@ -3,7 +3,7 @@ package com.example.gerenciador.hotel.domain.usecase.user;
 import com.example.gerenciador.hotel.domain.model.User;
 import com.example.gerenciador.hotel.domain.port.in.user.BuscarPorUsernameInputPort;
 import com.example.gerenciador.hotel.domain.port.out.user.FindUserByUsernameOutputPort;
-import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
+import com.example.gerenciador.hotel.domain.exception.UserNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class BuscarPorUsernameUseCase implements BuscarPorUsernameInputPort {
@@ -18,6 +18,6 @@ public class BuscarPorUsernameUseCase implements BuscarPorUsernameInputPort {
     @Transactional(readOnly = true)
     public User buscarPorUsername(String username) {
         return findUserByUsernameOutputPort.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário '" + username + "' não encontrado."));
+                .orElseThrow(() -> new UserNotFoundException("Usuário '" + username + "' não encontrado."));
     }
 }

@@ -9,8 +9,9 @@ import com.example.gerenciador.hotel.domain.port.out.hospede.FindHospedeByCpfOut
 import com.example.gerenciador.hotel.domain.port.out.quarto.FindQuartoByNumeroOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.reserva.QuartoEstaDisponivelParaDataOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.reserva.SaveReservaOutputPort;
-import com.example.gerenciador.hotel.shared.exception.QuartoNaoEstaDisponivelParaDataException;
-import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
+import com.example.gerenciador.hotel.domain.exception.QuartoNaoEstaDisponivelParaDataException;
+import com.example.gerenciador.hotel.domain.exception.HospedeNotFoundException;
+import com.example.gerenciador.hotel.domain.exception.QuartoNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -38,7 +39,7 @@ public class CriarReservaUseCase implements CriarReservaInputPort {
     @Transactional
     public Reserva criarReserva(String cpfHospede, String numeroQuarto, LocalDateTime dataEntrada, LocalDateTime dataSaida, Integer numeroHospedes) {
         Quarto quarto = findQuartoByNumeroOutputPort.findByNumero(numeroQuarto)
-                .orElseThrow(() -> new ResourceNotFoundException("Quarto com número " + numeroQuarto + " não encontrado."));
+                .orElseThrow(() -> new QuartoNotFoundException("Quarto com número " + numeroQuarto + " não encontrado."));
 
         boolean disponivel = quartoEstaDisponivelParaDataOutputPort.quartoEstaDisponivelParaData(dataEntrada, dataSaida, numeroQuarto);
         if (!disponivel) {
@@ -46,7 +47,7 @@ public class CriarReservaUseCase implements CriarReservaInputPort {
         }
 
         Hospede hospede = findHospedeByCpfOutputPort.findByCpf(cpfHospede)
-                .orElseThrow(() -> new ResourceNotFoundException("Hóspede com CPF " + cpfHospede + " não encontrado."));
+                .orElseThrow(() -> new HospedeNotFoundException("Hóspede com CPF " + cpfHospede + " não encontrado."));
 
         Reserva reserva = Reserva.builder()
                 .dataEntrada(dataEntrada)

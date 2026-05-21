@@ -6,7 +6,7 @@ import com.example.gerenciador.hotel.domain.model.Quarto;
 import com.example.gerenciador.hotel.domain.port.in.quarto.CriarQuartoInputPort;
 import com.example.gerenciador.hotel.domain.port.out.quarto.ExistsQuartoByNumeroOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.quarto.SaveQuartoOutputPort;
-import com.example.gerenciador.hotel.shared.exception.QuartoJaExisteException;
+import com.example.gerenciador.hotel.domain.exception.QuartoJaExisteException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class CriarQuartoUseCase implements CriarQuartoInputPort {

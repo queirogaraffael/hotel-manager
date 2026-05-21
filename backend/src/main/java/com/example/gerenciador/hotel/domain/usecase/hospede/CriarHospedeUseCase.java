@@ -4,8 +4,8 @@ import com.example.gerenciador.hotel.domain.model.Hospede;
 import com.example.gerenciador.hotel.domain.port.in.hospede.BuscarHospedePorCpfInputPort;
 import com.example.gerenciador.hotel.domain.port.in.hospede.CriarHospedeInputPort;
 import com.example.gerenciador.hotel.domain.port.out.hospede.FindHospedeByCpfOutputPort;
-import com.example.gerenciador.hotel.shared.exception.HospedeJaExisteException;
-import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
+import com.example.gerenciador.hotel.domain.exception.HospedeJaExisteException;
+import com.example.gerenciador.hotel.domain.exception.HospedeNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class CriarHospedeUseCase implements CriarHospedeInputPort {
@@ -25,6 +25,6 @@ public class CriarHospedeUseCase implements CriarHospedeInputPort {
         // A criação do Hospede passa pelo User — será orquestrada pelo UserService na Fase 4
         // Por hora, busca o hospede existente associado ao User já criado
         return findHospedeByCpfOutputPort.findByCpf(cpf)
-                .orElseThrow(() -> new ResourceNotFoundException("Hóspede com CPF " + cpf + " não encontrado."));
+                .orElseThrow(() -> new HospedeNotFoundException("Hóspede com CPF " + cpf + " não encontrado."));
     }
 }

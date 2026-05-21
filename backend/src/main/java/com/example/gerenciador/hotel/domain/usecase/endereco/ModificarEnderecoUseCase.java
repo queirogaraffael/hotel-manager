@@ -4,7 +4,7 @@ import com.example.gerenciador.hotel.domain.model.Endereco;
 import com.example.gerenciador.hotel.domain.port.in.endereco.ModificarEnderecoInputPort;
 import com.example.gerenciador.hotel.domain.port.out.endereco.FindEnderecoByIdOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.endereco.SaveEnderecoOutputPort;
-import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
+import com.example.gerenciador.hotel.domain.exception.EnderecoNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class ModificarEnderecoUseCase implements ModificarEnderecoInputPort {
@@ -21,7 +21,7 @@ public class ModificarEnderecoUseCase implements ModificarEnderecoInputPort {
     @Transactional
     public Endereco modificarEndereco(Long id, Endereco enderecoModificado) {
         Endereco endereco = findEnderecoByIdOutputPort.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Endereço com id " + id + " não encontrado."));
+                .orElseThrow(() -> new EnderecoNotFoundException("Endereço com id " + id + " não encontrado."));
 
         endereco.setRua(enderecoModificado.getRua());
         endereco.setNumero(enderecoModificado.getNumero());

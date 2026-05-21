@@ -6,8 +6,8 @@ import com.example.gerenciador.hotel.domain.port.in.extratofuncionario.CriarExtr
 import com.example.gerenciador.hotel.domain.port.out.extratofuncionario.ExisteExtratoDeFuncionarioParaMesOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.extratofuncionario.SaveExtratoFuncionarioOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.funcionario.FindComExtratoByCpfOutputPort;
-import com.example.gerenciador.hotel.shared.exception.ExtratoJaExisteParaMesReferenteException;
-import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
+import com.example.gerenciador.hotel.domain.exception.ExtratoJaExisteParaMesReferenteException;
+import com.example.gerenciador.hotel.domain.exception.FuncionarioNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -36,7 +36,7 @@ public class CriarExtratoUseCase implements CriarExtratoInputPort {
         }
 
         Funcionario funcionario = findComExtratoByCpfOutputPort.findComExtratoByCpf(cpfFuncionario)
-                .orElseThrow(() -> new ResourceNotFoundException("Funcionário com CPF " + cpfFuncionario + " não encontrado."));
+                .orElseThrow(() -> new FuncionarioNotFoundException("Funcionário com CPF " + cpfFuncionario + " não encontrado."));
 
         ExtratoFuncionario extrato = ExtratoFuncionario.builder()
                 .dataExtrato(dataExtrato)
