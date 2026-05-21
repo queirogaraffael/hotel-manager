@@ -1,4 +1,4 @@
-package com.example.gerenciador.hotel.configs;
+package com.example.gerenciador.hotel.infrastructure.configs;
 
 
 import io.swagger.v3.oas.models.ExternalDocumentation;

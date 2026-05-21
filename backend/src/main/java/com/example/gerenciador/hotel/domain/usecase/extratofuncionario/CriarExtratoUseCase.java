@@ -8,19 +8,25 @@ import com.example.gerenciador.hotel.domain.port.out.extratofuncionario.SaveExtr
 import com.example.gerenciador.hotel.domain.port.out.funcionario.FindComExtratoByCpfOutputPort;
 import com.example.gerenciador.hotel.shared.exception.ExtratoJaExisteParaMesReferenteException;
 import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-@Service
-@RequiredArgsConstructor
 public class CriarExtratoUseCase implements CriarExtratoInputPort {
 
     private final ExisteExtratoDeFuncionarioParaMesOutputPort existeExtratoDeFuncionarioParaMesOutputPort;
     private final FindComExtratoByCpfOutputPort findComExtratoByCpfOutputPort;
     private final SaveExtratoFuncionarioOutputPort saveExtratoFuncionarioOutputPort;
+
+    public CriarExtratoUseCase(
+            ExisteExtratoDeFuncionarioParaMesOutputPort existeExtratoDeFuncionarioParaMesOutputPort,
+            FindComExtratoByCpfOutputPort findComExtratoByCpfOutputPort,
+            SaveExtratoFuncionarioOutputPort saveExtratoFuncionarioOutputPort
+    ) {
+        this.existeExtratoDeFuncionarioParaMesOutputPort = existeExtratoDeFuncionarioParaMesOutputPort;
+        this.findComExtratoByCpfOutputPort = findComExtratoByCpfOutputPort;
+        this.saveExtratoFuncionarioOutputPort = saveExtratoFuncionarioOutputPort;
+    }
 
     @Override
     @Transactional

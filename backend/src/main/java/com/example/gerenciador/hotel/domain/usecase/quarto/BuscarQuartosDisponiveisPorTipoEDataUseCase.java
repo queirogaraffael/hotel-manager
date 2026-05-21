@@ -7,8 +7,6 @@ import com.example.gerenciador.hotel.domain.model.Quarto;
 import com.example.gerenciador.hotel.domain.port.in.quarto.BuscarQuartosDisponiveisPorTipoEDataInputPort;
 import com.example.gerenciador.hotel.domain.port.out.quarto.FindByTipoQuartoAndStatusListOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.quarto.FindOcupadosPorTipoOutputPort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -16,12 +14,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
 public class BuscarQuartosDisponiveisPorTipoEDataUseCase implements BuscarQuartosDisponiveisPorTipoEDataInputPort {
 
     private final FindOcupadosPorTipoOutputPort findOcupadosPorTipoOutputPort;
     private final FindByTipoQuartoAndStatusListOutputPort findByTipoQuartoAndStatusListOutputPort;
+
+    public BuscarQuartosDisponiveisPorTipoEDataUseCase(
+            FindOcupadosPorTipoOutputPort findOcupadosPorTipoOutputPort,
+            FindByTipoQuartoAndStatusListOutputPort findByTipoQuartoAndStatusListOutputPort
+    ) {
+        this.findOcupadosPorTipoOutputPort = findOcupadosPorTipoOutputPort;
+        this.findByTipoQuartoAndStatusListOutputPort = findByTipoQuartoAndStatusListOutputPort;
+    }
 
     @Override
     @Transactional(readOnly = true)

@@ -6,17 +6,23 @@ import com.example.gerenciador.hotel.domain.port.in.hospede.BuscarHospedePorCpfI
 import com.example.gerenciador.hotel.domain.port.in.hospede.CriarEnderecoParaHospedeInputPort;
 import com.example.gerenciador.hotel.domain.port.out.endereco.SaveEnderecoOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.hospede.SaveHospedeOutputPort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
 public class CriarEnderecoParaHospedeUseCase implements CriarEnderecoParaHospedeInputPort {
 
     private final BuscarHospedePorCpfInputPort buscarHospedePorCpfInputPort;
     private final SaveEnderecoOutputPort saveEnderecoOutputPort;
     private final SaveHospedeOutputPort saveHospedeOutputPort;
+
+    public CriarEnderecoParaHospedeUseCase(
+            BuscarHospedePorCpfInputPort buscarHospedePorCpfInputPort,
+            SaveEnderecoOutputPort saveEnderecoOutputPort,
+            SaveHospedeOutputPort saveHospedeOutputPort
+    ) {
+        this.buscarHospedePorCpfInputPort = buscarHospedePorCpfInputPort;
+        this.saveEnderecoOutputPort = saveEnderecoOutputPort;
+        this.saveHospedeOutputPort = saveHospedeOutputPort;
+    }
 
     @Override
     @Transactional

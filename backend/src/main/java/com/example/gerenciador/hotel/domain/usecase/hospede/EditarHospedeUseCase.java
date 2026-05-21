@@ -4,16 +4,20 @@ import com.example.gerenciador.hotel.domain.model.Hospede;
 import com.example.gerenciador.hotel.domain.port.in.hospede.BuscarHospedePorCpfInputPort;
 import com.example.gerenciador.hotel.domain.port.in.hospede.EditarHospedeInputPort;
 import com.example.gerenciador.hotel.domain.port.out.hospede.SaveHospedeOutputPort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
 public class EditarHospedeUseCase implements EditarHospedeInputPort {
 
     private final BuscarHospedePorCpfInputPort buscarHospedePorCpfInputPort;
     private final SaveHospedeOutputPort saveHospedeOutputPort;
+
+    public EditarHospedeUseCase(
+            BuscarHospedePorCpfInputPort buscarHospedePorCpfInputPort,
+            SaveHospedeOutputPort saveHospedeOutputPort
+    ) {
+        this.buscarHospedePorCpfInputPort = buscarHospedePorCpfInputPort;
+        this.saveHospedeOutputPort = saveHospedeOutputPort;
+    }
 
     @Override
     @Transactional

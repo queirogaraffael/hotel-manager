@@ -5,16 +5,17 @@ import com.example.gerenciador.hotel.domain.model.Quarto;
 import com.example.gerenciador.hotel.domain.port.in.quarto.BuscarQuartoPorNumeroInputPort;
 import com.example.gerenciador.hotel.domain.port.in.quarto.ModificarStatusQuartoInputPort;
 import com.example.gerenciador.hotel.domain.port.out.quarto.SaveQuartoOutputPort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
 public class ModificarStatusQuartoUseCase implements ModificarStatusQuartoInputPort {
 
     private final BuscarQuartoPorNumeroInputPort buscarQuartoPorNumeroInputPort;
     private final SaveQuartoOutputPort saveQuartoOutputPort;
+
+    public ModificarStatusQuartoUseCase(BuscarQuartoPorNumeroInputPort buscarQuartoPorNumeroInputPort, SaveQuartoOutputPort saveQuartoOutputPort) {
+        this.buscarQuartoPorNumeroInputPort = buscarQuartoPorNumeroInputPort;
+        this.saveQuartoOutputPort = saveQuartoOutputPort;
+    }
 
     @Override
     @Transactional

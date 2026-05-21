@@ -4,18 +4,22 @@ import com.example.gerenciador.hotel.domain.model.ExtratoFuncionario;
 import com.example.gerenciador.hotel.domain.port.in.extratofuncionario.BuscarExtratoPorIdInputPort;
 import com.example.gerenciador.hotel.domain.port.in.extratofuncionario.EditarExtratoInputPort;
 import com.example.gerenciador.hotel.domain.port.out.extratofuncionario.SaveExtratoFuncionarioOutputPort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-@Service
-@RequiredArgsConstructor
 public class EditarExtratoUseCase implements EditarExtratoInputPort {
 
     private final BuscarExtratoPorIdInputPort buscarExtratoPorIdInputPort;
     private final SaveExtratoFuncionarioOutputPort saveExtratoFuncionarioOutputPort;
+
+    public EditarExtratoUseCase(
+            BuscarExtratoPorIdInputPort buscarExtratoPorIdInputPort,
+            SaveExtratoFuncionarioOutputPort saveExtratoFuncionarioOutputPort
+    ) {
+        this.buscarExtratoPorIdInputPort = buscarExtratoPorIdInputPort;
+        this.saveExtratoFuncionarioOutputPort = saveExtratoFuncionarioOutputPort;
+    }
 
     @Override
     @Transactional

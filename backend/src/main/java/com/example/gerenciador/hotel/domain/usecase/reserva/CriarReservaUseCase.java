@@ -11,20 +11,28 @@ import com.example.gerenciador.hotel.domain.port.out.reserva.QuartoEstaDisponive
 import com.example.gerenciador.hotel.domain.port.out.reserva.SaveReservaOutputPort;
 import com.example.gerenciador.hotel.shared.exception.QuartoNaoEstaDisponivelParaDataException;
 import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-@Service
-@RequiredArgsConstructor
 public class CriarReservaUseCase implements CriarReservaInputPort {
 
     private final FindQuartoByNumeroOutputPort findQuartoByNumeroOutputPort;
     private final QuartoEstaDisponivelParaDataOutputPort quartoEstaDisponivelParaDataOutputPort;
     private final FindHospedeByCpfOutputPort findHospedeByCpfOutputPort;
     private final SaveReservaOutputPort saveReservaOutputPort;
+
+    public CriarReservaUseCase(
+            FindQuartoByNumeroOutputPort findQuartoByNumeroOutputPort,
+            QuartoEstaDisponivelParaDataOutputPort quartoEstaDisponivelParaDataOutputPort,
+            FindHospedeByCpfOutputPort findHospedeByCpfOutputPort,
+            SaveReservaOutputPort saveReservaOutputPort
+    ) {
+        this.findQuartoByNumeroOutputPort = findQuartoByNumeroOutputPort;
+        this.quartoEstaDisponivelParaDataOutputPort = quartoEstaDisponivelParaDataOutputPort;
+        this.findHospedeByCpfOutputPort = findHospedeByCpfOutputPort;
+        this.saveReservaOutputPort = saveReservaOutputPort;
+    }
 
     @Override
     @Transactional

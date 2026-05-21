@@ -6,15 +6,15 @@ import com.example.gerenciador.hotel.domain.port.in.hospede.CriarHospedeInputPor
 import com.example.gerenciador.hotel.domain.port.out.hospede.FindHospedeByCpfOutputPort;
 import com.example.gerenciador.hotel.shared.exception.HospedeJaExisteException;
 import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
 public class CriarHospedeUseCase implements CriarHospedeInputPort {
 
     private final FindHospedeByCpfOutputPort findHospedeByCpfOutputPort;
+
+    public CriarHospedeUseCase(FindHospedeByCpfOutputPort findHospedeByCpfOutputPort) {
+        this.findHospedeByCpfOutputPort = findHospedeByCpfOutputPort;
+    }
 
     @Override
     @Transactional

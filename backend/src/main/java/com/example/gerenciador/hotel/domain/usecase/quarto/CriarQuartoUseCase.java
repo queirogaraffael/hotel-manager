@@ -7,16 +7,17 @@ import com.example.gerenciador.hotel.domain.port.in.quarto.CriarQuartoInputPort;
 import com.example.gerenciador.hotel.domain.port.out.quarto.ExistsQuartoByNumeroOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.quarto.SaveQuartoOutputPort;
 import com.example.gerenciador.hotel.shared.exception.QuartoJaExisteException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
 public class CriarQuartoUseCase implements CriarQuartoInputPort {
 
     private final ExistsQuartoByNumeroOutputPort existsQuartoByNumeroOutputPort;
     private final SaveQuartoOutputPort saveQuartoOutputPort;
+
+    public CriarQuartoUseCase(ExistsQuartoByNumeroOutputPort existsQuartoByNumeroOutputPort, SaveQuartoOutputPort saveQuartoOutputPort) {
+        this.existsQuartoByNumeroOutputPort = existsQuartoByNumeroOutputPort;
+        this.saveQuartoOutputPort = saveQuartoOutputPort;
+    }
 
     @Override
     @Transactional

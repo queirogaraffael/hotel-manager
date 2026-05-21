@@ -4,15 +4,15 @@ import com.example.gerenciador.hotel.domain.enums.Turno;
 import com.example.gerenciador.hotel.domain.model.Funcionario;
 import com.example.gerenciador.hotel.domain.port.in.funcionario.BuscarFuncionarioPorCpfInputPort;
 import com.example.gerenciador.hotel.domain.port.in.funcionario.CriarFuncionarioInputPort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
 public class CriarFuncionarioUseCase implements CriarFuncionarioInputPort {
 
     private final BuscarFuncionarioPorCpfInputPort buscarFuncionarioPorCpfInputPort;
+
+    public CriarFuncionarioUseCase(BuscarFuncionarioPorCpfInputPort buscarFuncionarioPorCpfInputPort) {
+        this.buscarFuncionarioPorCpfInputPort = buscarFuncionarioPorCpfInputPort;
+    }
 
     @Override
     @Transactional

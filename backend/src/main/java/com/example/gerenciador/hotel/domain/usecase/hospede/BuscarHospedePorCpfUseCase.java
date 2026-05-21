@@ -4,15 +4,15 @@ import com.example.gerenciador.hotel.domain.model.Hospede;
 import com.example.gerenciador.hotel.domain.port.in.hospede.BuscarHospedePorCpfInputPort;
 import com.example.gerenciador.hotel.domain.port.out.hospede.FindHospedeByCpfOutputPort;
 import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
 public class BuscarHospedePorCpfUseCase implements BuscarHospedePorCpfInputPort {
 
     private final FindHospedeByCpfOutputPort findHospedeByCpfOutputPort;
+
+    public BuscarHospedePorCpfUseCase(FindHospedeByCpfOutputPort findHospedeByCpfOutputPort) {
+        this.findHospedeByCpfOutputPort = findHospedeByCpfOutputPort;
+    }
 
     @Override
     @Transactional(readOnly = true)

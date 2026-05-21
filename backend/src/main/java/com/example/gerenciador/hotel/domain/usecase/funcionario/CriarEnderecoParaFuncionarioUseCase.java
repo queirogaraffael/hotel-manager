@@ -5,17 +5,23 @@ import com.example.gerenciador.hotel.domain.model.Funcionario;
 import com.example.gerenciador.hotel.domain.port.in.funcionario.BuscarFuncionarioPorCpfInputPort;
 import com.example.gerenciador.hotel.domain.port.out.endereco.SaveEnderecoOutputPort;
 import com.example.gerenciador.hotel.domain.port.out.funcionario.SaveFuncionarioOutputPort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
 public class CriarEnderecoParaFuncionarioUseCase implements com.example.gerenciador.hotel.domain.port.in.funcionario.CriarEnderecoParaFuncionarioUseCase {
 
     private final BuscarFuncionarioPorCpfInputPort buscarFuncionarioPorCpfInputPort;
     private final SaveEnderecoOutputPort saveEnderecoOutputPort;
     private final SaveFuncionarioOutputPort saveFuncionarioOutputPort;
+
+    public CriarEnderecoParaFuncionarioUseCase(
+            BuscarFuncionarioPorCpfInputPort buscarFuncionarioPorCpfInputPort,
+            SaveEnderecoOutputPort saveEnderecoOutputPort,
+            SaveFuncionarioOutputPort saveFuncionarioOutputPort
+    ) {
+        this.buscarFuncionarioPorCpfInputPort = buscarFuncionarioPorCpfInputPort;
+        this.saveEnderecoOutputPort = saveEnderecoOutputPort;
+        this.saveFuncionarioOutputPort = saveFuncionarioOutputPort;
+    }
 
     @Override
     @Transactional
