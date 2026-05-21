@@ -4,7 +4,7 @@ import com.example.gerenciador.hotel.domain.enums.StatusQuarto;
 import com.example.gerenciador.hotel.domain.enums.StatusReserva;
 import com.example.gerenciador.hotel.domain.enums.TipoQuarto;
 import com.example.gerenciador.hotel.domain.model.Quarto;
-import com.example.gerenciador.hotel.domain.port.out.QuartoRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.quarto.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.mapper.QuartoEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,16 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class QuartoJpaAdapter implements QuartoRepositoryPort {
+public class QuartoJpaAdapter implements
+        SaveQuartoOutputPort,
+        FindQuartoByIdOutputPort,
+        FindQuartoByNumeroOutputPort,
+        ExistsQuartoByNumeroOutputPort,
+        FindByTipoQuartoOutputPort,
+        FindByTipoQuartoAndStatusOutputPort,
+        FindByStatusOutputPort,
+        FindOcupadosPorTipoOutputPort,
+        FindByTipoQuartoAndStatusListOutputPort {
 
     private final QuartoJpaRepository jpaRepository;
     private final QuartoEntityMapper mapper;

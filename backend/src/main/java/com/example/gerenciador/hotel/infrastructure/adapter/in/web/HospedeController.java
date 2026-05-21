@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class HospedeController {
 
-    private final BuscarHospedePorCpfUseCase buscarHospedePorCpfUseCase;
-    private final CriarEnderecoParaHospedeUseCase criarEnderecoParaHospedeUseCase;
-    private final BuscarEnderecoHospedePorCpfUseCase buscarEnderecoHospedePorCpfUseCase;
+    private final BuscarHospedePorCpfInputPort buscarHospedePorCpfUseCase;
+    private final CriarEnderecoParaHospedeInputPort criarEnderecoParaHospedeUseCase;
+    private final BuscarEnderecoHospedePorCpfInputPort buscarEnderecoHospedePorCpfUseCase;
 
     private final HospedeWebMapper hospedeMapper;
     private final EnderecoWebMapper enderecoMapper;

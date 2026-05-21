@@ -5,7 +5,7 @@ import com.example.gerenciador.hotel.domain.enums.StatusReserva;
 import com.example.gerenciador.hotel.domain.enums.TipoQuarto;
 import com.example.gerenciador.hotel.domain.model.Quarto;
 import com.example.gerenciador.hotel.domain.port.in.quarto.*;
-import com.example.gerenciador.hotel.domain.port.out.QuartoRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.quarto.*;
 import com.example.gerenciador.hotel.shared.exception.QuartoJaExisteException;
 import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +22,28 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class QuartoService implements
-        CriarQuartoUseCase,
-        BuscarQuartoPorNumeroUseCase,
-        EditarQuartoUseCase,
-        ModificarStatusQuartoUseCase,
-        BuscarQuartosPorTipoUseCase,
-        BuscarQuartosPorTipoEStatusUseCase,
-        BuscarQuartosPorStatusUseCase,
-        BuscarQuartosDisponiveisPorTipoEDataUseCase {
+        CriarQuartoInputPort,
+        BuscarQuartoPorNumeroInputPort,
+        EditarQuartoInputPort,
+        ModificarStatusQuartoInputPort,
+        BuscarQuartosPorTipoInputPort,
+        BuscarQuartosPorTipoEStatusInputPort,
+        BuscarQuartosPorStatusInputPort,
+        BuscarQuartosDisponiveisPorTipoEDataInputPort {
 
-    private final QuartoRepositoryPort quartoRepository;
+    private final ExistsQuartoByNumeroOutputPort existsQuartoByNumeroOutputPort;
+    private final SaveQuartoOutputPort saveQuartoOutputPort;
+    private final FindQuartoByNumeroOutputPort findQuartoByNumeroOutputPort;
+    private final FindByTipoQuartoOutputPort findByTipoQuartoOutputPort;
+    private final FindByTipoQuartoAndStatusOutputPort findByTipoQuartoAndStatusOutputPort;
+    private final FindByStatusOutputPort findByStatusOutputPort;
+    private final FindOcupadosPorTipoOutputPort findOcupadosPorTipoOutputPort;
+    private final FindByTipoQuartoAndStatusListOutputPort findByTipoQuartoAndStatusListOutputPort;
 
     @Override
     @Transactional
     public Quarto criarQuarto(String numero, TipoQuarto tipoQuarto, int capacidade, double precoDiaria, StatusQuarto statusQuarto) {
-        if (quartoRepository.existsByNumero(numero)) {
+        if (existsQuartoByNumeroOutputPort.existsByNumero(numero)) {
             throw new QuartoJaExisteException("Quarto já cadastrado com esse número.");
         }
         Quarto quarto = Quarto.builder()
@@ -46,13 +53,13 @@ public class QuartoService implements
                 .precoDiaria(precoDiaria)
                 .statusQuarto(statusQuarto)
                 .build();
-        return quartoRepository.save(quarto);
+        return saveQuartoOutputPort.save(quarto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Quarto buscarQuartoPorNumero(String numero) {
-        return quartoRepository.findByNumero(numero)
+        return findQuartoByNumeroOutputPort.findByNumero(numero)
                 .orElseThrow(() -> new ResourceNotFoundException("Quarto com número " + numero + " não encontrado."));
     }
 
@@ -64,7 +71,7 @@ public class QuartoService implements
         quarto.setCapacidade(capacidade);
         quarto.setPrecoDiaria(precoDiaria);
         quarto.setStatusQuarto(statusQuarto);
-        return quartoRepository.save(quarto);
+        return saveQuartoOutputPort.save(quarto);
     }
 
     @Override
@@ -72,25 +79,25 @@ public class QuartoService implements
     public Quarto modificarStatusQuarto(String numero, StatusQuarto statusQuarto) {
         Quarto quarto = buscarQuartoPorNumero(numero);
         quarto.setStatusQuarto(statusQuarto);
-        return quartoRepository.save(quarto);
+        return saveQuartoOutputPort.save(quarto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Quarto> buscarQuartosPorTipo(TipoQuarto tipoQuarto, Pageable pageable) {
-        return quartoRepository.findByTipoQuarto(tipoQuarto, pageable);
+        return findByTipoQuartoOutputPort.findByTipoQuarto(tipoQuarto, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Quarto> buscarQuartosPorTipoEStatus(TipoQuarto tipoQuarto, StatusQuarto statusQuarto, Pageable pageable) {
-        return quartoRepository.findByTipoQuartoAndStatus(tipoQuarto, statusQuarto, pageable);
+        return findByTipoQuartoAndStatusOutputPort.findByTipoQuartoAndStatus(tipoQuarto, statusQuarto, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Quarto> buscarQuartosPorStatus(StatusQuarto statusQuarto, Pageable pageable) {
-        return quartoRepository.findByStatus(statusQuarto, pageable);
+        return findByStatusOutputPort.findByStatus(statusQuarto, pageable);
     }
 
     @Override
@@ -98,8 +105,8 @@ public class QuartoService implements
     public List<Quarto> buscarQuartosDisponiveisPorTipoEData(TipoQuarto tipoQuarto, Date dataEntrada, Date dataSaida) {
         List<StatusReserva> statusOcupados = Arrays.asList(StatusReserva.AGENDADO, StatusReserva.EM_USO, StatusReserva.MANUTENCAO);
 
-        List<Quarto> quartosOcupados = quartoRepository.findOcupadosPorTipo(tipoQuarto, dataEntrada, dataSaida, statusOcupados);
-        List<Quarto> quartosDisponiveis = quartoRepository.findByTipoQuartoAndStatusList(tipoQuarto, StatusQuarto.DISPONIVEL);
+        List<Quarto> quartosOcupados = findOcupadosPorTipoOutputPort.findOcupadosPorTipo(tipoQuarto, dataEntrada, dataSaida, statusOcupados);
+        List<Quarto> quartosDisponiveis = findByTipoQuartoAndStatusListOutputPort.findByTipoQuartoAndStatusList(tipoQuarto, StatusQuarto.DISPONIVEL);
 
         return quartosDisponiveis.stream()
                 .filter(q -> quartosOcupados.stream().noneMatch(o -> o.getId().equals(q.getId())))

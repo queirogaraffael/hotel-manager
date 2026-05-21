@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.out.persistence;
 
 import com.example.gerenciador.hotel.domain.model.ExtratoFuncionario;
-import com.example.gerenciador.hotel.domain.port.out.ExtratoFuncionarioRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.extratofuncionario.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.mapper.ExtratoFuncionarioEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,12 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class ExtratoFuncionarioJpaAdapter implements ExtratoFuncionarioRepositoryPort {
+public class ExtratoFuncionarioJpaAdapter implements
+        SaveExtratoFuncionarioOutputPort,
+        FindExtratoFuncionarioByIdOutputPort,
+        FindByCpfFuncionarioOutputPort,
+        ExisteExtratoDeFuncionarioParaMesOutputPort,
+        DeleteExtratoFuncionarioByIdOutputPort {
 
     private final ExtratoFuncionarioJpaRepository jpaRepository;
     private final ExtratoFuncionarioEntityMapper mapper;

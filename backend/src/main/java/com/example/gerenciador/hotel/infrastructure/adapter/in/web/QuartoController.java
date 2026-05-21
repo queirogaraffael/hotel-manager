@@ -30,14 +30,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QuartoController {
 
-    private final CriarQuartoUseCase criarQuartoUseCase;
-    private final BuscarQuartoPorNumeroUseCase buscarQuartoPorNumeroUseCase;
-    private final EditarQuartoUseCase editarQuartoUseCase;
-    private final ModificarStatusQuartoUseCase modificarStatusQuartoUseCase;
-    private final BuscarQuartosPorTipoUseCase buscarQuartosPorTipoUseCase;
-    private final BuscarQuartosPorTipoEStatusUseCase buscarQuartosPorTipoEStatusUseCase;
-    private final BuscarQuartosPorStatusUseCase buscarQuartosPorStatusUseCase;
-    private final BuscarQuartosDisponiveisPorTipoEDataUseCase buscarQuartosDisponiveisPorTipoEDataUseCase;
+    private final CriarQuartoInputPort criarQuartoUseCase;
+    private final BuscarQuartoPorNumeroInputPort buscarQuartoPorNumeroUseCase;
+    private final EditarQuartoInputPort editarQuartoUseCase;
+    private final ModificarStatusQuartoInputPort modificarStatusQuartoUseCase;
+    private final BuscarQuartosPorTipoInputPort buscarQuartosPorTipoUseCase;
+    private final BuscarQuartosPorTipoEStatusInputPort buscarQuartosPorTipoEStatusUseCase;
+    private final BuscarQuartosPorStatusInputPort buscarQuartosPorStatusUseCase;
+    private final BuscarQuartosDisponiveisPorTipoEDataInputPort buscarQuartosDisponiveisPorTipoEDataUseCase;
 
     private final QuartoWebMapper mapper;
 

@@ -5,9 +5,9 @@ import com.example.gerenciador.hotel.domain.model.Hospede;
 import com.example.gerenciador.hotel.domain.model.Quarto;
 import com.example.gerenciador.hotel.domain.model.Reserva;
 import com.example.gerenciador.hotel.domain.port.in.reserva.*;
-import com.example.gerenciador.hotel.domain.port.out.HospedeRepositoryPort;
-import com.example.gerenciador.hotel.domain.port.out.QuartoRepositoryPort;
-import com.example.gerenciador.hotel.domain.port.out.ReservaRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.hospede.FindHospedeByCpfOutputPort;
+import com.example.gerenciador.hotel.domain.port.out.quarto.FindQuartoByNumeroOutputPort;
+import com.example.gerenciador.hotel.domain.port.out.reserva.*;
 import com.example.gerenciador.hotel.shared.exception.QuartoNaoEstaDisponivelParaDataException;
 import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,29 +21,34 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class ReservaService implements
-        CriarReservaUseCase,
-        BuscarReservaPorIdUseCase,
-        ModificarStatusReservaUseCase,
-        BuscarReservasPorHospedeEStatusUseCase,
-        BuscarReservasAgendadasEmUsoPorCpfUseCase,
-        BuscarReservasFinalizadasCanceladasPorCpfUseCase {
+        CriarReservaInputPort,
+        BuscarReservaPorIdInputPort,
+        ModificarStatusReservaInputPort,
+        BuscarReservasPorHospedeEStatusInputPort,
+        BuscarReservasAgendadasEmUsoPorCpfInputPort,
+        BuscarReservasFinalizadasCanceladasPorCpfInputPort {
 
-    private final ReservaRepositoryPort reservaRepository;
-    private final HospedeRepositoryPort hospedeRepository;
-    private final QuartoRepositoryPort quartoRepository;
+    private final SaveReservaOutputPort saveReservaOutputPort;
+    private final FindReservaByIdOutputPort findReservaByIdOutputPort;
+    private final QuartoEstaDisponivelParaDataOutputPort quartoEstaDisponivelParaDataOutputPort;
+    private final FindByHospedeEStatusOutputPort findByHospedeEStatusOutputPort;
+    private final FindAgendadasEmUsoPorCpfOutputPort findAgendadasEmUsoPorCpfOutputPort;
+    private final FindFinalizadasCanceladasPorCpfOutputPort findFinalizadasCanceladasPorCpfOutputPort;
+    private final FindHospedeByCpfOutputPort findHospedeByCpfOutputPort;
+    private final FindQuartoByNumeroOutputPort findQuartoByNumeroOutputPort;
 
     @Override
     @Transactional
     public Reserva criarReserva(String cpfHospede, String numeroQuarto, LocalDateTime dataEntrada, LocalDateTime dataSaida, Integer numeroHospedes) {
-        Quarto quarto = quartoRepository.findByNumero(numeroQuarto)
+        Quarto quarto = findQuartoByNumeroOutputPort.findByNumero(numeroQuarto)
                 .orElseThrow(() -> new ResourceNotFoundException("Quarto com número " + numeroQuarto + " não encontrado."));
 
-        boolean disponivel = reservaRepository.quartoEstaDisponivelParaData(dataEntrada, dataSaida, numeroQuarto);
+        boolean disponivel = quartoEstaDisponivelParaDataOutputPort.quartoEstaDisponivelParaData(dataEntrada, dataSaida, numeroQuarto);
         if (!disponivel) {
             throw new QuartoNaoEstaDisponivelParaDataException("Quarto não está disponível para reserva nesta data.");
         }
 
-        Hospede hospede = hospedeRepository.findByCpf(cpfHospede)
+        Hospede hospede = findHospedeByCpfOutputPort.findByCpf(cpfHospede)
                 .orElseThrow(() -> new ResourceNotFoundException("Hóspede com CPF " + cpfHospede + " não encontrado."));
 
         Reserva reserva = Reserva.builder()
@@ -55,13 +60,13 @@ public class ReservaService implements
                 .hospede(hospede)
                 .build();
 
-        return reservaRepository.save(reserva);
+        return saveReservaOutputPort.save(reserva);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Reserva buscarReservaPorId(Long id) {
-        return reservaRepository.findById(id)
+        return findReservaByIdOutputPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva com id " + id + " não encontrada."));
     }
 
@@ -70,24 +75,24 @@ public class ReservaService implements
     public Reserva modificarStatusReserva(Long id, StatusReserva statusReserva) {
         Reserva reserva = buscarReservaPorId(id);
         reserva.setStatusReserva(statusReserva);
-        return reservaRepository.save(reserva);
+        return saveReservaOutputPort.save(reserva);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Reserva> buscarReservasPorHospedeEStatus(String cpf, StatusReserva status, Pageable pageable) {
-        return reservaRepository.findByHospedeEStatus(cpf, status, pageable);
+        return findByHospedeEStatusOutputPort.findByHospedeEStatus(cpf, status, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Reserva> buscarReservasAgendadasEmUsoPorCpf(String cpf, Pageable pageable) {
-        return reservaRepository.findAgendadasEmUsoPorCpf(cpf, pageable);
+        return findAgendadasEmUsoPorCpfOutputPort.findAgendadasEmUsoPorCpf(cpf, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Reserva> buscarReservasFinalizadasCanceladasPorCpf(String cpf, Pageable pageable) {
-        return reservaRepository.findFinalizadasCanceladasPorCpf(cpf, pageable);
+        return findFinalizadasCanceladasPorCpfOutputPort.findFinalizadasCanceladasPorCpf(cpf, pageable);
     }
 }

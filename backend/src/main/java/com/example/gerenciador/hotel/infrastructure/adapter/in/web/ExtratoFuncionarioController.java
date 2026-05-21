@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ExtratoFuncionarioController {
 
-    private final CriarExtratoUseCase criarExtratoUseCase;
-    private final BuscarExtratoPorIdUseCase buscarExtratoPorIdUseCase;
-    private final BuscarExtratosPorCpfUseCase buscarExtratosPorCpfUseCase;
-    private final EditarExtratoUseCase editarExtratoUseCase;
-    private final DeletarExtratoUseCase deletarExtratoUseCase;
+    private final CriarExtratoInputPort criarExtratoUseCase;
+    private final BuscarExtratoPorIdInputPort buscarExtratoPorIdUseCase;
+    private final BuscarExtratosPorCpfInputPort buscarExtratosPorCpfUseCase;
+    private final EditarExtratoInputPort editarExtratoUseCase;
+    private final DeletarExtratoInputPort deletarExtratoUseCase;
 
     private final ExtratoFuncionarioWebMapper mapper;
 

@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.out.persistence;
 
 import com.example.gerenciador.hotel.domain.model.Endereco;
-import com.example.gerenciador.hotel.domain.port.out.EnderecoRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.endereco.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.mapper.EnderecoEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,11 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class EnderecoJpaAdapter implements EnderecoRepositoryPort {
+public class EnderecoJpaAdapter implements
+        SaveEnderecoOutputPort,
+        FindEnderecoByIdOutputPort,
+        GetEnderecoFuncionarioByCpfOutputPort,
+        GetEnderecoHospedeByCpfOutputPort {
 
     private final EnderecoJpaRepository jpaRepository;
     private final EnderecoEntityMapper mapper;

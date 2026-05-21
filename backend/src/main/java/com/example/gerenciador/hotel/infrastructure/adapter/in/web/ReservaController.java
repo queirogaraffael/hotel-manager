@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ReservaController {
 
-    private final CriarReservaUseCase criarReservaUseCase;
-    private final BuscarReservaPorIdUseCase buscarReservaPorIdUseCase;
-    private final ModificarStatusReservaUseCase modificarStatusReservaUseCase;
-    private final BuscarReservasPorHospedeEStatusUseCase buscarReservasPorHospedeEStatusUseCase;
-    private final BuscarReservasAgendadasEmUsoPorCpfUseCase buscarReservasAgendadasEmUsoPorCpfUseCase;
-    private final BuscarReservasFinalizadasCanceladasPorCpfUseCase buscarReservasFinalizadasCanceladasPorCpfUseCase;
+    private final CriarReservaInputPort criarReservaUseCase;
+    private final BuscarReservaPorIdInputPort buscarReservaPorIdUseCase;
+    private final ModificarStatusReservaInputPort modificarStatusReservaUseCase;
+    private final BuscarReservasPorHospedeEStatusInputPort buscarReservasPorHospedeEStatusUseCase;
+    private final BuscarReservasAgendadasEmUsoPorCpfInputPort buscarReservasAgendadasEmUsoPorCpfUseCase;
+    private final BuscarReservasFinalizadasCanceladasPorCpfInputPort buscarReservasFinalizadasCanceladasPorCpfUseCase;
 
     private final ReservaWebMapper mapper;
 

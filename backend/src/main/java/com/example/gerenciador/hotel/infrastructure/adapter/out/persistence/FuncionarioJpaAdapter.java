@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.out.persistence;
 
 import com.example.gerenciador.hotel.domain.model.Funcionario;
-import com.example.gerenciador.hotel.domain.port.out.FuncionarioRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.funcionario.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.mapper.FuncionarioEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,7 +12,13 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class FuncionarioJpaAdapter implements FuncionarioRepositoryPort {
+public class FuncionarioJpaAdapter implements
+        SaveFuncionarioOutputPort,
+        FindFuncionarioByIdOutputPort,
+        FindFuncionarioByCpfOutputPort,
+        ExistsFuncionarioByCpfOutputPort,
+        FindFuncionarioByNomeOutputPort,
+        FindComExtratoByCpfOutputPort {
 
     private final FuncionarioJpaRepository jpaRepository;
     private final FuncionarioEntityMapper mapper;

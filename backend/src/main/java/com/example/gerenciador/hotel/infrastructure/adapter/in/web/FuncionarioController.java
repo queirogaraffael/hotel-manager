@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FuncionarioController {
 
-    private final BuscarFuncionarioPorCpfUseCase buscarFuncionarioPorCpfUseCase;
-    private final BuscarFuncionariosPorNomeUseCase buscarFuncionariosPorNomeUseCase;
-    private final EditarFuncionarioUseCase editarFuncionarioUseCase;
+    private final BuscarFuncionarioPorCpfInputPort buscarFuncionarioPorCpfUseCase;
+    private final BuscarFuncionariosPorNomeInputPort buscarFuncionariosPorNomeUseCase;
+    private final EditarFuncionarioInputPort editarFuncionarioUseCase;
     private final CriarEnderecoParaFuncionarioUseCase criarEnderecoParaFuncionarioUseCase;
-    private final BuscarEnderecoFuncionarioPorCpfUseCase buscarEnderecoFuncionarioPorCpfUseCase;
+    private final BuscarEnderecoFuncionarioPorCpfInputPort buscarEnderecoFuncionarioPorCpfUseCase;
 
     private final FuncionarioWebMapper funcionarioMapper;
     private final EnderecoWebMapper enderecoMapper;

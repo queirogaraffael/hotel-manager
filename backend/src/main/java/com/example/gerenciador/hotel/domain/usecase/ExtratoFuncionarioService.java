@@ -3,8 +3,8 @@ package com.example.gerenciador.hotel.domain.usecase;
 import com.example.gerenciador.hotel.domain.model.ExtratoFuncionario;
 import com.example.gerenciador.hotel.domain.model.Funcionario;
 import com.example.gerenciador.hotel.domain.port.in.extratofuncionario.*;
-import com.example.gerenciador.hotel.domain.port.out.ExtratoFuncionarioRepositoryPort;
-import com.example.gerenciador.hotel.domain.port.out.FuncionarioRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.extratofuncionario.*;
+import com.example.gerenciador.hotel.domain.port.out.funcionario.FindComExtratoByCpfOutputPort;
 import com.example.gerenciador.hotel.shared.exception.ExtratoJaExisteParaMesReferenteException;
 import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,23 +18,27 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class ExtratoFuncionarioService implements
-        CriarExtratoUseCase,
-        BuscarExtratoPorIdUseCase,
-        BuscarExtratosPorCpfUseCase,
-        EditarExtratoUseCase,
-        DeletarExtratoUseCase {
+        CriarExtratoInputPort,
+        BuscarExtratoPorIdInputPort,
+        BuscarExtratosPorCpfInputPort,
+        EditarExtratoInputPort,
+        DeletarExtratoInputPort {
 
-    private final ExtratoFuncionarioRepositoryPort extratoRepository;
-    private final FuncionarioRepositoryPort funcionarioRepository;
+    private final ExisteExtratoDeFuncionarioParaMesOutputPort existeExtratoDeFuncionarioParaMesOutputPort;
+    private final FindComExtratoByCpfOutputPort findComExtratoByCpfOutputPort;
+    private final SaveExtratoFuncionarioOutputPort saveExtratoFuncionarioOutputPort;
+    private final FindExtratoFuncionarioByIdOutputPort findExtratoFuncionarioByIdOutputPort;
+    private final FindByCpfFuncionarioOutputPort findByCpfFuncionarioOutputPort;
+    private final DeleteExtratoFuncionarioByIdOutputPort deleteExtratoFuncionarioByIdOutputPort;
 
     @Override
     @Transactional
     public ExtratoFuncionario criarExtrato(String cpfFuncionario, Date dataExtrato, double horasTrabalhadas, double valorHora, double salario) {
-        if (extratoRepository.existeExtratoDeFuncionarioParaMes(cpfFuncionario, dataExtrato)) {
+        if (existeExtratoDeFuncionarioParaMesOutputPort.existeExtratoDeFuncionarioParaMes(cpfFuncionario, dataExtrato)) {
             throw new ExtratoJaExisteParaMesReferenteException("Extrato já existe para o mês referente.");
         }
 
-        Funcionario funcionario = funcionarioRepository.findComExtratoByCpf(cpfFuncionario)
+        Funcionario funcionario = findComExtratoByCpfOutputPort.findComExtratoByCpf(cpfFuncionario)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionário com CPF " + cpfFuncionario + " não encontrado."));
 
         ExtratoFuncionario extrato = ExtratoFuncionario.builder()
@@ -45,20 +49,20 @@ public class ExtratoFuncionarioService implements
                 .funcionario(funcionario)
                 .build();
 
-        return extratoRepository.save(extrato);
+        return saveExtratoFuncionarioOutputPort.save(extrato);
     }
 
     @Override
     @Transactional(readOnly = true)
     public ExtratoFuncionario buscarExtratoPorId(Long id) {
-        return extratoRepository.findById(id)
+        return findExtratoFuncionarioByIdOutputPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Extrato com id " + id + " não encontrado."));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<ExtratoFuncionario> buscarExtratosPorCpf(String cpf, Pageable pageable) {
-        return extratoRepository.findByCpfFuncionario(cpf, pageable);
+        return findByCpfFuncionarioOutputPort.findByCpfFuncionario(cpf, pageable);
     }
 
     @Override
@@ -69,13 +73,13 @@ public class ExtratoFuncionarioService implements
         extrato.setHorasTrabalhadas(horasTrabalhadas);
         extrato.setValorHora(valorHora);
         extrato.setSalario(salario);
-        return extratoRepository.save(extrato);
+        return saveExtratoFuncionarioOutputPort.save(extrato);
     }
 
     @Override
     @Transactional
     public void deletarExtrato(Long id) {
         buscarExtratoPorId(id); // garante que existe antes de deletar
-        extratoRepository.deleteById(id);
+        deleteExtratoFuncionarioByIdOutputPort.deleteById(id);
     }
 }

@@ -4,8 +4,11 @@ import com.example.gerenciador.hotel.domain.enums.Turno;
 import com.example.gerenciador.hotel.domain.model.Endereco;
 import com.example.gerenciador.hotel.domain.model.Funcionario;
 import com.example.gerenciador.hotel.domain.port.in.funcionario.*;
-import com.example.gerenciador.hotel.domain.port.out.EnderecoRepositoryPort;
-import com.example.gerenciador.hotel.domain.port.out.FuncionarioRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.endereco.GetEnderecoFuncionarioByCpfOutputPort;
+import com.example.gerenciador.hotel.domain.port.out.endereco.SaveEnderecoOutputPort;
+import com.example.gerenciador.hotel.domain.port.out.funcionario.FindFuncionarioByCpfOutputPort;
+import com.example.gerenciador.hotel.domain.port.out.funcionario.FindFuncionarioByNomeOutputPort;
+import com.example.gerenciador.hotel.domain.port.out.funcionario.SaveFuncionarioOutputPort;
 import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,20 +19,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class FuncionarioService implements
-        CriarFuncionarioUseCase,
-        BuscarFuncionarioPorCpfUseCase,
-        EditarFuncionarioUseCase,
-        BuscarFuncionariosPorNomeUseCase,
+        CriarFuncionarioInputPort,
+        BuscarFuncionarioPorCpfInputPort,
+        EditarFuncionarioInputPort,
+        BuscarFuncionariosPorNomeInputPort,
         CriarEnderecoParaFuncionarioUseCase,
-        BuscarEnderecoFuncionarioPorCpfUseCase {
+        BuscarEnderecoFuncionarioPorCpfInputPort {
 
-    private final FuncionarioRepositoryPort funcionarioRepository;
-    private final EnderecoRepositoryPort enderecoRepository;
+    private final FindFuncionarioByCpfOutputPort findFuncionarioByCpfOutputPort;
+    private final SaveFuncionarioOutputPort saveFuncionarioOutputPort;
+    private final FindFuncionarioByNomeOutputPort findFuncionarioByNomeOutputPort;
+    private final SaveEnderecoOutputPort saveEnderecoOutputPort;
+    private final GetEnderecoFuncionarioByCpfOutputPort getEnderecoFuncionarioByCpfOutputPort;
 
     @Override
     @Transactional(readOnly = true)
     public Funcionario buscarFuncionarioPorCpf(String cpf) {
-        return funcionarioRepository.findByCpf(cpf)
+        return findFuncionarioByCpfOutputPort.findByCpf(cpf)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionário com CPF " + cpf + " não encontrado."));
     }
 
@@ -46,29 +52,29 @@ public class FuncionarioService implements
         Funcionario funcionario = buscarFuncionarioPorCpf(cpf);
         funcionario.setCargo(cargo);
         funcionario.setTurno(turno);
-        return funcionarioRepository.save(funcionario);
+        return saveFuncionarioOutputPort.save(funcionario);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Funcionario> buscarFuncionariosPorNome(String nome, Pageable pageable) {
-        return funcionarioRepository.findByNome(nome, pageable);
+        return findFuncionarioByNomeOutputPort.findByNome(nome, pageable);
     }
 
     @Override
     @Transactional
     public Endereco criarEnderecoParaFuncionario(String cpf, Endereco endereco) {
         Funcionario funcionario = buscarFuncionarioPorCpf(cpf);
-        Endereco enderecoSalvo = enderecoRepository.save(endereco);
+        Endereco enderecoSalvo = saveEnderecoOutputPort.save(endereco);
         funcionario.getUser().setEndereco(enderecoSalvo);
-        funcionarioRepository.save(funcionario);
+        saveFuncionarioOutputPort.save(funcionario);
         return enderecoSalvo;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Endereco buscarEnderecoFuncionarioPorCpf(String cpf) {
-        return enderecoRepository.getEnderecoFuncionarioByCpf(cpf)
+        return getEnderecoFuncionarioByCpfOutputPort.getEnderecoFuncionarioByCpf(cpf)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionário sem endereço cadastrado."));
     }
 }

@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final RegistrarUsuarioUseCase registrarUsuarioUseCase;
-    private final BuscarPorUsernameUseCase buscarPorUsernameUseCase;
+    private final RegistrarUsuarioInputPort registrarUsuarioUseCase;
+    private final BuscarPorUsernameInputPort buscarPorUsernameUseCase;
     private final UserWebMapper mapper;
     private final TokenService tokenService;
     private final UserJpaRepository userJpaRepository; // Necessário para UserDetails até mover Spring Security p/ infra

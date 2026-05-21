@@ -1,7 +1,7 @@
 package com.example.gerenciador.hotel.infrastructure.adapter.out.persistence;
 
 import com.example.gerenciador.hotel.domain.model.User;
-import com.example.gerenciador.hotel.domain.port.out.UserRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.user.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.entity.UserEntity;
 import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.mapper.UserEntityMapper;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,12 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class UserJpaAdapter implements UserRepositoryPort {
+public class UserJpaAdapter implements
+        SaveUserOutputPort,
+        FindUserByIdOutputPort,
+        FindUserByUsernameOutputPort,
+        ExistsUserByUsernameOutputPort,
+        ExistsUserByCpfOutputPort {
 
     private final UserJpaRepository jpaRepository;
     private final UserEntityMapper mapper;

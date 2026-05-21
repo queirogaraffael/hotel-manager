@@ -4,7 +4,8 @@ import com.example.gerenciador.hotel.domain.enums.Turno;
 import com.example.gerenciador.hotel.domain.enums.UserRole;
 import com.example.gerenciador.hotel.domain.model.User;
 import com.example.gerenciador.hotel.domain.port.in.user.*;
-import com.example.gerenciador.hotel.domain.port.out.UserRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.user.FindUserByUsernameOutputPort;
+import com.example.gerenciador.hotel.domain.port.out.user.SaveUserOutputPort;
 import com.example.gerenciador.hotel.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,11 +17,12 @@ import java.time.LocalDate;
 @Service
 @RequiredArgsConstructor
 public class UserService implements
-        RegistrarUsuarioUseCase,
-        AutenticarUseCase,
-        BuscarPorUsernameUseCase {
+        RegistrarUsuarioInputPort,
+        AutenticarInputPort,
+        BuscarPorUsernameInputPort {
 
-    private final UserRepositoryPort userRepository;
+    private final SaveUserOutputPort saveUserOutputPort;
+    private final FindUserByUsernameOutputPort findUserByUsernameOutputPort;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -38,20 +40,20 @@ public class UserService implements
                 .dataNascimento(dataNascimento)
                 .userRole(role)
                 .build();
-        return userRepository.save(user);
+        return saveUserOutputPort.save(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public User autenticar(String username, String password) {
-        return userRepository.findByUsername(username)
+        return findUserByUsernameOutputPort.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário '" + username + "' não encontrado."));
     }
 
     @Override
     @Transactional(readOnly = true)
     public User buscarPorUsername(String username) {
-        return userRepository.findByUsername(username)
+        return findUserByUsernameOutputPort.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário '" + username + "' não encontrado."));
     }
 }

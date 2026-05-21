@@ -2,7 +2,7 @@ package com.example.gerenciador.hotel.infrastructure.adapter.out.persistence;
 
 import com.example.gerenciador.hotel.domain.enums.StatusReserva;
 import com.example.gerenciador.hotel.domain.model.Reserva;
-import com.example.gerenciador.hotel.domain.port.out.ReservaRepositoryPort;
+import com.example.gerenciador.hotel.domain.port.out.reserva.*;
 import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.mapper.ReservaEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +14,13 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class ReservaJpaAdapter implements ReservaRepositoryPort {
+public class ReservaJpaAdapter implements
+        SaveReservaOutputPort,
+        FindReservaByIdOutputPort,
+        QuartoEstaDisponivelParaDataOutputPort,
+        FindByHospedeEStatusOutputPort,
+        FindAgendadasEmUsoPorCpfOutputPort,
+        FindFinalizadasCanceladasPorCpfOutputPort {
 
     private final ReservaJpaRepository jpaRepository;
     private final ReservaEntityMapper mapper;
