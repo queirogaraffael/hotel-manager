@@ -7,7 +7,7 @@ import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.user.Logi
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.user.UserRegistrationDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.user.UserResponseDTO;
 import com.example.gerenciador.hotel.infrastructure.adapter.in.web.mapper.UserWebMapper;
-import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.UserJpaRepository;
+import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.user.UserJpaRepository;
 import com.example.gerenciador.hotel.infrastructure.security.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

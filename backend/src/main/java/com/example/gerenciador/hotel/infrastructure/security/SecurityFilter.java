@@ -1,6 +1,6 @@
 package com.example.gerenciador.hotel.infrastructure.security;
 
-import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.UserJpaRepository;
+import com.example.gerenciador.hotel.infrastructure.adapter.out.persistence.user.UserJpaRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
