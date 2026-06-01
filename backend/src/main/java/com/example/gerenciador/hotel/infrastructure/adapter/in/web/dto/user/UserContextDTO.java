@@ -1,28 +1,19 @@
-package com.example.gerenciador.hotel.domain.model;
+package com.example.gerenciador.hotel.infrastructure.adapter.in.web.dto.user;
 
 import com.example.gerenciador.hotel.domain.enums.UserRole;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-
+public class UserContextDTO {
     private UUID id;
-    private String username;
-    private String password;
-    private String cpf;
-    private LocalDate dataNascimento;
     private String nome;
+    private String username;
     private String email;
-    private String telefone;
     private UserRole userRole;
-    private Endereco endereco;
 }

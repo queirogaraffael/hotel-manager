@@ -28,3 +28,4 @@ api:
     token:
       secret: ${JWT_SECRET:my-secret-key}
       expiration: 2
+      issuer: ${JWT_ISSUER:gerenciador-hotel}
